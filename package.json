@@ -1,0 +1,20 @@
+{
+	"name": "iiitn",
+	"version": "1.0.0",
+	"description": "IIIT Programmers Club.",
+	"main": "index.js",
+	"scripts": {
+		"test": "./node_modules/.bin/webpack --config ./webpack.production.config.js",
+		"start": "./node_modules/.bin/webpack-dev-server"
+	},
+	"dependencies": {
+		"classui": "*"
+	},
+	"devDependencies": {
+		"copy-webpack-plugin": "^4.0.1",
+		"webpack": "^3.6.0",
+		"webpack-dev-server": "^2.8.2"
+	},
+	"author": "Kishore <kishore.iiitn@gmail.com>",
+	"license": "ISC"
+}
