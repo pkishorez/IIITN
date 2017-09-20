@@ -21,10 +21,18 @@ module.exports = {
 		extensions: [".tsx", ".ts", ".js"]
 	},
 	plugins: [
-		new copyWebpackPlugin([{
-			from: 'node_modules/classui/bundle/classui.css',
-			to: 'bundle/classui.css'
-		}]),
+		new copyWebpackPlugin([
+			{
+				from: 'node_modules/classui/bundle/classui.css',
+				to: 'bundle/classui.css'
+			}
+		]),
+		new copyWebpackPlugin([
+			{
+				from: 'node_modules/monaco-editor/min/vs',
+				to: 'bundle/vs'
+			}
+		]),
 		new webpack.DefinePlugin({ // <-- key to reducing React's size
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')

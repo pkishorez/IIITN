@@ -6,7 +6,7 @@ module.exports = {
 	output: {
 		filename: 'bundle/bundle.js'
 	},
-	
+
 	module: {
 		loaders: [
 			{
@@ -27,12 +27,22 @@ module.exports = {
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"]
 	},
+
 	plugins: [
-		new copyWebpackPlugin([{
-			from: 'node_modules/classui/bundle/classui.css',
-			to: 'bundle/classui.css'
-		}])
+		new copyWebpackPlugin([
+			{
+				from: 'node_modules/classui/bundle/classui.css',
+				to: 'bundle/classui.css'
+			}
+		]),
+		new copyWebpackPlugin([
+			{
+				from: 'node_modules/monaco-editor/dev/vs',
+				to: 'bundle/vs'
+			}
+		])
 	],
+
 	devtool: 'source-map',
 	
 	devServer: {
