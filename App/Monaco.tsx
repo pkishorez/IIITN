@@ -1,13 +1,23 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-export interface IProps {};
+export interface IProps {
+	width?: string|number,
+	height?: string|number
+	autoFocus?: boolean
+};
 export interface IState {
 	page_edited: boolean
 };
 
 export class Monaco extends React.Component<IProps, IState> {
 	private editor: monaco.editor.IStandaloneCodeEditor;
+	static defaultProps = {
+		width: 500,
+		height: 100,
+		autoFocus: false
+	};
+
 	constructor(props: any, context: any)
 	{
 		super(props, context);
@@ -21,11 +31,11 @@ export class Monaco extends React.Component<IProps, IState> {
 			console.error("Ref error.");
 			return;
 		}
-		(window as any).require.config({ paths: { 'vs': 'bundle/vs' }});		
+		(window as any).require.config({ paths: { 'vs': 'bundle/vs' }});
 		(window as any).require(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
 				this.editor = monaco.editor.create(ref, {
-					value: "Kishore",
+					value: "Hello",
 					language: 'typescript',
 					fontFamily: 'Inconsolata',
 					folding: true,
@@ -39,7 +49,8 @@ export class Monaco extends React.Component<IProps, IState> {
 				this.editor.getModel().updateOptions({
 					insertSpaces: false
 				})
-				this.editor.focus();
+				if (this.props.autoFocus)
+					this.editor.focus();
 			}
 		});
 	}
@@ -53,9 +64,11 @@ export class Monaco extends React.Component<IProps, IState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div className="card-2 monaco-editor" style={{
-			width: 500, height: 400
-		}} ref={this.initMonaco}>
+		return <div style={{marginBottom: 25}}>
+			<div style={{
+				width: this.props.width, height: this.props.height
+			}} ref={this.initMonaco}>
+			</div>
 		</div>;
 	}
 };
