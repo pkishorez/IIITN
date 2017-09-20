@@ -8,7 +8,10 @@
 		"start": "./node_modules/.bin/webpack-dev-server"
 	},
 	"dependencies": {
-		"classui": "*"
+		"@types/mongodb": "^2.2.11",
+		"classui": "*",
+		"monaco-editor": "^0.10.0",
+		"mongodb": "^2.2.31"
 	},
 	"devDependencies": {
 		"copy-webpack-plugin": "^4.0.1",
