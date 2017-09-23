@@ -5,7 +5,9 @@ import {Content} from 'classui/Content';
 import {NavBar} from 'classui/Navbar';
 import {Login} from './Pages/Login';
 import {withRouter, BrowserRouter, Route} from 'react-router-dom';
+import * as io from 'socket.io-client';
 
+let Socket = io();
 
 interface IProps {};
 export class App extends React.Component<IProps, any>
@@ -22,13 +24,3 @@ export class App extends React.Component<IProps, any>
 		</BrowserRouter>;
 	}
 }
-
-class _Dummy extends React.Component<{}, {}> {
-	render() {
-		return <div>
-			{this.props}
-		</div>;
-	}
-}
-
-let Dummy = withRouter(_Dummy);
