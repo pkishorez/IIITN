@@ -4,7 +4,7 @@ import {ClassUI} from 'classui/ClassUI';
 import {Content} from 'classui/Content';
 import {NavBar} from 'classui/Navbar';
 import {Login} from './Pages/Login';
-import {withRouter} from 'react-router';
+import {withRouter, BrowserRouter, Route} from 'react-router-dom';
 
 
 interface IProps {};
@@ -12,12 +12,14 @@ export class App extends React.Component<IProps, any>
 {
 	render()
 	{
-		return <ClassUI contentWidth={1024}>
-			<NavBar fixed logo="Programmer's Club"></NavBar>
-			<Content>
-				<Login/>
-			</Content>
-		</ClassUI>;
+		return <BrowserRouter>
+			<ClassUI contentWidth={800}>
+				<NavBar fixed logo="Programmer's Club"></NavBar>
+				<Content>
+					<Route  path="/login" strict exact component={Login} />
+				</Content>
+			</ClassUI>
+		</BrowserRouter>;
 	}
 }
 

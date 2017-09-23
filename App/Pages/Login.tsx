@@ -3,8 +3,9 @@ import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
 import {LoginForm} from '../Partial/LoginForm';
 import {Monaco} from '../Monaco';
+import {RouteComponentProps} from 'react-router-dom';
 
-interface IProps {};
+interface IProps extends RouteComponentProps<any> {};
 interface IState {};
 
 export class Login extends React.Component<IProps, IState> {
