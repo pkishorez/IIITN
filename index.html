@@ -5,19 +5,24 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="bundle/classui.css">
-	<link rel="stylesheet" href="assets/Inconsolata.css">
+	<link rel="stylesheet" href="/bundle/classui.css">
+	<link rel="stylesheet" href="/assets/Inconsolata.css">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<title>CSE Code Ground</title>
 	<style>
 		*{
+			/*
+				Monaco editor cursor is getting hidden if this statement is removed.
+				SMALL HACK.
+				CAVEAT: Responsive design is not possible :(
+			*/
 			max-width: inherit !important;
 		}
 	</style>
 </head>
 <body>
 	<div id="app"></div>
-	<script src="bundle/vs/loader.js"></script>
-	<script src="bundle/bundle.js"></script>
+	<script src="/bundle/vs/loader.js"></script>
+	<script src="/bundle/bundle.js"></script>
 </body>
 </html>

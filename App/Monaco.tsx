@@ -13,7 +13,7 @@ export interface IState {
 export class Monaco extends React.Component<IProps, IState> {
 	private editor: monaco.editor.IStandaloneCodeEditor;
 	static defaultProps = {
-		width: 500,
+		width: "100%",
 		height: 100,
 		autoFocus: false
 	};
@@ -31,7 +31,7 @@ export class Monaco extends React.Component<IProps, IState> {
 			console.error("Ref error.");
 			return;
 		}
-		(window as any).require.config({ paths: { 'vs': 'bundle/vs' }});
+		(window as any).require.config({ paths: { 'vs': '/bundle/vs' }});
 		(window as any).require(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
 				this.editor = monaco.editor.create(ref, {
@@ -64,7 +64,7 @@ export class Monaco extends React.Component<IProps, IState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div style={{marginBottom: 25}}>
+		return <div style={{marginBottom: 25, border: "1px solid grey"}} >
 			<div style={{
 				width: this.props.width, height: this.props.height
 			}} ref={this.initMonaco}>
