@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
-import {LoginForm} from '../Partial/LoginForm';
-import {Monaco} from '../Monaco';
+import {Formlayout} from 'classui/Components/Formlayout';
+import {TextField} from 'classui/Components/Formlayout/TextField';
 import {RouteComponentProps} from 'react-router-dom';
 
 interface IProps extends RouteComponentProps<any> {};
@@ -12,7 +12,14 @@ export class Login extends React.Component<IProps, IState> {
 	render() {
 		return <Layout justify="center"align="center" style={{height: `calc(100vh - 50px)`}}>
 			<Section card>
-				<LoginForm onSubmit={(data: any)=>{console.log("HELLO", data)}}/>
+				<Formlayout label="Login" onSubmit={(data: any)=>{console.log(data)}}>
+					<TextField autoFocus name="username" label="UserName">Username</TextField>
+					<TextField schema={{
+						type: "string",
+						minLength: 5
+					}} type="password" name="password" label="Password">Password</TextField>
+					<input type="submit"/>
+				</Formlayout>
 			</Section>
 		</Layout>;
 	}
