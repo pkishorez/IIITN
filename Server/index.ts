@@ -2,6 +2,7 @@ import * as express from 'express';
 import * as path from 'path';
 import * as http from 'http';
 import * as socketIO from 'socket.io';
+import {Connection} from './Connection';
 
 let app = express();
 let httpServer = new http.Server(app);
@@ -21,5 +22,7 @@ let server = httpServer.listen(8081, ()=>{
 });
 
 io.on('connection', (socket)=>{
-	console.log("NEW CONNECTION.");
+	// NEW CONNECTION.
+	console.log("Connection...");
+	new Connection(socket);
 });
