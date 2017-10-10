@@ -12,8 +12,16 @@ import {RouteComponentProps, Link} from 'react-router-dom';
 interface IProps extends RouteComponentProps<any> {};
 interface IState {};
 export class Register extends React.Component<IProps, IState> {
+	private dismiss: any;
 	componentDidMount() {
-		Flash.flash((dismiss)=><RegisterComponent />, true);
+		Flash.flash((dismiss)=>{
+			this.dismiss = dismiss;
+			return <RegisterComponent />;
+		}, true);
+	}
+	componentWillUnmount() {
+		if (this.dismiss)
+			this.dismiss();
 	}
 	render() {
 		return null;

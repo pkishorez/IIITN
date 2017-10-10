@@ -14,21 +14,31 @@ interface IProps extends RouteComponentProps<any> {
 interface IState {};
 
 export class Login extends React.Component<IProps, IState> {
-	render(){
-		return null;
+	private dismiss: any;
+	render() {
+		return <div>Kishore is a good boy.</div>;
 	}
 	login(data: any) {
 		User.login(data).then(console.log, console.error);
 	}
-	componentDidMount(){
-		Flash.flash((dismiss)=><div>
-			<Link to="/register"><div className="button">Register Here.</div></Link>
-			<Formlayout schema={SLoginUser} onSubmit={this.login.bind(this)} label="Login">
-				<TextField autoFocus name="_id" label="UserName (University ID)">Username</TextField>
-				<TextField type="password" name="password" label="Password">Password</TextField>
-				<input type="submit"/>
-			</Formlayout>
-			</div>,
+	componentDidMount() {
+		Flash.flash((dismiss)=>{
+			this.dismiss = dismiss;
+			return <div>
+				<Link to="/register"><div className="button">Register Here.</div></Link>
+				<Formlayout schema={SLoginUser} onSubmit={this.login.bind(this)} label="Login">
+					<TextField autoFocus name="_id" label="UserName (University ID)">Username</TextField>
+					<TextField type="password" name="password" label="Password">Password</TextField>
+					<input type="submit"/>
+				</Formlayout>
+			</div>
+		},
 		true);
+	}
+	componentWillUnmount() {
+		if (this.dismiss) {
+			console.log("Dismissing...");
+			this.dismiss();
+		}
 	}
 }
