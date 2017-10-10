@@ -1,14 +1,15 @@
 import * as _ from 'lodash';
 
 // POST MESSAGE
+let BUFFER_SIZE = 5;
 let processCode = (code: string)=> `
 var __kishore_bdata = "";
 var Console = console;
 console = {
 	log: function(msg) {
-		if ((__kishore_bdata.length+msg.length)>10) {
+		if ((__kishore_bdata.length+msg.length)>(BUFFER_SIZE*1024)) {
 			//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
-			throw("Buffer Overflow. Output cannot exceed 5KB.");
+			throw("Buffer Overflow. Output cannot exceed ${BUFFER_SIZE}KB.");
 			return;
 		}
 		__kishore_bdata += msg;
