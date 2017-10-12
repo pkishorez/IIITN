@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Monaco} from '../Monaco';
+import {Layout, Section} from 'classui/Components/Layout';
+import {Menu, Item, Divider} from 'classui/Components/Menu';
 
 interface IProps {};
 interface IState {
@@ -15,9 +17,21 @@ export class Lesson extends React.Component<IProps, IState> {
 		};
 	}
 	render() {
-		return <div>
-			<Question answer={`   *\n  ***\n *****\n*******`}>Write a program to print 5 base Pyramid. like</Question>
-		</div>;
+		return <Layout c_props={{card: false}} gutter={15} align="start">
+			<Section minWidth={225}>
+				<Menu header="Lessons">
+					<Item>1. Working with Console.</Item>
+					<Item>2. Variables</Item>
+					<Item>3. Conditionals</Item>
+					<Item>4. Loops</Item>
+					<Item>5. Functions</Item>
+					<div className="button">Kishore</div>
+				</Menu>
+			</Section>
+			<Section remain>
+				<Question answer={`   *\n  ***\n *****\n*******`}>Write a program to print 5 base Pyramid. like</Question>
+			</Section>
+		</Layout>;
 	}
 }
 
@@ -36,12 +50,15 @@ export class Question extends React.Component<IQuestionProps, any> {
 	}
 	render() {
 		return <div className="card-2" style={{padding: 10, backgroundColor: "white"}}>
-			{this.props.children}
-			<pre style={{fontFamily: "monospace", lineHeight: 1}}>{this.props.answer}</pre>
+			<div className="card-2" style={{padding: 10}}>
+				{this.props.children}
+				<pre style={{fontFamily: "monospace", color: "darkgreen", lineHeight: 1, marginTop: 10}}>{this.props.answer}</pre>
+			</div>
 			<Monaco processOutput={(output)=>this.setState({output})}/>
 			<pre className="card-0" style={{
 				padding: 10,
 				transition: "0.3s all",
+				maxHeight: 300,
 				backgroundColor: (this.state.output.data==this.props.answer)?"#D0FFD0":"#FFE1E1",
 				fontFamily: "monospace",
 				color: this.state.output.type=="error"?'red':'black'
