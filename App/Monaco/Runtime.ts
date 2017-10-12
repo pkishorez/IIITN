@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 let BUFFER_SIZE = 5;
 let processCode = (code: string)=> `
 var __kishore_bdata = "";
-var Console = console;
 console = {
 	log: function(msg) {
-		if ((__kishore_bdata.length+msg.length)>(BUFFER_SIZE*1024)) {
+		msg = msg.toString();
+		if ((__kishore_bdata.length+msg.length)>(${BUFFER_SIZE}*1024)) {
 			//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
 			throw("Buffer Overflow. Output cannot exceed ${BUFFER_SIZE}KB.");
 			return;
@@ -21,38 +21,44 @@ try {
 }
 catch(e) {
 	self.postMessage({type: "error", data: e});
-}
-`;
+}`;
 
 let worker: Worker;
 
-export let throttleRunProgram = _.throttle(runProgram, 100, {
-trailing: true,
-leading: false
+export let throttleRunProgram = _.throttle(runProgram, 10, {
+	trailing: true,
+	leading: false
 });
 
 export function runProgram(code: string, msg: Function)
 {
-let blob = new Blob([processCode(code)], {type: 'text/javascript'});
-let url = URL.createObjectURL(blob);
-let bdata = "";
+	let blob = new Blob([processCode(code)], {type: 'text/javascript'});
+	let url = URL.createObjectURL(blob);
+	let bdata = "";
 
-if (worker) {
-	worker.terminate();
-	(worker as any) = undefined;
-}
-worker = new Worker(url);
-worker.onerror = (ev)=>{
-	console.log(ev.lineno+" - "+ev.colno+":: "+ev.message);
-}
-worker.onmessage = (m: any)=>{
-	msg(m.data);
-}
-
-setTimeout(function(){
 	if (worker) {
 		worker.terminate();
 		(worker as any) = undefined;
 	}
-}, 500000);
+	worker = new Worker(url);
+
+	let timeout = setTimeout(function(){
+		if (worker) {
+			worker.terminate();
+			msg({type: "error", data: "Code Timeout..."});
+			(worker as any) = undefined;
+		}
+	}, 5000);
+	worker.onerror = (ev)=>{
+		msg({type: "error", data: ev.lineno+" - "+ev.colno+":: "+ev.message});
+		clearTimeout(timeout);
+		worker.terminate();
+		(worker as any)	= undefined;
+	}
+	worker.onmessage = (m: any)=>{
+		msg(m.data);
+		clearTimeout(timeout);
+		worker.terminate();
+		(worker as any)	= undefined;
+	}
 }
