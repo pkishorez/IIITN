@@ -33,7 +33,12 @@ class _SocketIO {
 			this.socket.emit("request", request);
 			let responseID = getResponseID(reqid);
 			this.socket.on(responseID, (json: IResponse)=>{
-				resolve(json);
+				if (json.error) {
+					reject(json.error);
+				}
+				else {
+					resolve(json.data);
+				}
 				this.socket.off(responseID);
 			});
 		});
