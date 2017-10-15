@@ -8,21 +8,28 @@ let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
+	private connected = false;
 	private socket: SocketIOClient.Socket;
 	constructor() {
 		this.socket = io();
 		this.socket.on("connect", ()=>{
 			// Connected.
+			this.connected = true;
 			console.log("SocketIO Connection established.");
 		});
 		this.socket.on("disconnect", ()=>{
 			// Disconnected.
+			this.connected = false;
 			console.log("SocketIO Connection Disconnected.");
 		});
 	}
 
 	request(req_type: IRequestType, data: any) {
 		return new Promise((resolve, reject)=>{
+			if (!this.connected) {
+				reject("Failed connecting to server.");
+				return;
+			}
 			let reqid = g_reqid++;
 			let request: IRequest = {
 				id: reqid,
