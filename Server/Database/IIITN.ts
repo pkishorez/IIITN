@@ -36,11 +36,14 @@ export class User {
 		return this.db.then((db)=>{
 			return db.collection("user").findOne({_id: userid}).then((res)=>{
 				// User Found.
+				if (!res) {
+					return Promise.reject("User Not Found.");
+				}
 				if (res.password!=password) {
 					return Promise.reject("Invalid password.");
 				}
 				return Promise.resolve(userid);
-			});
+			})
 		});
 	}
 
