@@ -7,7 +7,7 @@ import {Select} from 'classui/Components/Form/Select';
 import {SRegisterUser} from '../../Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
 import {User} from '../User';
-import {RouteComponentProps, Link} from 'react-router-dom';
+import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 
 interface IProps extends RouteComponentProps<any> {};
 interface IState {};
@@ -28,14 +28,31 @@ export class Register extends React.Component<IProps, IState> {
 	}
 }
 
-class RegisterComponent extends React.Component<any, any>{
+class RegisterComponent extends React.Component<any, {error: string, registered: boolean}>{
+	constructor() {
+		super();
+		this.state = {
+			error: "",
+			registered: false
+		};
+	}
 	register(data: any) {
-		User.register(data).then((data)=>console.log(data), (error)=>{console.log(error)})
+		User.register(data).then(
+			(data)=>{
+				this.setState({registered: true});
+			},
+			(error)=>{
+				this.setState({error});
+			})
 	}
 	render() {
+		if (this.state.registered) {
+			return <Redirect to="/login"/>;
+		}
 		return <div style={{minWidth: 230}}>
 			<Link to="/login"><div className="button">Login here.</div></Link>
 			<Formlayout schema={SRegisterUser} label="Register" onSubmit={this.register.bind(this)}>
+				{this.state.error?<h5 style={{color: "red"}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="University ID">University ID</TextField>
 				<TextField name="name" label="Name">Name</TextField>
 				<TextField name="email" label="Email ID">Email</TextField>
@@ -45,7 +62,7 @@ class RegisterComponent extends React.Component<any, any>{
 				Branch : <Select name="branch" options={(SRegisterUser.branch as any).values}></Select>
 				<br/>
 				<input type="submit"/>
-		</Formlayout>
+			</Formlayout>
 		</div>;
 	}
 }
