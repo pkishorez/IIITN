@@ -9,7 +9,6 @@ export interface IRequest {
 }
 export interface IResponse {
 	error?: string
-	success?: string
 	data?: any
 }
 
@@ -27,7 +26,7 @@ export class Connection {
 			case "LOGIN": {
 				return User.login(request.data._id, request.data.password).then((user)=>{
 					this.user = user;
-					return "Success";
+					return "User Successfully Logged in";
 				});
 			}
 			case "REGISTER": {
@@ -48,7 +47,7 @@ export class Connection {
 			// Process request and send response in data.
 			this.processRequest(request).then((data)=>{
 				let response: IResponse = {
-					data: request.data
+					data
 				};
 				this.socket.emit(getResponseID(request.id), response);	
 			}).catch((error)=>{
