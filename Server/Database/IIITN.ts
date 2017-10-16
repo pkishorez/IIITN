@@ -9,16 +9,36 @@ let REJECT = (error: string)=>{
 		return Promise.reject(error);
 	}
 }
+
+export class Database {
+	private static get db(){
+		return DB.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
+	}
+	private get db() {
+		return Database.db;
+	}
+	
+	// Database related Functions all goes here...
+
+	static getStudents() {
+		return this.db.then((db)=>{
+			return db.collection("user").find({}).toArray().then(arr=>{
+				return Promise.resolve(arr);
+			}).catch(REJECT("Request Failed."));
+		})
+	}
+}
+
 export class User {
 	userid: string;
 
 	private constructor(userid: string) {
 		this.userid = userid;
 	}
-	static get db(){
+	private static get db(){
 		return DB.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
 	}
-	get db() {
+	private get db() {
 		return User.db;
 	}
 	static register(user: any) {
@@ -42,7 +62,7 @@ export class User {
 				if (res.password!=password) {
 					return Promise.reject("Invalid password.");
 				}
-				return Promise.resolve(userid);
+				return Promise.resolve(new User(userid));
 			})
 		});
 	}
