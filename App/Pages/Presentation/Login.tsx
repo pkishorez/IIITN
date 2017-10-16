@@ -5,8 +5,13 @@ import {Formlayout} from 'classui/Components/Formlayout';
 import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Flash} from 'classui/Components/Flash';
 import {RouteComponentProps, Redirect, Link} from 'react-router-dom';
-import {SLoginUser} from '../../Server/Database/Schema';
-import {User} from '../User';
+import {connect} from 'react-redux';
+import {store} from '../../State';
+import {A_User} from '../../State/Action';
+import {IRootState} from '../../State/RootReducer';
+import {SLoginUser} from '../../../Server/Database/Schema';
+import {User} from '../../User';
+import {History} from '../../History';
 
 interface IProps {
 	redirect?: string
@@ -15,12 +20,15 @@ interface IState {
 	error?: string
 };
 
+let LoginMessage: string;
+let RedirectURL: string = "/home";
+
 export class Login extends React.Component<IProps, IState> {
 
 	render() {
 		return <div>Kishore is a good boy.</div>;
 	}
-
+	
 	componentDidMount() {
 		Flash.flash((dismiss)=>{
 			let cwu = this.componentWillUnmount;
@@ -43,7 +51,9 @@ class Login_ extends React.Component<IProps, IState> {
 	}
 	login(data: any) {
 		User.login(data).then((response: string)=>{
-			console.log(response);
+			store.dispatch(A_User.login(data._id));
+			LoginMessage = "User already logged in!!";
+			(History.props as any).history.replace(RedirectURL);
 		}, (error: string)=>{
 			console.log(error);
 			this.setState({
@@ -54,6 +64,7 @@ class Login_ extends React.Component<IProps, IState> {
 	render(){
 		return <div>
 			<Link to="/register"><div className="button">Register Here.</div></Link>
+			{LoginMessage?<div style={{color: "darkgreen", margin: 10, marginBottom: -5}}>{LoginMessage}</div>:null}
 			<Formlayout schema={SLoginUser} onSubmit={this.login.bind(this)} label="Login">
 				{this.state.error?<h5 style={{color: 'red'}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="UserName (University ID)">Username</TextField>
@@ -62,4 +73,14 @@ class Login_ extends React.Component<IProps, IState> {
 			</Formlayout>
 		</div>;
 	}
+}
+
+interface IAuthProps {
+	message: string,
+	redirect: string
+}
+export let RequireAuthentication = (props: IAuthProps)=>{
+	LoginMessage = props.message;
+	RedirectURL = props.redirect;
+	return <Redirect to={"/login"}/>;
 }
