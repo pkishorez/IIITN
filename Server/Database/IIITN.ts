@@ -27,6 +27,16 @@ export class Database {
 			}).catch(REJECT("Request Failed."));
 		})
 	}
+	static getProfile(userid: string) {
+		return this.db.then((db)=>{
+			return db.collection("user").findOne({_id: userid}).then((res)=>{
+				if (!res) {
+					return Promise.reject("User Details not found.");
+				}
+				return Promise.resolve(res);
+			})
+		})
+	}
 }
 
 export class User {

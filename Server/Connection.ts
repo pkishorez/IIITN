@@ -1,6 +1,6 @@
 import {User, Database} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
-export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS"
+export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS" | "PROFILE"
 
 export interface IRequest {
 	id: number
@@ -34,6 +34,9 @@ export class Connection {
 			}
 			case "STUDENTS": {
 				return Database.getStudents();
+			}
+			case "PROFILE": {
+				return Database.getProfile(request.data.userid);
 			}
 		}
 		if (!this.user) {
