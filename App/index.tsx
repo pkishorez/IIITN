@@ -4,9 +4,10 @@ import {ClassUI} from 'classui/ClassUI';
 import {Content} from 'classui/Content';
 import {NavBar, NavbarRemain} from 'classui/Navbar';
 import {Login, Register, Profile, Students} from './Pages';
-import {RequireAuthentication} from './Pages/Presentation//Login';
+import {RequireAuthentication} from './Pages/Presentation/Login';
 import {Lesson} from './Pages/Lesson';
 import {Home} from './Pages/Home';
+import {Header} from './Header';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import {store} from './State';
 import {History_} from './History';
@@ -21,10 +22,7 @@ export class App extends React.Component<IProps, any>
 			<BrowserRouter>
 				<ClassUI contentWidth={1024}>
 					<History_ />
-					<NavBar fixed logo="Programmer's Club">
-						<NavbarRemain/>
-						<div className="button">Profile</div>
-					</NavBar>
+					<Header />
 					<Content>
 						<Switch>
 							<Route path="/home" strict exact component={Home} />
@@ -37,8 +35,9 @@ export class App extends React.Component<IProps, any>
 								}
 								return <Switch>
 									<Route path="/lesson" component={Lesson} />
-									<Route path="/profile" component={Profile} />
+									<Route path="/profile/:userid" render={(props)=><Profile userid={props.match.params.userid}/>} />
 									<Route path="/students" component={Students} />
+									<Route render={()=>{return <Redirect to="/students"/>}}/>
 								</Switch>;
 							}}/>
 						</Switch>
