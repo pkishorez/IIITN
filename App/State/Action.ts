@@ -6,5 +6,11 @@ export let A_User = {
 			type: "USER_LOGIN",
 			userid
 		};
+	},
+	logout() {
+		return {
+			type: "USER_LOGIN",
+			userid: null
+		};
 	}
 }
