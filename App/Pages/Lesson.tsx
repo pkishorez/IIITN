@@ -3,12 +3,42 @@ import * as ReactDOM from 'react-dom';
 import {Monaco} from '../Monaco';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
-import {Question} from './Presentation/Question';
+import {Question, Practice} from './Presentation/Question';
 
 interface IProps {};
 interface IState {
 	output: any
 };
+
+let Practices = [
+	{
+		description: "Console.log function accepts a string. When called with a string, prints on the console.",
+		content: "console.log('Hello World.');"
+	},
+	{
+		description: "When string contains '\\n' it's a new line.",
+		content: "console.log('Hello World.\\nHello World.');"
+	},
+	{
+		description: "Here is an example to print a pattern.",
+		content: "console.log('*\\n**\\n***\\n****');"
+	}
+]
+
+let Questions = [
+	{
+		question: "Write a program to print :",
+		answer: "Hello World."
+	},
+	{
+		question: "Write a program to print :",
+		answer: "   *\n  ***\n *****\n*******"
+	},
+	{
+		question: "Write a program to print :",
+		answer: "*\n**\n***\n****"
+	}
+];
 
 export class Lesson extends React.Component<IProps, IState> {
 	constructor() {
@@ -35,13 +65,24 @@ export class Lesson extends React.Component<IProps, IState> {
 				It accepts String.<br/>
 				Let's Dive Into Hello World Program.
 
-				<h3>Program #1</h3>
-				<Question answer="Hello World">Write program to print.</Question>
-				<h3>Program #2</h3>
-				<Question answer="   *\n  ***\n *****\n********">Write program to print.</Question>
-				<h3>Program #3</h3>
-				<Question answer="*\n**\n***\n****">Write program to print.</Question>
-				</Section>
+				{
+					Practices.map((p, i)=>{
+						return <div key={i}>
+							<div style={{marginTop: 15}}>{p.description}</div>
+							<Practice content={p.content}></Practice>
+						</div>;
+					})
+				}
+
+				<h3>Practice questions.</h3>
+				{
+					Questions.map((q, i)=>{
+						return <div key={i}>
+							<Question answer={q.answer}>{q.question}</Question>
+						</div>;
+					})
+				}
+			</Section>
 		</Layout>;
 	}
 }
