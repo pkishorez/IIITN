@@ -8,7 +8,7 @@ let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected = false;
+	private connected = true;
 	private socket: SocketIOClient.Socket;
 	constructor() {
 		this.socket = io();
@@ -24,7 +24,7 @@ class _SocketIO {
 		});
 	}
 
-	request(req_type: IRequestType, data: any) {
+	request(req_type: IRequestType, data?: any) {
 		return new Promise((resolve, reject)=>{
 			if (!this.connected) {
 				reject("Failed connecting to server.");
