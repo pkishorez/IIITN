@@ -4,9 +4,10 @@ import {Layout, Section} from 'classui/Components/Layout';
 import {Formlayout} from 'classui/Components/Formlayout';
 import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Select} from 'classui/Components/Form/Select';
-import {SRegisterUser} from '../../Server/Database/Schema';
+import {SRegisterUser} from '../../../Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
-import {User} from '../User';
+import {User} from '../../User';
+import {RequireAuthentication} from './Login';
 import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 
 interface IProps extends RouteComponentProps<any> {};
@@ -47,7 +48,7 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 	}
 	render() {
 		if (this.state.registered) {
-			return <Redirect to="/login"/>;
+			return <RequireAuthentication message="User Successfully Registered." redirect="/home" />;
 		}
 		return <div style={{minWidth: 230}}>
 			<Link to="/login"><div className="button">Login here.</div></Link>
