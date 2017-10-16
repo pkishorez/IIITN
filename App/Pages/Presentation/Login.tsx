@@ -8,7 +8,6 @@ import {RouteComponentProps, Redirect, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {store} from '../../State';
 import {A_User} from '../../State/Action';
-import {IRootState} from '../../State/RootReducer';
 import {SLoginUser} from '../../../Server/Database/Schema';
 import {User} from '../../User';
 import {History} from '../../History';
@@ -20,8 +19,8 @@ interface IState {
 	error?: string
 };
 
-let LoginMessage: string;
-let RedirectURL: string = "/home";
+let LoginMessage: string | undefined;
+let RedirectURL: string = "/students";
 
 export class Login extends React.Component<IProps, IState> {
 
@@ -52,7 +51,7 @@ class Login_ extends React.Component<IProps, IState> {
 	login(data: any) {
 		User.login(data).then((response: string)=>{
 			store.dispatch(A_User.login(data._id));
-			LoginMessage = "User already logged in!!";
+			LoginMessage = undefined;
 			(History.props as any).history.replace(RedirectURL);
 		}, (error: string)=>{
 			console.log(error);
