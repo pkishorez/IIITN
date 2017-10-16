@@ -6,5 +6,8 @@ export let User = {
 	},
 	register(data: any) {
 		return SocketIO.request("REGISTER", data);
+	},
+	getStudents() {
+		return SocketIO.request("STUDENTS");
 	}
 }

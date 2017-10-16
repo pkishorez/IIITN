@@ -1,6 +1,6 @@
-import {User} from './Database/IIITN';
+import {User, Database} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
-export type IRequestType = "LOGIN" | "REGISTER"
+export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS"
 
 export interface IRequest {
 	id: number
@@ -31,6 +31,9 @@ export class Connection {
 			}
 			case "REGISTER": {
 				return User.register(request.data);
+			}
+			case "STUDENTS": {
+				return Database.getStudents();
 			}
 		}
 		if (!this.user) {
