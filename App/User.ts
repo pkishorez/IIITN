@@ -9,5 +9,10 @@ export let User = {
 	},
 	getStudents() {
 		return SocketIO.request("STUDENTS");
+	},
+	getProfile(userid: string) {
+		return SocketIO.request("PROFILE", {
+			userid
+		});
 	}
 }
