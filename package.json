@@ -10,22 +10,22 @@
 	"dependencies": {
 		"@types/es6-promise": "0.0.33",
 		"@types/express": "^4.0.37",
-		"@types/mongodb": "^2.2.12",
-		"@types/socket.io": "^1.4.30",
-		"@types/socket.io-client": "^1.4.30",
-		"@types/systemjs": "^0.20.5",
+		"@types/mongodb": "^2.2.13",
+		"@types/socket.io": "^1.4.31",
+		"@types/socket.io-client": "^1.4.31",
+		"@types/systemjs": "^0.20.6",
 		"classui": "0.0.46",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.0",
-		"mongodb": "^2.2.31",
+		"mongodb": "^2.2.33",
 		"systemjs": "^0.20.19"
 	},
 	"devDependencies": {
-		"copy-webpack-plugin": "^4.1.0",
-		"express": "^4.16.1",
+		"copy-webpack-plugin": "^4.1.1",
+		"express": "^4.16.2",
 		"socket.io": "^2.0.3",
-		"webpack": "^3.6.0",
-		"webpack-dev-server": "^2.9.1"
+		"webpack": "^3.7.1",
+		"webpack-dev-server": "^2.9.2"
 	},
 	"author": "Kishore <kishore.iiitn@gmail.com>",
 	"license": "ISC"
