@@ -6,26 +6,25 @@ interface IQuestionProps {
 	answer: string
 }
 interface IQuestionState {
-	output: any
+	output: string
 }
-export class Question extends React.Component<IQuestionProps, any> {
+export class Question extends React.Component<IQuestionProps, IQuestionState> {
 	constructor() {
 		super();
 		this.state = {
-			output: {}
+			output: ""
 		}
 		this.runProgram = this.runProgram.bind(this);
 	}
 	runProgram(value: string) {
-		Runtime.run(value, (res: any)=>{
-			console.log(res);
+		Runtime.run(value).then((res: string)=>{
 			this.setState({
 				output: res
 			});
-		})
+		}).catch(()=>{});
 	}
 	render() {
-		let correctAnswer = this.state.output.data==this.props.answer;
+		let correctAnswer = this.state.output==this.props.answer;
 		return <div className="card-0" style={{margin: 15,padding: 10, backgroundColor: "white"}}>
 			<div style={{padding: 10}}>
 				{this.props.children}
@@ -40,7 +39,7 @@ export class Question extends React.Component<IQuestionProps, any> {
 				fontFamily: "monospace",
 				fontWeight: 900,
 				color: 'white'
-			}}>{this.state.output.data}</pre>
+			}}>{this.state.output}</pre>
 		</div>;
 	}
 }
@@ -49,23 +48,22 @@ interface IPracticeProps{
 	content: string
 }
 interface IPracticeState {
-	output: any
+	output: string
 }
 export class Practice extends React.Component<IPracticeProps, IPracticeState> {
 	constructor() {
 		super();
 		this.state = {
-			output: {}
+			output: ""
 		}
 		this.runProgram = this.runProgram.bind(this);
 	}
 	runProgram(value: string) {
-		Runtime.run(value, (res: any)=>{
-			console.log(res);
+		Runtime.run(value).then((res: string)=>{
 			this.setState({
 				output: res
 			});
-		})
+		}).catch(()=>{});
 	}
 	render() {
 		return <div className="card-0" style={{margin: 15,padding: 10, backgroundColor: "white"}}>
@@ -78,7 +76,7 @@ export class Practice extends React.Component<IPracticeProps, IPracticeState> {
 				backgroundColor: "white",
 				fontFamily: "monospace",
 				color: 'black'
-			}}>{this.state.output.data}</pre>
+			}}>{this.state.output}</pre>
 		</div>;
 	}
 }

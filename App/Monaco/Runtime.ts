@@ -49,14 +49,14 @@ export interface IFunction {
 	}
 };
 export let Runtime = {
-	run(code: string, msg: Function) {
+	run(code: string) {
 		let genCode = Code.generate(`
 			${code};
 			self.postMessage({type: "OUTPUT", data: __kishore_bdata});
 		`);
-		runProgram(genCode, msg);
+		return runProgram(genCode);
 	},
-	runFunction(code: string, func: IFunction, msg: Function) {
+	runFunction(code: string, func: IFunction) {
 		let genCode = Code.generate(`
 			${code};
 			if (${func.name}) {
@@ -67,12 +67,17 @@ export let Runtime = {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
 			}
 		`);
-		runProgram(genCode, msg);
+		return runProgram(genCode);
 	}
+};
+
+interface IRuntimeResponse {
+	type: "error" | "OUTPUT",
+	data: any
 };
 let worker: Worker;
 
-function runProgram(code: string, msg: Function)
+function runProgram(code: string)
 {
 	let blob = new Blob([code], {type: 'text/javascript'});
 	let url = URL.createObjectURL(blob);
@@ -84,23 +89,31 @@ function runProgram(code: string, msg: Function)
 	}
 	worker = new Worker(url);
 
-	let timeout = setTimeout(function(){
-		if (worker) {
+	return new Promise((resolve, reject)=>{
+		let timeout = setTimeout(function(){
+			if (worker) {
+				worker.terminate();
+				reject("Code Timeout...");
+				(worker as any) = undefined;
+			}
+		}, 5000);
+		worker.onerror = (ev)=>{
+			reject(ev.lineno+" - "+ev.colno+":: "+ev.message);
+			clearTimeout(timeout);
 			worker.terminate();
-			msg({type: "error", data: "Code Timeout..."});
-			(worker as any) = undefined;
+			(worker as any)	= undefined;
 		}
-	}, 5000);
-	worker.onerror = (ev)=>{
-		msg({type: "error", data: ev.lineno+" - "+ev.colno+":: "+ev.message});
-		clearTimeout(timeout);
-		worker.terminate();
-		(worker as any)	= undefined;
-	}
-	worker.onmessage = (m: any)=>{
-		msg(m.data);
-		clearTimeout(timeout);
-		worker.terminate();
-		(worker as any)	= undefined;
-	}
+		worker.onmessage = (m)=>{
+			let data: IRuntimeResponse = m.data;
+			if (data.type=="error") {
+				reject(data.data);
+			}
+			else {
+				resolve(data.data);
+			}
+			clearTimeout(timeout);
+			worker.terminate();
+			(worker as any)	= undefined;
+		}	
+	});
 }
