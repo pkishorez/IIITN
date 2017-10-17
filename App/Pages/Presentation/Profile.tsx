@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
-import {User} from '../../User';
+import {Database} from '../../User';
 
 interface IProps {
 	userid: string
@@ -18,7 +18,7 @@ export class Profile extends React.Component<IProps, IState> {
 		};
 	}
 	componentDidMount() {
-		User.getProfile(this.props.userid).then((profile)=>{
+		Database.getProfile(this.props.userid).then((profile)=>{
 			console.log(profile);
 			this.setState({
 				profile

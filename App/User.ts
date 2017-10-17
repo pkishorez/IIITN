@@ -6,7 +6,10 @@ export let User = {
 	},
 	register(data: any) {
 		return SocketIO.request("REGISTER", data);
-	},
+	}
+};
+
+export let Database = {
 	getStudents() {
 		return SocketIO.request("STUDENTS");
 	},
