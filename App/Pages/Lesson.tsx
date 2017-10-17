@@ -4,6 +4,7 @@ import {Monaco} from '../Monaco';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
 import {Question, Practice} from './Presentation/Question';
+import {FQuestion} from './Questions/FQuestion';
 
 interface IProps {};
 interface IState {
@@ -82,6 +83,11 @@ export class Lesson extends React.Component<IProps, IState> {
 						</div>;
 					})
 				}
+				<FQuestion funcName="isPrime" answers={[
+					{input: [2], output: true},
+					{input: [3], output: true},
+					{input: [4], output: false},
+				]}>Write isPrime function to check if prime or not.</FQuestion>
 			</Section>
 		</Layout>;
 	}
