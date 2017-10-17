@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {Monaco} from '../Monaco';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
-import {Question, Practice} from './Presentation/Question';
+import {Question, Practice} from './Questions/Question';
 import {FQuestion} from './Questions/FQuestion';
 
 interface IProps {};
