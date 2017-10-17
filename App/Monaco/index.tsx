@@ -1,7 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {transpileModule} from './Playground';
-import {runProgram, throttleRunProgram} from './Runtime';
 import * as _ from 'lodash';
 import * as ts from 'typescript';
 
@@ -16,7 +14,6 @@ export interface IProps {
 	content?: string
 	autoFocus?: boolean
 	getOutput?: (output: string)=>void
-	processOutput?: (output: any)=>void
 };
 export interface IState {
 	page_edited: boolean
@@ -28,9 +25,9 @@ export class Monaco extends React.Component<IProps, IState> {
 	static defaultProps = {
 		width: "100%",
 		height: 150,
-		fontSize: 18,
+		fontSize: 15,
 		content: "",
-		lineNumbers: "off",
+		lineNumbers: "on",
 		autoFocus: false
 	};
 
@@ -65,7 +62,6 @@ export class Monaco extends React.Component<IProps, IState> {
 			this.editor = monaco.editor.create(ref, {
 				value: this.props.content,
 				theme: "vs",
-				//fontWeight: "900",
 				language: 'typescript',
 				fontFamily: 'Inconsolata',
 				fontSize: this.props.fontSize,
@@ -91,17 +87,6 @@ export class Monaco extends React.Component<IProps, IState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
-				let onother = transpileModule(value, {
-					module: ts.ModuleKind.AMD,
-					target: ts.ScriptTarget.ES5,
-					noLib: true,
-					noResolve: true,
-					suppressOutputPathCheck: true
-				});
-				throttleRunProgram(onother, (ev: {type: "error"|"OUTPUT", data: string})=>{
-					console.log(ev);
-					this.props.processOutput?this.props.processOutput(ev):null;
-				});
 			})
 			this.editor.getModel().updateOptions({
 				insertSpaces: false
@@ -123,8 +108,7 @@ export class Monaco extends React.Component<IProps, IState> {
 			this.diffEditor = monaco.editor.createDiffEditor(ref, {
 				theme: "vs",
 				fontFamily: 'Inconsolata',
-				fontSize: 15,
-				//fontWeight: "900",
+				fontSize: this.props.fontSize,
 				folding: true,
 				quickSuggestions: false,
 				parameterHints: false,
@@ -147,17 +131,6 @@ export class Monaco extends React.Component<IProps, IState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
-				let onother = transpileModule(value, {
-					module: ts.ModuleKind.AMD,
-					target: ts.ScriptTarget.ES5,
-					noLib: true,
-					noResolve: true,
-					suppressOutputPathCheck: true
-				});
-				throttleRunProgram(onother, (ev: {type: "error"|"OUTPUT", data: string})=>{
-					console.log(ev);
-					this.props.processOutput?this.props.processOutput(ev):null;
-				});
 			})
 			if (this.props.autoFocus)
 				this.editor.focus();
