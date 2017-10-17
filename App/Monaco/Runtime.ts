@@ -21,14 +21,7 @@ let Code = {
 	_after: ``,
 	generate(code: string) {
 		// Transpile Typescript to Javascript.
-		code = transpileModule(code, {
-			module: ts.ModuleKind.AMD,
-			target: ts.ScriptTarget.ES5,
-			noLib: true,
-			noResolve: true,
-			suppressOutputPathCheck: true
-		});
-		return `
+		code = `
 		${this._before}
 		try {
 			${code}
@@ -38,15 +31,19 @@ let Code = {
 		}
 		${this._after}
 		`;
+		return transpileModule(code, {
+			module: ts.ModuleKind.AMD,
+			target: ts.ScriptTarget.ES5,
+			noLib: true,
+			noResolve: true,
+			suppressOutputPathCheck: true
+		});
 	}
 }
 
 export interface IFunction {
 	name: string
-	testcases: {
-		input: number[]
-		output: any
-	}
+	input: any[]
 };
 export let Runtime = {
 	run(code: string) {
@@ -60,14 +57,14 @@ export let Runtime = {
 		let genCode = Code.generate(`
 			${code};
 			if (${func.name}) {
-				let output = ${func.name}.apply(null, [${func.testcases.input}]);
+				let output = ${func.name}.apply(null, [${func.input}]);
 				self.postMessage({type: 'OUTPUT', data: output});
 			}
 			else {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
 			}
 		`);
-		return runProgram(genCode);
+		return runProgram(genCode, true);
 	}
 };
 
@@ -75,21 +72,26 @@ interface IRuntimeResponse {
 	type: "error" | "OUTPUT",
 	data: any
 };
-let worker: Worker;
+let globalWorker: Worker;
 
-function runProgram(code: string)
+function runProgram(code: string, parallel?: boolean)
 {
 	let blob = new Blob([code], {type: 'text/javascript'});
 	let url = URL.createObjectURL(blob);
 	let bdata = "";
-
-	if (worker) {
-		worker.terminate();
-		(worker as any) = undefined;
-	}
-	worker = new Worker(url);
+	let worker: Worker;
 
 	return new Promise((resolve, reject)=>{
+		if (parallel) {
+			worker = new Worker(url);
+		}
+		else{
+			worker = globalWorker;
+			worker.terminate();
+			reject("Worker terminated.");
+			(worker as any) = undefined;
+		}
+
 		let timeout = setTimeout(function(){
 			if (worker) {
 				worker.terminate();
@@ -98,7 +100,7 @@ function runProgram(code: string)
 			}
 		}, 5000);
 		worker.onerror = (ev)=>{
-			reject(ev.lineno+" - "+ev.colno+":: "+ev.message);
+			reject("Syntax error. Please check.");
 			clearTimeout(timeout);
 			worker.terminate();
 			(worker as any)	= undefined;
