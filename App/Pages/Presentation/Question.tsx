@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Monaco} from '../../Monaco';
+import {IFunction, Runtime} from '../../Monaco/Runtime';
 
 interface IQuestionProps {
 	answer: string
@@ -13,6 +14,15 @@ export class Question extends React.Component<IQuestionProps, any> {
 		this.state = {
 			output: {}
 		}
+		this.runProgram = this.runProgram.bind(this);
+	}
+	runProgram(value: string) {
+		Runtime.run(value, (res: any)=>{
+			console.log(res);
+			this.setState({
+				output: res
+			});
+		})
 	}
 	render() {
 		let correctAnswer = this.state.output.data==this.props.answer;
@@ -21,7 +31,7 @@ export class Question extends React.Component<IQuestionProps, any> {
 				{this.props.children}
 				<pre style={{fontFamily: "monospace", color: "darkgreen", lineHeight: 1, marginTop: 10}}>{this.props.answer}</pre>
 			</div>
-			<Monaco processOutput={(output)=>this.setState({output})}/>
+			<Monaco getOutput={this.runProgram}/>
 			<pre className="card-0" style={{
 				padding: 10,
 				transition: "0.3s all",
@@ -47,10 +57,19 @@ export class Practice extends React.Component<IPracticeProps, IPracticeState> {
 		this.state = {
 			output: {}
 		}
+		this.runProgram = this.runProgram.bind(this);
+	}
+	runProgram(value: string) {
+		Runtime.run(value, (res: any)=>{
+			console.log(res);
+			this.setState({
+				output: res
+			});
+		})
 	}
 	render() {
 		return <div className="card-0" style={{margin: 15,padding: 10, backgroundColor: "white"}}>
-			<Monaco height={50} diffContent={{content: this.props.content}} processOutput={(output)=>this.setState({output})}/>
+			<Monaco height={50} diffContent={{content: this.props.content}} getOutput={this.runProgram}/>
 			<pre className="card-0" style={{
 				padding: 10,
 				transition: "0.3s all",
