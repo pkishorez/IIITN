@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
-import * as ts from 'typescript';
 
-export interface IProps {
+export interface IMonacoProps {
 	width?: string|number
 	height?: string|number
 	fontSize?: number
@@ -15,17 +14,17 @@ export interface IProps {
 	autoFocus?: boolean
 	getOutput?: (output: string)=>void
 };
-export interface IState {
+export interface IMonacoState {
 	page_edited: boolean
 };
 
-export class Monaco extends React.Component<IProps, IState> {
+export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	private editor: monaco.editor.IStandaloneCodeEditor;
 	private diffEditor: monaco.editor.IStandaloneDiffEditor;
 	static defaultProps = {
 		width: "100%",
 		height: 150,
-		fontSize: 15,
+		fontSize: 16,
 		content: "",
 		lineNumbers: "on",
 		autoFocus: false
@@ -45,10 +44,10 @@ export class Monaco extends React.Component<IProps, IState> {
 			func();
 			return;
 		}
-		(window as any).require.config({ paths: { 'vs': '/bundle/vs' }});
+		(window as any).require.config({ paths: { 'vs': '/assets/vs' }});
 		(window as any).require(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
-				func();				
+				func();
 			}
 		});
 	}
