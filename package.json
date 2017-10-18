@@ -4,8 +4,9 @@
 	"description": "IIIT Programmers Club.",
 	"main": "index.js",
 	"scripts": {
-		"test": "./node_modules/.bin/webpack -w --config ./webpack.production.config.js",
-		"start": "./node_modules/.bin/webpack -w"
+		"production": "./node_modules/.bin/webpack -w --config ./webpack.production.config.js",
+		"test": "./node_modules/.bin/webpack -w --config ./webpack.dev.config.js",
+		"server": "./node_modules/.bin/webpack -w --config ./webpack.server.config.js"
 	},
 	"dependencies": {
 		"@types/es6-promise": "0.0.33",
@@ -14,9 +15,9 @@
 		"@types/socket.io": "^1.4.31",
 		"@types/socket.io-client": "^1.4.31",
 		"@types/systemjs": "^0.20.6",
-		"classui": "0.0.46",
+		"classui": "0.0.48",
 		"es6-promise": "^4.1.1",
-		"monaco-editor": "^0.10.0",
+		"monaco-editor": "^0.10.1",
 		"mongodb": "^2.2.33",
 		"systemjs": "^0.20.19"
 	},
@@ -24,8 +25,9 @@
 		"copy-webpack-plugin": "^4.1.1",
 		"express": "^4.16.2",
 		"socket.io": "^2.0.3",
-		"webpack": "^3.7.1",
-		"webpack-dev-server": "^2.9.2"
+		"webpack": "^3.8.0",
+		"webpack-dev-server": "^2.9.2",
+		"webpack-node-externals": "^1.6.0"
 	},
 	"author": "Kishore <kishore.iiitn@gmail.com>",
 	"license": "ISC"
