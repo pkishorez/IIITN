@@ -11,7 +11,7 @@ let io = socketIO(httpServer);
 app.use(express.static("./"));
 
 app.get('*', (req, res)=>{
-	res.sendFile(path.join(__dirname, '../index.html'));
+	res.sendFile(path.resolve('./index.html'));
 });
 
 
