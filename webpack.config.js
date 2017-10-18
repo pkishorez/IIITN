@@ -1,5 +1,6 @@
 var webpack = require("webpack");
 var copyWebpackPlugin = require("copy-webpack-plugin");
+var fs = require("fs");
 
 module.exports = {
 	entry: './index.tsx',
@@ -13,9 +14,12 @@ module.exports = {
 			{
 				test: /\.tsx?$/,
 				exclude: /node_modules/,
-				loader: 'ts-loader?configFile=./tsconfig.production.json'
+				loader: 'ts-loader'
 			}
 		]
+	},
+	externals: {
+		"monaco": "monaco"
 	},
 	resolve: {
 		extensions: [".tsx", ".ts", ".js"]
@@ -27,12 +31,12 @@ module.exports = {
 				to: 'bundle/classui.css'
 			}
 		]),
-		new copyWebpackPlugin([
+		(!fs.existsSync("assets/vs"))?new copyWebpackPlugin([
 			{
 				from: 'node_modules/monaco-editor/min/vs',
-				to: 'bundle/vs'
+				to: 'assets/vs'
 			}
-		]),
+		]):new copyWebpackPlugin([]),
 		new webpack.DefinePlugin({ // <-- key to reducing React's size
 			'process.env': {
 				'NODE_ENV': JSON.stringify('production')
