@@ -5,7 +5,7 @@ module.exports = {
 	entry: './index.tsx',
 	
 	output: {
-		filename: 'bundle/bundle.js'
+		filename: 'production/bundle/bundle.js'
 	},
 
 	module: {
@@ -33,13 +33,13 @@ module.exports = {
 		new copyWebpackPlugin([
 			{
 				from: 'node_modules/classui/bundle/classui.css',
-				to: 'bundle/classui.css'
+				to: 'production/bundle/classui.css'
 			}
 		]),
-		(!fs.existsSync("assets/vs"))?new copyWebpackPlugin([
+		(!fs.existsSync("production/assets/vs"))?new copyWebpackPlugin([
 			{
 				from: 'node_modules/monaco-editor/min/vs',
-				to: 'assets/vs'
+				to: 'production/assets/vs'
 			}
 		]):new copyWebpackPlugin([])
 	],
