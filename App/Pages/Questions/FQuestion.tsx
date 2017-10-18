@@ -67,7 +67,7 @@ export class FQuestion extends React.Component<IFQuestionProps, IFQuestionState>
 	render() {
 		return <div className="card-0" style={{...this.props.style, padding: 10, backgroundColor: "white"}}>
 			<div style={{padding: 10}}>
-				{this.props.children}
+				{this.props.children}{" "}
 				<span className="button" style={{display: 'inline-block'}} onClick={this.RUN}>Run Program</span>
 			</div>
 			<Monaco {...this.props.monaco} getOutput={this.runProgram}/>

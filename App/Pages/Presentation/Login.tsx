@@ -20,7 +20,7 @@ interface IState {
 };
 
 let LoginMessage: string | undefined;
-let RedirectURL: string = "/students";
+let RedirectURL: string = "/playground";
 
 export class Login extends React.Component<IProps, IState> {
 
