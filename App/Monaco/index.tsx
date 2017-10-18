@@ -6,11 +6,15 @@ export interface IMonacoProps {
 	width?: string|number
 	height?: string|number
 	fontSize?: number
+	fontFamily?: string
 	lineNumbers?: "on" | "off"
 	diffContent?: {
 		content: string
 	}
 	content?: string
+	quickSuggestions?: boolean
+	parameterHints?: boolean
+	readOnly?: boolean
 	autoFocus?: boolean
 	getOutput?: (output: string)=>void
 };
@@ -25,7 +29,11 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		width: "100%",
 		height: 150,
 		fontSize: 16,
+		fontFamily: 'Inconsolata',
 		content: "",
+		quickSuggestions: true,
+		parameterHints: true,
+		readOnly: false,
 		lineNumbers: "on",
 		autoFocus: false
 	};
@@ -62,10 +70,13 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				value: this.props.content,
 				theme: "vs",
 				language: 'typescript',
-				fontFamily: 'Inconsolata',
+				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
 				folding: true,
-				quickSuggestions: false,
+				quickSuggestions: this.props.quickSuggestions,
+				parameterHints: this.props.parameterHints,
+				readOnly: this.props.readOnly,
+				multiCursorModifier: "ctrlCmd",
 				wordWrap: "on",
 				minimap: {
 					enabled: false
@@ -106,11 +117,13 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			let modified = monaco.editor.createModel(this.props.content?this.props.content:"", "typescript");
 			this.diffEditor = monaco.editor.createDiffEditor(ref, {
 				theme: "vs",
-				fontFamily: 'Inconsolata',
+				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
 				folding: true,
-				quickSuggestions: false,
-				parameterHints: false,
+				quickSuggestions: this.props.quickSuggestions,
+				parameterHints: this.props.parameterHints,
+				readOnly: this.props.readOnly,
+				multiCursorModifier: "ctrlCmd",
 				suggestOnTriggerCharacters: false,
 				wordWrap: "on",
 				minimap: {
@@ -149,7 +162,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	render() {
 		return <div style={{marginBottom: 5}} className="card-0">
 			<div style={{
-				width: this.props.width, height: this.props.height
+				width: this.props.width, height: this.props.height, paddingTop: 10, paddingBottom: 10, backgroundColor: 'white'
 			}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}>
 			</div>
 		</div>;
