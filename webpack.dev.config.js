@@ -1,4 +1,5 @@
 var copyWebpackPlugin = require("copy-webpack-plugin");
+var fs = require("fs");
 
 module.exports = {
 	entry: './index.tsx',
@@ -35,12 +36,12 @@ module.exports = {
 				to: 'bundle/classui.css'
 			}
 		]),
-		new copyWebpackPlugin([
+		(!fs.existsSync("assets/vs"))?new copyWebpackPlugin([
 			{
-				from: 'node_modules/monaco-editor/dev/vs',
-				to: 'bundle/vs'
+				from: 'node_modules/monaco-editor/min/vs',
+				to: 'assets/vs'
 			}
-		])
+		]):new copyWebpackPlugin([])
 	],
 
 	devtool: 'source-map',
