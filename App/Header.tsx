@@ -22,7 +22,7 @@ class _Header extends React.Component<IProps, IState> {
 	render() {
 		return <NavBar fixed logo="Programmer's Club">
 			<NavbarRemain/>
-			<RLink to="/lesson"><div className="button">Lessons</div></RLink>
+			<RLink to="/typescript"><div className="button">Typescript</div></RLink>
 			<RLink to="/students"><div className="button">Students</div></RLink>
 			<RLink to="/login"><div className="button" onClick={this.logout}>{this.props.userid?"logout":"Login"}</div></RLink>
 		</NavBar>;
