@@ -6,6 +6,7 @@ import {NavBar, NavbarRemain} from 'classui/Navbar';
 import {Login, Register, Profile, Students} from './Pages';
 import {RequireAuthentication} from './Pages/Presentation/Login';
 import {Lesson} from './Pages/Lesson';
+import {Typescript} from './Pages/Typescript';
 import {Home} from './Pages/Home';
 import {Header} from './Header';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
@@ -35,9 +36,10 @@ export class App extends React.Component<IProps, any>
 								}
 								return <Switch>
 									<Route path="/lesson" component={Lesson} />
+									<Route path="/typescript" component={Typescript} />
 									<Route path="/profile/:userid" render={(props)=><Profile userid={props.match.params.userid}/>} />
 									<Route path="/students" component={Students} />
-									<Route render={()=>{return <Redirect to="/students"/>}}/>
+									<Route render={()=>{return <Redirect to="/typescript"/>}}/>
 								</Switch>;
 							}}/>
 						</Switch>
