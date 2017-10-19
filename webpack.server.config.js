@@ -6,7 +6,7 @@ module.exports = {
 	externals: [nodeExternals()],
 	entry: './Server/index.ts',
 	output: {
-		filename: './bundle/server.bundle.js',
+		filename: './production/bundle/server.bundle.js',
 		libraryTarget: 'commonjs2'
 	},
 	module: {
