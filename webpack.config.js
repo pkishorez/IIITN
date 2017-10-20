@@ -1,5 +1,6 @@
 var webpack = require("webpack");
 var copyWebpackPlugin = require("copy-webpack-plugin");
+var CompressionPlugin = require('compression-webpack-plugin');
 var fs = require("fs");
 var serverConfig = require("./webpack.server.config");
 
@@ -45,7 +46,14 @@ module.exports = [
 				}
 			}),
 			new webpack.optimize.UglifyJsPlugin(), //minify everything
-			new webpack.optimize.AggressiveMergingPlugin()//Merge chunks 
+			new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
+			new CompressionPlugin({
+				asset: "./production/bundle/bundle.js.gz",
+				algorithm: "gzip",
+				test: /\.js$|\.css$|\.html$/,
+				threshold: 10240,
+				minRatio: 0.8
+			})
 		]
 	},
 	serverConfig
