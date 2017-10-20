@@ -4,7 +4,7 @@
 	"description": "IIIT Programmers Club.",
 	"main": "index.js",
 	"scripts": {
-		"production": "./node_modules/.bin/webpack -w --config ./webpack.production.config.js",
+		"production": "./node_modules/.bin/webpack -w",
 		"test": "./node_modules/.bin/webpack -w --config ./webpack.dev.config.js",
 		"server": "./node_modules/.bin/webpack -w --config ./webpack.server.config.js"
 	},
@@ -22,6 +22,7 @@
 		"systemjs": "^0.20.19"
 	},
 	"devDependencies": {
+		"compression-webpack-plugin": "^1.0.1",
 		"copy-webpack-plugin": "^4.1.1",
 		"express": "^4.16.2",
 		"socket.io": "^2.0.3",
