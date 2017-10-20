@@ -25,6 +25,12 @@ let Migrate = [
 export class Typescript extends React.Component<IProps, IState> {
 	componentDidMount() {
 		Flash.flash((dismiss)=>{
+			let cwu = this.componentWillUnmount;
+			this.componentWillUnmount = ()=>{
+				dismiss();
+				if (cwu)
+					cwu();
+			};
 			return <Screen {...Migrate[0]}/>;
 		}, true, true);
 	}
