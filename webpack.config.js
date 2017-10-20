@@ -6,10 +6,12 @@ var serverConfig = require("./webpack.server.config");
 
 module.exports = [
 	{
-		entry: './index.tsx',
-
+		entry: {
+			SW: './App/SW.ts',
+			"bundle/bundle": './index.tsx'
+		},
 		output: {
-			filename: 'production/bundle/bundle.js'
+			filename: 'production/[name].js'
 		},
 
 		module: {
