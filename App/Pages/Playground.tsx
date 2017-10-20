@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {Monaco, IMonacoProps} from '../Monaco';
 import {Runtime} from '../Monaco/Runtime';
 import {Layout, Section} from 'classui/Components/Layout';
+import * as _ from 'lodash';
 
 interface IProps {
 	monaco?: IMonacoProps
@@ -11,6 +12,7 @@ interface IState {
 	output: string
 };
 
+let output_seq = 0
 export class Playground extends React.Component<IProps, IState> {
 	constructor()
 	{
@@ -18,16 +20,26 @@ export class Playground extends React.Component<IProps, IState> {
 		this.state = {
 			output: ""
 		};
-		this.runProgram = this.runProgram.bind(this);
+		this.runProgram = _.throttle(this.runProgram.bind(this), 100);
 	}
 	runProgram(value: string)
 	{
+		let program_seq_no = output_seq+1;
 		Runtime.run(value).then((val: string)=>{
+			output_seq++;
+			// Program output outdated.
+			if (program_seq_no<output_seq){
+				return;
+			}
 			this.setState({
 				...this.state,
 				output: val
 			});
 		}).catch((val)=>{
+			output_seq++;
+			if (program_seq_no<output_seq){
+				return;
+			}
 			this.setState({
 				...this.state,
 				output: val
