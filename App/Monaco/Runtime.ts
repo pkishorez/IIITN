@@ -12,7 +12,7 @@ let Code = {
 			msg = msg.toString();
 			if ((__kishore_bdata.length+msg.length)>(${BUFFER_SIZE}*1024)) {
 				//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
-				throw("Buffer Overflow. Output cannot exceed ${BUFFER_SIZE}KB.");
+				throw("Buffer Overflow. Output exceeded ${BUFFER_SIZE}KB.\\n\\n"+__kishore_bdata);
 				return;
 			}
 			__kishore_bdata += msg;
@@ -27,7 +27,7 @@ let Code = {
 			${code}
 		}
 		catch(e) {
-			self.postMessage({type: "error", data: e});
+			self.postMessage({type: "error", data: e+"\\n\\n"+__kishore_bdata});
 		}
 		${this._after}
 		`;
@@ -74,7 +74,7 @@ interface IRuntimeResponse {
 };
 let globalWorker: Worker;
 
-function runProgram(code: string, parallel?: boolean)
+function runProgram(code: string, parallel = true)
 {
 	let blob = new Blob([code], {type: 'text/javascript'});
 	let url = URL.createObjectURL(blob);
@@ -92,7 +92,7 @@ function runProgram(code: string, parallel?: boolean)
 			(worker as any) = undefined;
 		}
 
-		let timeout = setTimeout(function(){
+		let timeout = setTimeout(()=>{
 			if (worker) {
 				worker.terminate();
 				reject("Code Timeout...");
