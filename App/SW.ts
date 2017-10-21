@@ -6,12 +6,18 @@ let urlsToCache: string[] = [
 
 // Install Event.
 self.addEventListener("install", (event:any)=>{
+	if (caches.has(CACHE_NAME)){
+		console.log("Deleted old cache...");
+		caches.delete(CACHE_NAME);		
+	}
 	// Perform install steps.
 	event.waitUntil(
 		caches.open(CACHE_NAME).then((cache)=>{
 			return cache.addAll(urlsToCache);
 		})
 	);
+	console.log("New Cache : "+CACHE_NAME);
+	(self as any).skipWaiting();
 });
 
 // Activation Event.
@@ -49,5 +55,4 @@ self.addEventListener("fetch", (event: any)=>{
 			})
 		);
 	}
-
 });
