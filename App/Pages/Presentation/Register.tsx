@@ -48,7 +48,7 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 	}
 	render() {
 		if (this.state.registered) {
-			return <RequireAuthentication message="User Successfully Registered." redirect="/home" />;
+			return <RequireAuthentication message="User Successfully Registered." />;
 		}
 		return <div style={{minWidth: 230}}>
 			<Link to="/login"><div className="button">Login here.</div></Link>
