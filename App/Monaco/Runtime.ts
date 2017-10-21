@@ -6,18 +6,53 @@ import * as ts from 'typescript';
 let BUFFER_SIZE = 5;
 
 let Code = {
-	_before: `var __kishore_bdata = "";
-	console = {
-		log: function(msg) {
-			msg = msg.toString();
-			if ((__kishore_bdata.length+msg.length)>(${BUFFER_SIZE}*1024)) {
-				//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
-				throw("Buffer Overflow. Output exceeded ${BUFFER_SIZE}KB.\\n\\n"+__kishore_bdata);
-				return;
+	_before: `
+		var __kishore_bdata = "";
+		let _Console = console;
+		let __kishore_logMessage = (args: any[])=>{
+			let msg = "";
+			for (let arg of args) {
+				switch(typeof arg) {
+					case "undefined":{
+						msg += "undefined";
+						break;
+					}
+					case "function": {
+						msg += "[function]";
+						break;
+					}
+					case "object": {
+						msg += JSON.stringify(arg);
+						break;
+					}
+					case "symbol":
+					case "boolean":
+					case "string":
+					case "number": {
+						msg += arg.toString();
+						break;
+					}
+				}
 			}
-			__kishore_bdata += msg;
-		}
-	}`,
+			return msg;
+		};
+		(console as any) = {
+			_log(args) {
+				let msg = __kishore_logMessage(args);
+				if ((__kishore_bdata.length+msg.length)>(${BUFFER_SIZE}*1024)) {
+					//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
+					throw("Buffer Overflow. Output exceeded ${BUFFER_SIZE}KB.\\n\\n"+__kishore_bdata);
+				}
+				__kishore_bdata += msg;
+			},
+			log(...args) {
+				this._log(args);
+			},
+			logn(...args) {
+				this._log(args);
+				this._log("\\n");
+			}
+		}`,
 	_after: ``,
 	generate(code: string) {
 		// Transpile Typescript to Javascript.
