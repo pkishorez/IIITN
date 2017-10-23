@@ -111,7 +111,7 @@ export let Runtime = {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
 			}
 		`);
-		return runProgram(genCode, true) as any;
+		return runProgram(genCode) as any;
 	}
 };
 
@@ -121,34 +121,42 @@ interface IRuntimeResponse {
 };
 let globalWorker: Worker;
 
-function runProgram(code: string, parallel = true)
+let n_workers = 0;
+let workers: Worker[] = [];
+const N_MAX_WORKERS = 10;
+function runProgram(code: string, worker_timeout=2)
 {
 	let blob = new Blob([code], {type: 'text/javascript'});
 	let url = URL.createObjectURL(blob);
 	let bdata = "";
-	let worker: Worker;
+
 
 	return new Promise((resolve, reject)=>{
-		if (parallel) {
-			worker = new Worker(url);
+		let rejectRequest = (msg: string)=>{
+			n_workers--;
+			reject(msg);
 		}
-		else{
-			worker = globalWorker;
-			worker.terminate();
-			reject("Worker terminated.");
-			(worker as any) = undefined;
+		let resolveRequest = (msg: string)=>{
+			n_workers--;
+			resolve(msg);
 		}
+		if (n_workers>N_MAX_WORKERS) {
+			reject("Too much computation. Please wait :(");
+			return;
+		}
+		let worker = new Worker(url);
+		n_workers++;
 
 		let timeout = setTimeout(()=>{
 			if (worker) {
 				worker.terminate();
-				reject("Code Timeout...");
+				rejectRequest("Code Timeout...");
 				(worker as any) = undefined;
 			}
-		}, 5000);
+		}, worker_timeout*1000);
 		worker.onerror = (ev)=>{
 			console.log(ev);
-			reject("Syntax error. Please check.");
+			rejectRequest("Syntax error. Please check.");
 			clearTimeout(timeout);
 			worker.terminate();
 			(worker as any)	= undefined;
@@ -156,14 +164,14 @@ function runProgram(code: string, parallel = true)
 		worker.onmessage = (m)=>{
 			let data: IRuntimeResponse = m.data;
 			if (data.type=="error") {
-				reject(data.data);
+				rejectRequest(data.data);
 			}
 			else {
-				resolve(data.data);
+				resolveRequest(data.data);
 			}
 			clearTimeout(timeout);
 			worker.terminate();
 			(worker as any)	= undefined;
-		}	
+		}
 	});
 }
