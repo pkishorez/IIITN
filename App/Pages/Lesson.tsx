@@ -83,11 +83,13 @@ export class Lesson extends React.Component<IProps, IState> {
 						</div>;
 					})
 				}
-				<FQuestion funcName="isPrime" answers={[
-					{input: [2], output: true},
-					{input: [3], output: true},
-					{input: [4], output: false},
-				]}>Write isPrime function to check if prime or not.</FQuestion>
+				<FQuestion funcDetails={{
+					name: "isPrime",
+					inputs: [
+						{input: [2], output: true},
+						{input: [3], output: true},
+						{input: [4], output: false}
+				]}}>Write isPrime function to check if prime or not.</FQuestion>
 			</Section>
 		</Layout>;
 	}

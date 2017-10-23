@@ -13,13 +13,15 @@ let Migrate = [
 			<h3>Prime Number Program</h3>
 			Write a program to return nth prime number.
 		</div>,
-		question: <FQuestion funcName="nthPrime" monaco={{height: 300, content: `function nthPrime(num)\n{\n\tlet nprime = 2;\n\treturn nprime;\n}`}} answers={[
-			{input: [1], output: 2},
-			{input: [10], output: 29},
-			{input: [20], output: 71},
-			{input: [30], output: 113},
-			{input: [40], output: 173}
-		]}>Write program to return nth prime number.</FQuestion>
+		question: <FQuestion monaco={{height: 300, content: `function nthPrime(num)\n{\n\tlet nprime = 2;\n\treturn nprime;\n}`}} funcDetails={{
+			name: "nthPrime",
+			inputs: [
+				{input: [1], output: 2},
+				{input: [10], output: 29},
+				{input: [20], output: 71},
+				{input: [30], output: 113},
+				{input: [40], output: 173}
+		]}}>Write program to return nth prime number.</FQuestion>
 	}
 ]
 export class Typescript extends React.Component<IProps, IState> {
