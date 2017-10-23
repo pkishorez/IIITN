@@ -22,7 +22,7 @@ let Code = {
 						break;
 					}
 					case "object": {
-						msg += JSON.stringify(arg);
+						msg += JSON.stringify(arg, null, 4)+"\\n";
 						break;
 					}
 					case "symbol":
@@ -41,16 +41,12 @@ let Code = {
 				let msg = __kishore_logMessage(args);
 				if ((__kishore_bdata.length+msg.length)>(${BUFFER_SIZE}*1024)) {
 					//self.postMessage({type: "error", data: "Buffer Overflow. Output cannot exceed 5KB."});
-					throw("Buffer Overflow. Output exceeded ${BUFFER_SIZE}KB.\\n\\n"+__kishore_bdata);
+					throw("Buffer Overflow. Output exceeded ${BUFFER_SIZE}KB.");
 				}
 				__kishore_bdata += msg;
 			},
 			log(...args) {
 				this._log(args);
-			},
-			logn(...args) {
-				this._log(args);
-				this._log("\\n");
 			}
 		}`,
 	_after: ``,
@@ -62,7 +58,7 @@ let Code = {
 			${code}
 		}
 		catch(e) {
-			self.postMessage({type: "error", data: e+"\\n\\n"+__kishore_bdata});
+			self.postMessage({type: "error", data: e});
 		}
 		${this._after}
 		`;
@@ -76,9 +72,13 @@ let Code = {
 	}
 }
 
+export interface IFunctionInputOutput {
+	input: any[],
+	output: any
+}
 export interface IFunction {
 	name: string
-	input: any[]
+	inputs: IFunctionInputOutput[]
 };
 export let Runtime = {
 	run(code: string) {
@@ -88,18 +88,30 @@ export let Runtime = {
 		`);
 		return runProgram(genCode);
 	},
-	runFunction(code: string, func: IFunction) {
+	runFunction(code: string, func: IFunction): Promise<{outputs: any, consoleOutput: string}> {
 		let genCode = Code.generate(`
 			${code};
+			let func = ${JSON.stringify(func)};
+			let inputs = func.inputs;
 			if (${func.name}) {
-				let output = ${func.name}.apply(null, [${func.input}]);
-				self.postMessage({type: 'OUTPUT', data: output});
+				console = {
+					log(msg){}
+				}
+				let outputs = [];
+				for (let input of inputs) {
+					let output = ${func.name}.apply(null, [input.input]);
+					outputs.push(output);
+				}
+				self.postMessage({type: 'OUTPUT', data: {
+					consoleOutput: __kishore_bdata,
+					outputs
+				}});
 			}
 			else {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
 			}
 		`);
-		return runProgram(genCode, true);
+		return runProgram(genCode, true) as any;
 	}
 };
 
@@ -135,6 +147,7 @@ function runProgram(code: string, parallel = true)
 			}
 		}, 5000);
 		worker.onerror = (ev)=>{
+			console.log(ev);
 			reject("Syntax error. Please check.");
 			clearTimeout(timeout);
 			worker.terminate();
