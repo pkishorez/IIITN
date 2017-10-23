@@ -88,7 +88,7 @@ export let Runtime = {
 		`);
 		return runProgram(genCode);
 	},
-	runFunction(code: string, func: IFunction): Promise<{outputs: any, consoleOutput: string}> {
+	runFunction(code: string, func: IFunction) {
 		let genCode = Code.generate(`
 			${code};
 			let func = ${JSON.stringify(func)};
@@ -102,10 +102,7 @@ export let Runtime = {
 					let output = ${func.name}.apply(null, [input.input]);
 					outputs.push(output);
 				}
-				self.postMessage({type: 'OUTPUT', data: {
-					consoleOutput: __kishore_bdata,
-					outputs
-				}});
+				self.postMessage({type: 'OUTPUT', data: outputs});
 			}
 			else {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
