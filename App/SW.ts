@@ -31,16 +31,17 @@ self.addEventListener("fetch", (event: any)=>{
 	if (url.pathname.startsWith("/assets/") || url.pathname.startsWith("/bundle/")) {
 		event.respondWith(
 			caches.match(event.request).then((response)=>{
-				if (response) {
-					return response;
-				}
-				return fetch(event.request.clone()).then((response)=>{
+				let fetchRequest = fetch(event.request.clone()).then((response)=>{
 					let cacheresponse = response.clone();
 					caches.open(CACHE_NAME).then((cache)=>{
 						cache.put(event.request, cacheresponse);
 					});
 					return response;
 				}).catch(()=>{}) // Ignore fetch error.
+				if (response) {
+					return response;
+				}
+				return fetchRequest;
 			})
 		);
 		return;
