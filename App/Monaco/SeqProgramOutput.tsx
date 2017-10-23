@@ -54,7 +54,7 @@ export class SeqProgramOutput extends React.Component<IProps, IState> {
 		return 	<pre className="card-0" style={{
 			padding: 10,
 			transition: "0.3s all",
-			height: `calc(100vh - 150px)`,
+			height: 100,
 			backgroundColor: "white",
 			fontFamily: "monospace",
 			color: "black",
