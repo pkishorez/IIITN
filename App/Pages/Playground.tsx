@@ -2,29 +2,26 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Monaco, IMonacoProps} from '../Monaco';
 import {Runtime} from '../Monaco/Runtime';
+import {SeqProgramOutput} from '../Monaco/SeqProgramOutput';
 import {Layout, Section} from 'classui/Components/Layout';
 import * as _ from 'lodash';
 
 interface IProps {
 	monaco?: IMonacoProps
 };
-interface IState {
-	output: string
-};
+interface IState {};
 
-let output_seq = 0
 export class Playground extends React.Component<IProps, IState> {
+	output: SeqProgramOutput|null;
 	constructor()
 	{
 		super();
-		this.state = {
-			output: ""
-		};
-		this.runProgram = _.throttle(this.runProgram.bind(this), 100);
 		this.saveContent = _.debounce(this.saveContent.bind(this), 500, {
 			trailing: true,
 			leading: true
 		});
+		this.runProgram = this.runProgram.bind(this);
+		console.log(this.output);
 	}
 	saveContent(value: string) {
 		if (value){
@@ -34,28 +31,7 @@ export class Playground extends React.Component<IProps, IState> {
 	runProgram(value: string)
 	{
 		this.saveContent(value);
-		let program_seq_no = output_seq+1;
-		Runtime.run(value).then((val: string)=>{
-			output_seq++;
-			// Program output outdated.
-			if (program_seq_no<output_seq){
-				return;
-			}
-			this.setState({
-				...this.state,
-				output: val
-			});
-		}).catch((val)=>{
-			output_seq++;
-			if (program_seq_no<output_seq){
-				return;
-			}
-			this.setState({
-				...this.state,
-				output: val
-			});
-		});
-
+		this.output?this.output.runProgram(value):null;
 	}
 	render() {
 		let oldContent = localStorage.getItem("PLAYGROUND");
@@ -69,17 +45,7 @@ export class Playground extends React.Component<IProps, IState> {
 			</Section>
 			<Section width={400} card>
 				<h3 style={{textAlign: "center"}}>Output</h3>
-				<pre className="card-0" style={{
-					padding: 10,
-					transition: "0.3s all",
-					height: `calc(100vh - 150px)`,
-					backgroundColor: "white",
-					fontFamily: "monospace",
-					color: "black",
-					overflow: "auto"
-				}}>
-				{this.state.output}
-				</pre>
+				<SeqProgramOutput throttle={10} ref={(ref)=>{this.output=ref}}/>
 			</Section>
 		</Layout>;
 	}
