@@ -93,7 +93,7 @@ export let Runtime = {
 			${code};
 			let func = ${JSON.stringify(func)};
 			let inputs = func.inputs;
-			if (${func.name}) {
+			if (typeof ${func.name}=="function") {
 				console = {
 					log(msg){}
 				}
