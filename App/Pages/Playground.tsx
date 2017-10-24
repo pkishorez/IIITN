@@ -45,7 +45,7 @@ export class Playground extends React.Component<IProps, IState> {
 			</Section>
 			<Section width={400} card>
 				<h3 style={{textAlign: "center"}}>Output</h3>
-				<SeqProgramOutput throttle={10} ref={(ref)=>{this.output=ref}} style={{
+				<SeqProgramOutput debounce={100} ref={(ref)=>{this.output=ref}} style={{
 					height: `calc(100vh - 150px)`
 				}}/>
 			</Section>

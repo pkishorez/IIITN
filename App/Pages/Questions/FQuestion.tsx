@@ -42,8 +42,8 @@ export class FQuestion extends React.Component<IFQuestionProps, IFQuestionState>
 				{this.props.children}{" "}
 			</div>
 			<Monaco {...this.props.monaco} getOutput={this.runProgram}/>
-			<SeqTestcaseOutput throttle={500} ref={(ref)=>{this.runTestCases=ref}} funcDetails={this.props.funcDetails}/>
-			<SeqProgramOutput throttle={10} ref={(ref)=>{this.showOutput=ref}}/>
+			<SeqTestcaseOutput debounce={50} ref={(ref)=>{this.runTestCases=ref}} funcDetails={this.props.funcDetails}/>
+			<SeqProgramOutput debounce={50} ref={(ref)=>{this.showOutput=ref}}/>
 		</div>;
 	}
 }

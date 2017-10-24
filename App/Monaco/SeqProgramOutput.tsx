@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 interface IProps {
 	style?: React.CSSProperties
-	throttle?: number
+	debounce?: number
 };
 interface IState {
 	output: string
@@ -23,8 +23,11 @@ export class SeqProgramOutput extends React.Component<IProps, IState> {
 			output: ""
 		}
 	}
-	compnentDidMount() {
-		this.runProgram = _.throttle(this.runProgram.bind(this), this.props.throttle);		
+	componentDidMount() {
+		this.runProgram = _.debounce(this.runProgram.bind(this), this.props.debounce, {
+			trailing: true,
+			leading: true
+		});
 	}
 	runProgram(code: string)
 	{
