@@ -73,6 +73,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
 				folding: true,
+				automaticLayout: true,
 				quickSuggestions: this.props.quickSuggestions,
 				parameterHints: this.props.parameterHints,
 				readOnly: this.props.readOnly,

@@ -13,7 +13,7 @@ let Migrate = [
 			<h3>Prime Number Program</h3>
 			Write a program to return nth prime number.
 		</div>,
-		question: <FQuestion monaco={{height: 300, content: `function nthPrime(num)\n{\n\tlet nprime = 2;\n\treturn nprime;\n}`}} funcDetails={{
+		question: <FQuestion monaco={{height: `calc(100vh - 230px)`, content: `function nthPrime(num)\n{\n\tlet nprime = 2;\n\treturn nprime;\n}`}} funcDetails={{
 			name: "nthPrime",
 			inputs: [
 				{input: [1], output: 2},
