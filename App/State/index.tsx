@@ -20,7 +20,7 @@ let persistState = ()=>{
 	localStorage.setItem("state", JSON.stringify(store.getState()));
 };
 
-store.subscribe(_.debounce(persistState, 2000, {
+store.subscribe(_.debounce(persistState, 1000, {
 	leading: true,
 	trailing: true
 }));

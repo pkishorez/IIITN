@@ -12,5 +12,15 @@ export let A_User = {
 			type: "USER_LOGIN",
 			userid: null
 		};
+	},
+	goOnline(): IUserAction {
+		return {
+			type: "USER_ONLINE"
+		}
+	},
+	goOffline(): IUserAction {
+		return {
+			type: "USER_OFFLINE"
+		}
 	}
 }

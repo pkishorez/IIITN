@@ -1,15 +1,17 @@
 export interface IUserState {
 	userid: string | null
+	online: boolean
 }
 
-export type IUserActionType = "USER_LOGIN" | "USER_REGISTER"
+export type IUserActionType = "USER_LOGIN" | "USER_REGISTER" | "USER_OFFLINE" | "USER_ONLINE"
 
 export interface IUserAction {
 	type: IUserActionType
 	[id: string]: any
 }
 let defaultState: IUserState = {
-	userid: null
+	userid: null,
+	online: false
 };
 
 export let UserReducer = (state: IUserState = defaultState, action: IUserAction) => {
@@ -18,6 +20,20 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 			state = {
 				...state,
 				userid: action.userid
+			}
+			break;
+		}
+		case "USER_OFFLINE": {
+			state = {
+				...state,
+				online: false
+			}
+			break;
+		}
+		case "USER_ONLINE": {
+			state = {
+				...state,
+				online: true
 			}
 			break;
 		}

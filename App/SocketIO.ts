@@ -2,13 +2,14 @@ import {NavBar} from 'classui/Navbar';
 import {Promise} from 'es6-promise';
 import {getResponseID} from '../Common/Utils';
 import {IRequestType, IRequest, IResponse} from '../Server/Connection';
+import {A_User, store} from './State';
 import * as io from 'socket.io-client';
 
 let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected = true;
+	private connected = false;
 	private socket: SocketIOClient.Socket;
 	constructor() {
 		this.socket = io();
@@ -16,11 +17,13 @@ class _SocketIO {
 			// Connected.
 			this.connected = true;
 			console.log("SocketIO Connection established.");
+			store.dispatch(A_User.goOnline());
 		});
 		this.socket.on("disconnect", ()=>{
 			// Disconnected.
 			this.connected = false;
 			console.log("SocketIO Connection Disconnected.");
+			store.dispatch(A_User.goOffline());
 		});
 	}
 
