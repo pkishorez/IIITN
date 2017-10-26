@@ -8,7 +8,7 @@ import {RouteComponentProps, Redirect, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {store} from '../../State';
 import {A_User} from '../../State/Action';
-import {SLoginUser} from '../../../Server/Database/Schema';
+import {S_UserLogin} from '../../../Server/Database/Schema';
 import {User} from '../../User';
 import {History} from '../../History';
 
@@ -65,7 +65,7 @@ class Login_ extends React.Component<IProps, IState> {
 		return <div style={{backgroundColor: "white"}}>
 			<Link to="/register"><div className="button">Register Here.</div></Link>
 			{LoginMessage?<div style={{color: "darkgreen", margin: 10, marginBottom: 0}}>{LoginMessage}</div>:null}
-			<Formlayout schema={SLoginUser} onSubmit={this.login.bind(this)} label="Login">
+			<Formlayout schema={S_UserLogin} onSubmit={this.login.bind(this)} label="Login">
 				{this.state.error?<h5 style={{color: 'red'}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="UserName (University ID)">Username</TextField>
 				<TextField type="password" name="password" label="Password">Password</TextField>

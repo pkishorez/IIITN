@@ -4,7 +4,7 @@ import {Layout, Section} from 'classui/Components/Layout';
 import {Formlayout} from 'classui/Components/Formlayout';
 import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Select} from 'classui/Components/Form/Select';
-import {SRegisterUser} from '../../../Server/Database/Schema';
+import {S_User} from '../../../Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
 import {User} from '../../User';
 import {RequireAuthentication} from './Login';
@@ -52,15 +52,15 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 		}
 		return <div style={{minWidth: 230}}>
 			<Link to="/login"><div className="button">Login here.</div></Link>
-			<Formlayout schema={SRegisterUser} label="Register" onSubmit={this.register.bind(this)}>
+			<Formlayout schema={S_User} label="Register" onSubmit={this.register.bind(this)}>
 				{this.state.error?<h5 style={{color: "red"}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="University ID">University ID</TextField>
 				<TextField name="name" label="Name">Name</TextField>
 				<TextField name="email" label="Email ID">Email</TextField>
 				<TextField type="password" name="password" label="Password">Password</TextField>
-				Batch : <Select name="batch" options={(SRegisterUser.batch as any).values}></Select>
+				Batch : <Select name="batch" options={(S_User.batch as any).values}></Select>
 				<br/>
-				Branch : <Select name="branch" options={(SRegisterUser.branch as any).values}></Select>
+				Branch : <Select name="branch" options={(S_User.branch as any).values}></Select>
 				<br/>
 				<input type="submit"/>
 			</Formlayout>

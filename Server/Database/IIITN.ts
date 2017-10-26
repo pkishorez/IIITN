@@ -1,6 +1,6 @@
 import {DB} from './';
-import {ISchema, ValidateSchema} from 'classui/Components/Form/Schema';
-import {SRegisterUser} from './Schema';
+import {ISchema, Schema} from 'classui/Components/Form/Schema';
+import {S_User, SP_UserProfile} from './Schema';
 import {Promise} from 'es6-promise';
 import * as mongodb from 'mongodb';
 
@@ -23,6 +23,9 @@ export class Database {
 	static getStudents() {
 		return this.db.then((db)=>{
 			return db.collection("user").find({}).toArray().then(arr=>{
+				arr = arr.map((user)=>{
+					return User.getProfile(user);
+				});
 				return Promise.resolve(arr);
 			}).catch(REJECT("Request Failed."));
 		})
@@ -33,7 +36,7 @@ export class Database {
 				if (!res) {
 					return Promise.reject("User Details not found.");
 				}
-				return Promise.resolve(res);
+				return Promise.resolve(Schema.populate(SP_UserProfile, res));
 			})
 		})
 	}
@@ -52,7 +55,7 @@ export class User {
 		return User.db;
 	}
 	static register(user: any) {
-		let error = ValidateSchema(SRegisterUser, user);
+		let error = Schema.validate(S_User, user);
 		if (error){
 			return Promise.reject(error);
 		}
@@ -76,5 +79,7 @@ export class User {
 			})
 		});
 	}
-
+	static getProfile(data: any) {
+		return Schema.populate(SP_UserProfile, data);
+	}
 }

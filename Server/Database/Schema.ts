@@ -1,6 +1,6 @@
-import {ISchema} from 'classui/Components/Form/Schema';
+import {ISchema, ISchemaPopulate} from 'classui/Components/Form/Schema';
 
-export let SRegisterUser: ISchema = {
+export let S_User: ISchema = {
 	_id: {
 		type: "string",
 		length: 7
@@ -25,7 +25,12 @@ export let SRegisterUser: ISchema = {
 	}
 };
 
-export let SLoginUser: ISchema = {
-	_id: SRegisterUser._id,
-	password: SRegisterUser.password
+export let S_UserLogin: ISchema = {
+	_id: S_User._id,
+	password: S_User.password
+};
+
+export let SP_UserProfile: ISchemaPopulate = {
+	schema: S_User,
+	exclude: ["password"]
 };
