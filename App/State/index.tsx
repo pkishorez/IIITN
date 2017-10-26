@@ -10,6 +10,8 @@ export let store: Store<IRootState>;
 
 try {
 	let preLoadedState: IRootState = JSON.parse(localStorage.getItem("state") as string);
+	// Reset preloaded state independent of state saved.
+	preLoadedState.user.online = false;
 	store = createStore<IRootState>(RootReducer, preLoadedState);
 }
 catch(e) {
