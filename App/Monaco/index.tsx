@@ -28,7 +28,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	static defaultProps = {
 		width: "100%",
 		height: 150,
-		fontSize: 16,
+		fontSize: 15,
 		fontFamily: 'Inconsolata',
 		content: "",
 		quickSuggestions: true,
@@ -55,6 +55,16 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		(window as any).require.config({ paths: { 'vs': '/assets/vs' }});
 		(window as any).require(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
+				monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+					target: monaco.languages.typescript.ScriptTarget.ES2016,
+					noImplicitAny: true,
+					noUnusedParameters: true,
+					noImplicitReturns: true,
+					alwaysStrict: true,
+					noUnusedLocals: true,
+					allowNonTsExtensions: true,
+					strictNullChecks: true
+				});
 				func();
 			}
 		});
@@ -77,7 +87,6 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				quickSuggestions: this.props.quickSuggestions,
 				parameterHints: this.props.parameterHints,
 				readOnly: this.props.readOnly,
-				multiCursorModifier: "ctrlCmd",
 				wordWrap: "on",
 				minimap: {
 					enabled: false
@@ -124,7 +133,6 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				quickSuggestions: this.props.quickSuggestions,
 				parameterHints: this.props.parameterHints,
 				readOnly: this.props.readOnly,
-				multiCursorModifier: "ctrlCmd",
 				suggestOnTriggerCharacters: false,
 				wordWrap: "on",
 				minimap: {
