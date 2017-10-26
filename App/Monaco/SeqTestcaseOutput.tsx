@@ -48,7 +48,7 @@ export class SeqTestcaseOutput extends React.Component<IProps, IState> {
 			let correct = 0;
 			let correctAnswers = _.map(this.props.funcDetails.inputs, (answer)=>(answer.output));
 			for (let i=0; i<correctAnswers.length; i++) {
-				if (outputs[i]==correctAnswers[i]) {
+				if (_.isEqual(outputs[i], correctAnswers[i])) {
 					correct++;
 				}
 			}

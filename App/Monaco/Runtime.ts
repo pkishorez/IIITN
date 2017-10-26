@@ -99,7 +99,7 @@ export let Runtime = {
 				}
 				let outputs = [];
 				for (let input of inputs) {
-					let output = ${func.name}.apply(null, [input.input]);
+					let output = ${func.name}.apply(null, input.input);
 					outputs.push(output);
 				}
 				self.postMessage({type: 'OUTPUT', data: outputs});
