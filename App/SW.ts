@@ -1,7 +1,10 @@
 let CACHE_NAME = "iiitncache";
 
 let urlsToCache: string[] = [
-	"/"
+	"/",
+	"/playground",
+	"/typescript",
+	"/login"
 ];
 
 // Install Event.
