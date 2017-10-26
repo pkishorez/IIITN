@@ -38,12 +38,12 @@ export class FQuestion extends React.Component<IFQuestionProps, IFQuestionState>
 	}
 	render() {
 		return <div className="card-0" style={{...this.props.style, padding: 10, backgroundColor: "white"}}>
-			<div style={{padding: 10}}>
+			{this.props.children?<div style={{padding: 10}}>
 				{this.props.children}{" "}
-			</div>
+			</div>:null}
 			<Monaco {...this.props.monaco} getOutput={this.runProgram}/>
 			<SeqTestcaseOutput debounce={50} ref={(ref)=>{this.runTestCases=ref}} funcDetails={this.props.funcDetails}/>
-			<SeqProgramOutput debounce={50} ref={(ref)=>{this.showOutput=ref}}/>
+			<SeqProgramOutput debounce={50} style={{height: 50}} ref={(ref)=>{this.showOutput=ref}}/>
 		</div>;
 	}
 }
