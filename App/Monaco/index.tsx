@@ -44,10 +44,8 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor = this.destroyEditor.bind(this);
 		this.initMonaco = this.initMonaco.bind(this);
 		this.initDiffMonaco = this.initDiffMonaco.bind(this);
-		this._init = this._init.bind(this);
 	}
-	_init(func: Function) {
-		this.destroyEditor();
+	static INIT(func: Function) {
 		if(typeof monaco != "undefined") {
 			func();
 			return;
@@ -75,7 +73,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			console.error("Reference Error, MONACO");
 			return;
 		}
-		this._init(()=>{
+		Monaco.INIT(()=>{
 			this.editor = monaco.editor.create(ref, {
 				value: this.props.content,
 				theme: "vs",
@@ -122,7 +120,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			console.error("Reference Error, MONACO");
 			return;
 		}
-		this._init(()=>{
+		Monaco.INIT(()=>{
 			let original = monaco.editor.createModel(this.props.diffContent?this.props.diffContent.content:"", "typescript");
 			let modified = monaco.editor.createModel(this.props.content?this.props.content:"", "typescript");
 			this.diffEditor = monaco.editor.createDiffEditor(ref, {
