@@ -22,7 +22,17 @@ export function transpileModule(input: string, options: any) {
 	// Emit
 	program.emit();
 	if (outputText === undefined) {
-		throw new Error("Output generation failed");
+		return `self.postMessage({type: "error", data: "Syntax Error."})`;
 	}
 	return outputText;
+}
+
+export function compileCode(code: string) {
+	return transpileModule(code, {
+		module: ts.ModuleKind.AMD,
+		target: ts.ScriptTarget.ES5,
+		noLib: true,
+		noResolve: true,
+		suppressOutputPathCheck: true
+	});
 }
