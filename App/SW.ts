@@ -4,7 +4,8 @@ let urlsToCache: string[] = [
 	"/",
 	"/playground",
 	"/typescript",
-	"/login"
+	"/login",
+	"/2dplayground"
 ];
 
 // Install Event.
