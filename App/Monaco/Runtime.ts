@@ -86,7 +86,7 @@ export let Runtime = {
 			${code};
 			self.postMessage({type: "OUTPUT", data: __kishore_bdata});
 		`);
-		return runProgram(genCode);
+		return runProgramInWorker(genCode);
 	},
 	runFunction(code: string, func: IFunction) {
 		let genCode = Code.generate(`
@@ -108,7 +108,7 @@ export let Runtime = {
 				self.postMessage({type: 'error', data: 'Function ${func.name} not defined.'});
 			}
 		`);
-		return runProgram(genCode) as any;
+		return runProgramInWorker(genCode) as any;
 	}
 };
 
@@ -121,7 +121,7 @@ let globalWorker: Worker;
 let n_workers = 0;
 let workers: Worker[] = [];
 const N_MAX_WORKERS = 10;
-function runProgram(code: string, worker_timeout=2)
+function runProgramInWorker(code: string, worker_timeout=2)
 {
 	let blob = new Blob([code], {type: 'text/javascript'});
 	let url = URL.createObjectURL(blob);
@@ -171,4 +171,11 @@ function runProgram(code: string, worker_timeout=2)
 			(worker as any)	= undefined;
 		}
 	});
+}
+
+export function runProgram(code: string) {
+	var script = document.createElement("script");
+	// Add script content
+	script.innerHTML = code;
+	document.body.appendChild(script);
 }
