@@ -40,6 +40,18 @@ module.exports = [
 					to: 'production/bundle/classui.css'
 				}
 			]),
+			new copyWebpackPlugin([
+				{
+					from: 'node_modules/@iiitn/canvas/bundle',
+					to: 'production/assets/canvas'
+				}
+			]),
+			new copyWebpackPlugin([
+				{
+					from: 'node_modules/draft-js/dist/Draft.css',
+					to: 'production/bundle/Draft.css'
+				}
+			]),
 			(!fs.existsSync("production/assets/vs"))?new copyWebpackPlugin([
 				{
 					from: 'node_modules/monaco-editor/min/vs',
