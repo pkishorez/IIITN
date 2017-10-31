@@ -38,6 +38,13 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		autoFocus: false
 	};
 
+	private static _typescriptDefaults: {
+		compilerOptions: monaco.languages.typescript.CompilerOptions
+	};
+	static get typescriptDefaults() {
+		return Monaco._typescriptDefaults;
+	}
+
 	constructor(props: any, context: any)
 	{
 		super(props, context);
@@ -53,16 +60,19 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		(window as any).require.config({ paths: { 'vs': '/assets/vs' }});
 		(window as any).require(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
-				monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-					target: monaco.languages.typescript.ScriptTarget.ES2016,
-					noImplicitAny: true,
-					noUnusedParameters: true,
-					noImplicitReturns: true,
-					alwaysStrict: true,
-					noUnusedLocals: true,
-					allowNonTsExtensions: true,
-					strictNullChecks: true
-				});
+				this._typescriptDefaults = {
+					compilerOptions: {
+						target: monaco.languages.typescript.ScriptTarget.ES2016,
+						noImplicitAny: true,
+						noUnusedParameters: true,
+						noImplicitReturns: true,
+						alwaysStrict: true,
+						noUnusedLocals: true,
+						allowNonTsExtensions: true,
+						strictNullChecks: true
+					}
+				};
+				monaco.languages.typescript.typescriptDefaults.setCompilerOptions(this.typescriptDefaults.compilerOptions);
 				func();
 			}
 		});
