@@ -12,6 +12,7 @@ export interface IMonacoProps {
 		content: string
 	}
 	content?: string
+	ctrlEnterAction?: ()=>void
 	quickSuggestions?: boolean
 	parameterHints?: boolean
 	readOnly?: boolean
@@ -107,7 +108,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 					e.stopPropagation();
 					e.preventDefault();
 					e.browserEvent.stopImmediatePropagation();
-					let sel = this.editor.getSelection();
+
+					// Add action if ctrlEnter. This will become famouse keybinding for Monaco in IIITN.
+					this.props.ctrlEnterAction && this.props.ctrlEnterAction();
 				}
 			})
 			this.editor.getModel().onDidChangeContent((e)=>{
