@@ -12,8 +12,8 @@ let urlsToCache: string[] = [
 	"/assets/vs/loader.js",
 	"/assets/Inconsolata.css",
 	"/assets/Draft.css",
-	"/assets/canvas/global.js",
-
+	"/assets/canvas2d/global.js",
+	
 	"/bundle/classui.css",
 	"/bundle/bundle.js"
 ];

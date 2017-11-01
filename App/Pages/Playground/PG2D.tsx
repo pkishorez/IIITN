@@ -14,26 +14,47 @@ interface IState {
 	code: string
 };
 
-let defaultCode = `import {Canvas} from 'Canvas';
-import {Rectangle, Circle} from 'Canvas/Shapes';
+let defaultCode = `import {Canvas} from 'canvas2d';
+import {Rectangle, Circle, Shape, CustomShape} from 'canvas2d/Shapes';
 
-let canvasElement = document.getElementById("canvas") as HTMLCanvasElement;
-canvasElement.width = 500;
-canvasElement.height = 400;
-canvasElement.style.backgroundColor = "white";
+let canvasElem = document.getElementById("canvas") as HTMLCanvasElement;
+canvasElem.width = 500;
+canvasElem.height = 400;
+canvasElem.style.backgroundColor = "white";
 
-let canvas = new Canvas(canvasElement, true);
+let canvas = new Canvas(canvasElem, true);
 
-let circle = new Circle(10, "red").setPosition(100, 200);
-let rect = new Rectangle(20, 20, "green").setPosition(100, 100);
+function move(o: any, speed: number)
+{
+	o.moveTo(Math.random()*canvas.width, Math.random()*canvas.height, speed, ()=>{
+		move(o, speed);
+	});
+}
+let circle: Shape = new Circle(10, "red").setPosition(0, 0);
+move(circle, 0.5);
 
-canvas.addObject(circle);
-canvas.addObject(rect);`;
+for (let i=0; i<40; i++) {
+	let rect: Shape = new Rectangle(10, 10, "green").setPosition(0, 0);
+	canvas.addObject(rect);
+	move(rect, 1);
+}
+for (let i=0; i<40; i++) {
+	let circle: Shape = new Circle(5, "green").setPosition(0, 0);
+	canvas.addObject(circle);
+	move(circle, 1);
+}
+
+let cshape: Shape = new CustomShape([{x: 30, y: 0}, {x: 30, y: 30}, {x: 20, y: 5}, {x: 0, y: 0}, {x: 0, y: 30}, {x: 30, y: 30}, {x: 5, y: 20}, {x: 0, y: 0}], "red").moveTo(100, 100);
+canvas.addObject(cshape);
+move(cshape, 0.3);`;
 
 export class PG2D extends React.Component<IProps, IState> {
 	constructor() {
 		super();
 		let savedCode = localStorage.getItem("PG2D");
+		if (savedCode && savedCode.trim()=="") {
+			savedCode = null;
+		}
 		this.state = {
 			loaded: false,
 			code: savedCode?savedCode:defaultCode
