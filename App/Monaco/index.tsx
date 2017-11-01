@@ -81,7 +81,6 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	initMonaco(ref: HTMLDivElement|null)
 	{
 		if (!ref) {
-			console.error("Reference Error, MONACO");
 			return;
 		}
 		Monaco.INIT(()=>{

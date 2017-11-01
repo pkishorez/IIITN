@@ -39,13 +39,13 @@ module.exports = [
 			new copyWebpackPlugin([
 				{
 					from: 'node_modules/draft-js/dist/Draft.css',
-					to: 'production/bundle/Draft.css'
+					to: 'production/assets/Draft.css'
 				}
 			]),
 			new copyWebpackPlugin([
 				{
-					from: 'node_modules/@iiitn/canvas/bundle',
-					to: 'production/assets/canvas'
+					from: 'node_modules/@iiitn/canvas2d/bundle',
+					to: 'production/assets/canvas2d'
 				}
 			]),
 			(!fs.existsSync("production/assets/vs"))?new copyWebpackPlugin([

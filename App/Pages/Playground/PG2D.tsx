@@ -43,7 +43,7 @@ export class PG2D extends React.Component<IProps, IState> {
 			trailing: true
 		});
 		this.runCode = this.runCode.bind(this);
-		fetch("/assets/canvas/Canvas_bundled.d.ts").then((res)=>{
+		fetch("/assets/canvas2d/Canvas_bundled.d.ts").then((res)=>{
 			let def = res.text().then((data)=>{
 				Monaco.INIT(()=>{
 					monaco.languages.typescript.typescriptDefaults.addExtraLib(data);
@@ -84,9 +84,12 @@ export class PG2D extends React.Component<IProps, IState> {
 	}
 	render() {
 		let code = this.state.code;
-		return <Layout align="start" style={{height: `calc(100vh - 50px)`}} gutter={20}>
+		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
 			<Section width={750}>
-				<Monaco content={code as string} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveCode}/>
+				{this.state.loaded?
+					<Monaco content={code as string} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveCode}/>:
+					<div>Loading...</div>
+				}
 			</Section>
 			<Section remain>
 				<Menu header="Canvas Playground">
