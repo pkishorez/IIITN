@@ -1,11 +1,21 @@
 let CACHE_NAME = "iiitncache";
 
 let urlsToCache: string[] = [
+	// Cache web pages.
 	"/",
 	"/playground",
 	"/typescript",
 	"/login",
-	"/2dplayground"
+	"/2dplayground",
+
+	// Cache webpage resources.
+	"/assets/vs/loader.js",
+	"/assets/Inconsolata.css",
+	"/assets/Draft.css",
+	"/assets/canvas/global.js",
+
+	"/bundle/classui.css",
+	"/bundle/bundle.js"
 ];
 
 // Install Event.
