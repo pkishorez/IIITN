@@ -1,4 +1,5 @@
 import {IUserAction} from './UserReducer';
+import {ITaskAction, ITaskState, ITask} from './TaskReducer';
 
 export let A_User = {
 	login(userid: string): IUserAction {
@@ -7,7 +8,7 @@ export let A_User = {
 			userid
 		};
 	},
-	logout() {
+	logout(): IUserAction {
 		return {
 			type: "USER_LOGIN",
 			userid: null
@@ -22,5 +23,35 @@ export let A_User = {
 		return {
 			type: "USER_OFFLINE"
 		}
+	}
+}
+
+export let A_Task = {
+	init(tasks: ITaskState): ITaskAction {
+		return {
+			type: "TASK_INIT",
+			tasks
+		};
+	},
+	add(id: number, task: ITask): ITaskAction {
+		return {
+			type: "TASK_ADD",
+			id,
+			task
+		}
+	},
+	saveBuffer(id: number, code: string): ITaskAction {
+		return {
+			type: "TASK_SAVE_BUFFER",
+			id,
+			code
+		}
+	},
+	save(id: number, code: string): ITaskAction {
+		return {
+			type: "TASK_SAVE",
+			id,
+			code
+		};
 	}
 }
