@@ -12,7 +12,7 @@ let app = express();
 // let privateKey = fs.readFileSync('./assets/certs/iiitnselfsigned.key', 'utf8');
 // let certificate = fs.readFileSync('./assets/certs/iiitnselfsigned.crt', 'utf8');
 
-let httpServer = new http.Server(app);
+let httpServer = new (http as any).Server(app);
 // let httpsServer = https.createServer({
 // 	key: privateKey,
 // 	cert: certificate

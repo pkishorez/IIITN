@@ -1,36 +1,37 @@
-import {ISchema, ISchemaPopulate} from 'classui/Components/Form/Schema';
+import {IJSONSchema} from 'classui/Components/Form/Schema';
 
-export let S_User: ISchema = {
-	_id: {
-		type: "string",
-		length: 7
-	},
-	name: {
-		type: "string"
-	},
-	email: {
-		type: "email"
-	},
-	password: {
-		type: "string",
-		minLength: 5
-	},
-	batch: {
-		type: "list",
-		values: ["E1", "E2", "E3", "E4"]
-	},
-	branch: {
-		type: "list",
-		values: ["CSE", "MME", "ECE", "MECH", "CHEMICAL"]
+export let S_User: IJSONSchema = {
+	type: "object",
+	properties: {
+		_id: {
+			type: "string",
+			maxLength: 7,
+			minLength: 7
+		},
+		name: {
+			type: "string"
+		},
+		email: {
+			type: "string",
+			format: "email"
+		},
+		password: {
+			type: "string",
+			minLength: 5
+		},
+		batch: {
+			enum: ["E1", "E2", "E3", "E4"]
+		},
+		branch: {
+			enum: ["CSE", "MME", "ECE", "MECH", "CHEMICAL"]
+		}	
 	}
 };
 
-export let S_UserLogin: ISchema = {
-	_id: S_User._id,
-	password: S_User.password
-};
-
-export let SP_UserProfile: ISchemaPopulate = {
-	schema: S_User,
-	exclude: ["password"]
+export let S_UserLogin: IJSONSchema = {
+	type: "object",
+	properties: {
+		_id: (S_User.properties as any)._id,
+		password: (S_User.properties as any).password	
+	}
 };

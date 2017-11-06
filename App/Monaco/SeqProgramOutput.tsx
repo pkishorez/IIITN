@@ -42,7 +42,7 @@ export class SeqProgramOutput extends React.Component<IProps, IState> {
 				...this.state,
 				output: val
 			});
-		}).catch((val)=>{
+		}).catch((val: string)=>{
 			this.output_seq++;
 			if (program_seq_no<this.output_seq){
 				return;

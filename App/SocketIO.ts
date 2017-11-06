@@ -28,7 +28,7 @@ class _SocketIO {
 	}
 
 	request(req_type: IRequestType, data?: any) {
-		return new Promise((resolve, reject)=>{
+		return new Promise<string>((resolve, reject)=>{
 			if (!this.connected) {
 				reject("Failed connecting to server.");
 				return;

@@ -17,7 +17,7 @@
 		"@types/socket.io": "^1.4.31",
 		"@types/socket.io-client": "^1.4.31",
 		"@types/systemjs": "^0.20.6",
-		"classui": "0.0.55",
+		"classui": "0.0.57",
 		"draft-js": "^0.10.4",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.1",
@@ -30,7 +30,7 @@
 		"express": "^4.16.2",
 		"socket.io": "^2.0.4",
 		"webpack": "^3.8.0",
-		"webpack-dev-server": "^2.9.3",
+		"webpack-dev-server": "^2.9.4",
 		"webpack-node-externals": "^1.6.0"
 	},
 	"author": "Kishore <kishore.iiitn@gmail.com>",

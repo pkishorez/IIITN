@@ -1,6 +1,6 @@
 import {DB} from './';
-import {ISchema, Schema} from 'classui/Components/Form/Schema';
-import {S_User, SP_UserProfile} from './Schema';
+import {Schema} from 'classui/Components/Form/Schema';
+import {S_User} from './Schema';
 import {Promise} from 'es6-promise';
 import * as mongodb from 'mongodb';
 
@@ -36,7 +36,7 @@ export class Database {
 				if (!res) {
 					return Promise.reject("User Details not found.");
 				}
-				return Promise.resolve(Schema.populate(SP_UserProfile, res));
+				return Promise.resolve(res);
 			})
 		})
 	}
@@ -80,6 +80,6 @@ export class User {
 		});
 	}
 	static getProfile(data: any) {
-		return Schema.populate(SP_UserProfile, data);
+		return data;
 	}
 }

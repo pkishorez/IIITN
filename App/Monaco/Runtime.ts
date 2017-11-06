@@ -128,7 +128,7 @@ function runProgramInWorker(code: string, worker_timeout=2)
 	let bdata = "";
 
 
-	return new Promise((resolve, reject)=>{
+	return new Promise<string>((resolve, reject)=>{
 		let rejectRequest = (msg: string)=>{
 			n_workers--;
 			reject(msg);
@@ -177,5 +177,15 @@ export function runProgram(code: string) {
 	var script = document.createElement("script");
 	// Add script content
 	script.innerHTML = code;
+	document.body.appendChild(script);
+}
+
+
+export function runProgramInNewScope(code: string) {
+	var script = document.createElement("script");
+	// Add script content
+	script.innerHTML = `(function(){
+	${code}
+})()`;
 	document.body.appendChild(script);
 }
