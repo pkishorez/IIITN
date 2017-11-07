@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Flash} from 'classui/Components/Flash';
 import {Layout, Section} from 'classui/Components/Layout';
-import {Monaco} from '../Monaco';
-import {runProgramInNewScope} from '../Monaco/Runtime';
-import {compileCode} from '../Monaco/Playground';
+import {Monaco} from '../../Monaco';
+import {runProgramInNewScope} from '../../Monaco/Runtime';
+import {compileCode} from '../../Monaco/Playground';
 import * as _ from 'lodash';
 
 interface IProps {};
@@ -32,7 +32,7 @@ canvas.addObject(rect);`
 }
 ];
 
-export class Starter extends React.Component<IProps, IState> {
+export class PlaygroundCanvas2dStarter extends React.Component<IProps, IState> {
 	componentDidMount() {
 		Monaco.INIT(()=>{
 			monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({

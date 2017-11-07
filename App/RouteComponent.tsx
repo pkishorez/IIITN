@@ -1,13 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Login, Register, Profile, Students} from './Pages';
-import {Home} from './Pages/Home';
+import {Home} from './Pages/Presentation/Home';
 import {RequireAuthentication} from './Pages/Presentation/Login';
 import {Lesson} from './Pages/Lesson';
 import {Typescript} from './Pages/Typescript';
-import {Playground} from './Pages/Playground/index';
-import {PG2D} from './Pages/Playground/PG2D';
-import {Starter} from './Pages/Starter';
+import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from './Pages/Playground/';
 import {Task, AddTask} from './Pages/Task';
 import {store} from './State';
 import {AddQuestion} from './Pages/Questions';
@@ -22,9 +20,9 @@ export class RouteComponent extends React.Component<IProps, IState> {
 			<Route path="/home" strict exact component={Home} />
 			<Route path="/register" strict exact component={Register} />
 			<Route path="/login" strict exact component={Login} />
-			<Route path="/playground" component={Playground} />
-			<Route path="/2dplayground" component={PG2D} />
-			<Route path="/starter" component={Starter} />
+			<Route path="/playground" component={PlaygroundTypescript} />
+			<Route path="/2dplayground" component={PlaygroundCanvas2D} />
+			<Route path="/starter" component={PlaygroundCanvas2dStarter} />
 			<Route path="/lesson" component={Lesson} />
 			<Route path="/typescript" component={Typescript} />
 			<Route path="/questions" component={AddQuestion} />

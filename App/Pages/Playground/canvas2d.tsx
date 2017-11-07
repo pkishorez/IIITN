@@ -48,7 +48,7 @@ let cshape: Shape = new CustomShape([{x: 30, y: 0}, {x: 30, y: 30}, {x: 20, y: 5
 canvas.addObject(cshape);
 move(cshape, 0.3);`;
 
-export class PG2D extends React.Component<IProps, IState> {
+export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 	constructor() {
 		super();
 		let savedCode = localStorage.getItem("PG2D");
