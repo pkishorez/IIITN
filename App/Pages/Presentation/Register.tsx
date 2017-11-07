@@ -58,9 +58,9 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 				<TextField name="name" label="Name">Name</TextField>
 				<TextField name="email" label="Email ID">Email</TextField>
 				<TextField type="password" name="password" label="Password">Password</TextField>
-				Batch : <Select name="batch" options={(S_User.batch as any).values}></Select>
+				Batch : <Select name="batch" options={(S_User.properties as any).batch.enum}></Select>
 				<br/>
-				Branch : <Select name="branch" options={(S_User.branch as any).values}></Select>
+				Branch : <Select name="branch" options={(S_User.properties as any).branch.enum}></Select>
 				<br/>
 				<input type="submit"/>
 			</Formlayout>
