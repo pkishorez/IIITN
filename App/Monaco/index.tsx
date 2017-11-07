@@ -8,6 +8,7 @@ export interface IMonacoProps {
 	fontSize?: number
 	fontFamily?: string
 	lineNumbers?: "on" | "off"
+	editorRef?: (ref: monaco.editor.IStandaloneCodeEditor)=>void
 	diffContent?: {
 		content: string
 	}
@@ -102,16 +103,19 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				scrollBeyondLastLine: false,
 				lineNumbers: this.props.lineNumbers
 			});
+			if (this.props.editorRef) {
+				this.props.editorRef(this.editor);
+			}
 			this.editor.onKeyDown(e=>{
 				if (e.ctrlKey && e.code=="Enter") {
 					e.stopPropagation();
 					e.preventDefault();
 					e.browserEvent.stopImmediatePropagation();
 
-					// Add action if ctrlEnter. This will become famouse keybinding for Monaco in IIITN.
+					// Add action if ctrlEnter. This will become famous keybinding for Monaco in IIITN.
 					this.props.ctrlEnterAction && this.props.ctrlEnterAction();
 				}
-			})
+			});
 			this.editor.getModel().onDidChangeContent((e)=>{
 				let value = this.editor.getValue();
 				if (this.props.getOutput) {
@@ -179,11 +183,12 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div style={{marginBottom: 5}} className="card-0">
+		return <div style={{border: '1px solid rgba(0, 0, 0, 0.2)'}}>
 			<div style={{
-				width: this.props.width, height: this.props.height, paddingTop: 10, paddingBottom: 10, backgroundColor: 'white'
-			}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}>
-			</div>
+				width: this.props.width,
+				height: this.props.height,
+				backgroundColor: 'white'
+			}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
 		</div>;
 	}
 };
