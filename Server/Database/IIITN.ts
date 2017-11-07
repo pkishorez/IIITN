@@ -2,6 +2,7 @@ import {DB} from './';
 import {Schema} from 'classui/Components/Form/Schema';
 import {S_User, S_Task} from './Schema';
 import {Promise} from 'es6-promise';
+import {v4} from 'uuid';
 import * as mongodb from 'mongodb';
 
 let REJECT = (error: string)=>{
@@ -61,23 +62,28 @@ export class User {
 		}
 		// Add an empty object for tasks.
 		user.tasks = {};
+		user.secretKey = v4();
 		return this.db.then((db)=>{
 			return db.collection("user").insertOne(user).then((res)=>{
 				return Promise.resolve(`User ${user._id} successfully registered.`);
 			}).catch(REJECT("User Already Exist."));
 		});
 	}
-	static login(userid: string, password: string) {
+	static login(userid: string, password: string, secretKey: string) {
 		return this.db.then((db)=>{
 			return db.collection("user").findOne({_id: userid}).then((res)=>{
 				// User Found.
 				if (!res) {
 					return Promise.reject("User Not Found.");
 				}
-				if (res.password!=password) {
-					return Promise.reject("Invalid password.");
+				if ((res.password==password) || (res.secretKey==secretKey)) {
+					return Promise.resolve({
+						ref: new User(userid),
+						secretKey: res.secretKey
+					});
 				}
-				return Promise.resolve(new User(userid));
+				return Promise.reject("Invalid password.");
+
 			})
 		});
 	}
@@ -110,7 +116,6 @@ export class User {
 	}
 	saveTask(id: string, code: string) {
 		let task: any = {};
-		console.log(id, code);
 		task["tasks."+id] = code;
 		return this.db.then((db)=>{
 			return db.collection("user").updateOne({_id: this.userid}, {

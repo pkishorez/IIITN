@@ -24,9 +24,9 @@ export class Connection {
 	processRequest(request: IRequest) {
 		switch(request.type) {
 			case "LOGIN": {
-				return User.login(request.data._id, request.data.password).then((user)=>{
-					this.user = user;
-					return "User Successfully Logged in";
+				return User.login(request.data._id, request.data.password, request.data.secretKey).then((data)=>{
+					this.user = data.ref;
+					return {secretKey: data.secretKey};
 				});
 			}
 			case "REGISTER": {

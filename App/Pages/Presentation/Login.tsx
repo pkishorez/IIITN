@@ -50,8 +50,8 @@ class Login_ extends React.Component<IProps, IState> {
 		};
 	}
 	login(data: any) {
-		User.login(data).then((response: string)=>{
-			store.dispatch(A_User.login(data._id));
+		User.login(data).then((response: any)=>{
+			store.dispatch(A_User.login(data._id, response.secretKey));
 			LoginMessage = undefined;
 			(History.props as any).history.replace(RedirectURL);
 		}, (error: string)=>{

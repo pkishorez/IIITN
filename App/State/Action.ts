@@ -2,16 +2,18 @@ import {IUserAction} from './UserReducer';
 import {ITaskAction, ITaskState, ITask} from './TaskReducer';
 
 export let A_User = {
-	login(userid: string): IUserAction {
+	login(userid: string, secretKey: string): IUserAction {
 		return {
 			type: "USER_LOGIN",
-			userid
+			userid,
+			secretKey
 		};
 	},
 	logout(): IUserAction {
 		return {
 			type: "USER_LOGIN",
-			userid: null
+			userid: null,
+			secretKey: null
 		};
 	},
 	goOnline(): IUserAction {

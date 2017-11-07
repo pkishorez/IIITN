@@ -1,5 +1,6 @@
 export interface IUserState {
 	userid: string | null
+	secretKey: string | null
 	online: boolean
 }
 
@@ -11,6 +12,7 @@ export interface IUserAction {
 }
 let defaultState: IUserState = {
 	userid: null,
+	secretKey: null,
 	online: false
 };
 
@@ -19,7 +21,8 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 		case "USER_LOGIN": {
 			state = {
 				...state,
-				userid: action.userid
+				userid: action.userid,
+				secretKey: action.secretKey
 			}
 			break;
 		}
