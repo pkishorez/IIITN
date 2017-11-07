@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Monaco, IMonacoProps} from '../../Monaco';
-import {IFunction, Runtime} from '../../Monaco/Runtime';
+import {IFunction, Runtime} from '../../Monaco/Runtime/';
 import {SeqProgramOutput, SeqTestcaseOutput} from '../../Monaco/SeqProgram/';
 import * as _ from 'lodash';
 

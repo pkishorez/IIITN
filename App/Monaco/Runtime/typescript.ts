@@ -1,7 +1,7 @@
 import * as ts from 'typescript';
 import * as _ from 'lodash';
 
-export function transpileModule(input: string, options: any) {
+function transpileModule(input: string, options: any) {
 	var inputFileName = options.jsx ? "module.tsx" : "module.ts";
 	var sourceFile = ts.createSourceFile(inputFileName, input, options.target || ts.ScriptTarget.ES5);
 	// Output

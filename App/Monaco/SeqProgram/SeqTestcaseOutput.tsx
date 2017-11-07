@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Runtime, IFunction} from '../Runtime';
+import {Runtime, IFunction} from '../Runtime/';
 import * as _ from 'lodash';
 
 interface IProps {

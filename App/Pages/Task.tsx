@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {CanvasMonaco} from '../Monaco/CanvasMonaco';
-import {compileCode} from '../Monaco/Playground';
-import {runProgram} from '../Monaco/Runtime';
+import {compileCode} from '../Monaco/Runtime/typescript';
+import {runProgram} from '../Monaco/Runtime/';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Dropdown} from 'classui/Components/Dropdown';
 import * as _ from 'lodash';

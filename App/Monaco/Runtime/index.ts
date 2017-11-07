@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {transpileModule} from './Playground';
+import {compileCode} from './typescript';
 import * as ts from 'typescript';
 
 // POST MESSAGE
@@ -62,13 +62,7 @@ let Code = {
 		}
 		${this._after}
 		`;
-		return transpileModule(code, {
-			module: ts.ModuleKind.AMD,
-			target: ts.ScriptTarget.ES5,
-			noLib: true,
-			noResolve: true,
-			suppressOutputPathCheck: true
-		});
+		return compileCode(code);
 	}
 }
 

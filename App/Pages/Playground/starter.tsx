@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 import {Flash} from 'classui/Components/Flash';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Monaco} from '../../Monaco';
-import {runProgramInNewScope} from '../../Monaco/Runtime';
-import {compileCode} from '../../Monaco/Playground';
+import {runProgramInNewScope} from '../../Monaco/Runtime/';
+import {compileCode} from '../../Monaco/Runtime/typescript';
 import * as _ from 'lodash';
 
 interface IProps {};
