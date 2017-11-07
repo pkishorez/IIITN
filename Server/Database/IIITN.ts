@@ -1,6 +1,6 @@
 import {DB} from './';
 import {Schema} from 'classui/Components/Form/Schema';
-import {S_User} from './Schema';
+import {S_User, S_Task} from './Schema';
 import {Promise} from 'es6-promise';
 import * as mongodb from 'mongodb';
 
@@ -59,6 +59,8 @@ export class User {
 		if (error){
 			return Promise.reject(error);
 		}
+		// Add an empty object for tasks.
+		user.tasks = {};
 		return this.db.then((db)=>{
 			return db.collection("user").insertOne(user).then((res)=>{
 				return Promise.resolve(`User ${user._id} successfully registered.`);
@@ -81,5 +83,41 @@ export class User {
 	}
 	static getProfile(data: any) {
 		return data;
+	}
+	getTasks() {
+		return this.db.then((db)=>{
+			return db.collection("task").find({}).toArray().then(mainTasks=>{
+				return db.collection("user").find({_id: this.userid}, {tasks: 1}).toArray().then((userTasks)=>{
+					return Promise.resolve({
+						userTasks,
+						mainTasks
+					});
+				}).catch(REJECT("Couldn't get tasks"));
+			}).catch(REJECT("Couldn't get tasks."));
+		})
+	}
+	addTask(data: any) {
+		let error = Schema.validate(S_Task, data);
+		if (error){
+			return Promise.reject(error);
+		}
+
+		return this.db.then((db)=>{
+			return db.collection("task").insertOne(data).then(()=>{
+				return Promise.resolve("Successfully added.");
+			}).catch(REJECT("Couldn't add task."));
+		})
+	}
+	saveTask(id: string, code: string) {
+		let task: any = {};
+		console.log(id, code);
+		task["tasks."+id] = code;
+		return this.db.then((db)=>{
+			return db.collection("user").updateOne({_id: this.userid}, {
+				$set: task
+			}).then(()=>{
+				return Promise.resolve("Successfully saved.");
+			}).catch((e)=>Promise.reject("Couldn't save."+JSON.stringify(e)));
+		})
 	}
 }
