@@ -9,7 +9,7 @@ let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected = false;
+	private connected = true;
 	private socket: SocketIOClient.Socket;
 	constructor() {
 		this.socket = io();
