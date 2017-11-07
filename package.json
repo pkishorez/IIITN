@@ -17,12 +17,14 @@
 		"@types/socket.io": "^1.4.31",
 		"@types/socket.io-client": "^1.4.31",
 		"@types/systemjs": "^0.20.6",
+		"@types/uuid": "^3.4.3",
 		"classui": "0.0.58",
 		"draft-js": "^0.10.4",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.1",
 		"mongodb": "^2.2.33",
-		"systemjs": "^0.20.19"
+		"systemjs": "^0.20.19",
+		"uuid": "^3.1.0"
 	},
 	"devDependencies": {
 		"compression-webpack-plugin": "^1.0.1",
