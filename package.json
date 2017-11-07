@@ -17,7 +17,7 @@
 		"@types/socket.io": "^1.4.31",
 		"@types/socket.io-client": "^1.4.31",
 		"@types/systemjs": "^0.20.6",
-		"classui": "0.0.57",
+		"classui": "0.0.58",
 		"draft-js": "^0.10.4",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.1",
