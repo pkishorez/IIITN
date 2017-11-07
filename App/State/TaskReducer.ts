@@ -2,7 +2,7 @@ export interface ITask {
 	question: string
 	resetCode: string
 	saved: string
-	buffer: string
+	buffer?: string
 }
 export interface ITaskState {
 	[id: string]: ITask

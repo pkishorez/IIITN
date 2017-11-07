@@ -48,27 +48,32 @@ class Task_ extends React.Component<IProps, IState>{
 		};
 		this.loadTask = this.loadTask.bind(this);
 		this.save = this.save.bind(this);
+		this.resetCode = this.resetCode.bind(this);
 		this.saveBuffer = _.debounce(this.saveBuffer.bind(this), 200);
+		this.runCode = this.runCode.bind(this);
 	}
 	componentDidMount() {
 		TaskAction.get().then((ts)=>{
+			let storedTasks = store.getState().tasks;
 			let tasks: IRootState["tasks"] = {};
 			// Compute tasks from ts.
 			ts.mainTasks.map((t: any)=>{
 				tasks[t._id] = {
 					question: t.question,
 					resetCode: t.resetCode,
-					saved: ts.userTasks[0].tasks[t._id],
-					buffer: t.resetCode
+					saved: ts.userTasks[0].tasks[t._id]
 				}
 			});
-			console.log(tasks);
-			store.dispatch(A_Task.init(tasks));
+			for (let i of _.difference(Object.keys(storedTasks), Object.keys(tasks))) {
+				(storedTasks[i] as any) = undefined;
+			}
+			store.dispatch(A_Task.init(_.merge(storedTasks, tasks)));
 		});
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
 		let code = task.buffer?task.buffer:task.resetCode;
+		console.log(task);
 		this.editorRef.setValue(code?code:defaultCode);
 		this.setState({
 			currentTaskNum: taskNum,
@@ -85,8 +90,15 @@ class Task_ extends React.Component<IProps, IState>{
 	save() {
 		TaskAction.save(this.state.currentTask, this.editorRef.getValue()).then(alert).catch(alert);
 	}
+	resetCode() {
+		let code = this.props.tasks[this.state.currentTask];
+		this.editorRef.setValue(code.resetCode?code.resetCode:defaultCode);
+	}
 	saveBuffer(value: string) {
 		store.dispatch(A_Task.saveBuffer(this.state.currentTask, value?value:""));
+	}
+	runCode() {
+		runProgramInNewScope(CompileCanvasCode(this.editorRef.getValue()));
 	}
 	render() {
 		let tasks = [], index = 0;
@@ -97,7 +109,7 @@ class Task_ extends React.Component<IProps, IState>{
 		}
 		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
 			<Section remain>
-				<CanvasMonaco height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>this.editorRef=ref}/>
+				<CanvasMonaco ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>this.editorRef=ref}/>
 			</Section>
 			<Section width={402} style={{overflow: 'auto'}}>
 				<Layout gutter={20}>
@@ -106,8 +118,9 @@ class Task_ extends React.Component<IProps, IState>{
 							{tasks}
 						</Dropdown>
 					</Section>
+					<Section><div className="button" onClick={this.resetCode}>Reset Code</div></Section>
 					<Section><div className="button" onClick={this.save}>Save</div></Section>
-				</Layout>
+					</Layout>
 				<canvas id="tcanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
 				<canvas id="ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
 			</Section>
@@ -130,9 +143,7 @@ export class AddTask extends React.Component {
 	}
 	addTask(data: any) {
 		console.log(data);
-		SocketIO.request("TASK_ADD", {
-			question: data.question
-		}).then(alert).catch(alert);
+		SocketIO.request("TASK_ADD", data).then(alert).catch(alert);
 	}
 	render() {
 		return <Form onSubmit={this.addTask}>
