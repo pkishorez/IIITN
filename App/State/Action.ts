@@ -33,21 +33,21 @@ export let A_Task = {
 			tasks
 		};
 	},
-	add(id: number, task: ITask): ITaskAction {
+	add(id: string, task: ITask): ITaskAction {
 		return {
 			type: "TASK_ADD",
 			id,
 			task
 		}
 	},
-	saveBuffer(id: number, code: string): ITaskAction {
+	saveBuffer(id: string, code: string): ITaskAction {
 		return {
 			type: "TASK_SAVE_BUFFER",
 			id,
 			code
 		}
 	},
-	save(id: number, code: string): ITaskAction {
+	save(id: string, code: string): ITaskAction {
 		return {
 			type: "TASK_SAVE",
 			id,

@@ -1,9 +1,11 @@
 export interface ITask {
+	question: string
+	resetCode: string
 	saved: string
 	buffer: string
 }
 export interface ITaskState {
-	[id: number]: ITask
+	[id: string]: ITask
 }
 
 export type ITaskActionType = "TASK_ADD" | "TASK_SAVE" | "TASK_SAVE_BUFFER" | "TASK_INIT";
@@ -37,4 +39,5 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			break;
 		}
 	}
+	return state;
 }

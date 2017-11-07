@@ -3,7 +3,7 @@ export interface IUserState {
 	online: boolean
 }
 
-export type IUserActionType = "USER_LOGIN" | "USER_REGISTER" | "USER_OFFLINE" | "USER_ONLINE"
+export type IUserActionType = "USER_LOGIN" | "USER_OFFLINE" | "USER_ONLINE"
 
 export interface IUserAction {
 	type: IUserActionType

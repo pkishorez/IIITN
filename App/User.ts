@@ -9,6 +9,22 @@ export let User = {
 	}
 };
 
+export let Task = {
+	add(data: any) {
+		return SocketIO.request("TASK_ADD", data);
+	},
+	get() {
+		return SocketIO.request("TASK_GET");
+	},
+	save(id: string, code: string) {
+		let data = {
+			id,
+			code
+		};
+		return SocketIO.request("TASK_SAVE", data);
+	}
+};
+
 export let Database = {
 	getStudents() {
 		return SocketIO.request("STUDENTS");
