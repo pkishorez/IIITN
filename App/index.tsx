@@ -6,10 +6,18 @@ import {Header} from './Header';
 import {History_} from './History';
 import {RouteComponent} from './RouteComponent';
 import {store, IRootState} from './State';
+import {User} from './User';
 import {ServiceWorker} from './ServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider, connect} from 'react-redux';
 
+if (store.getState().user.userid) {
+	// Reestablish session if user is already logged in.
+	User.login({
+		_id: store.getState().user.userid,
+		secretKey: store.getState().user.secretKey
+	});	
+}
 ServiceWorker.initialize();
 
 interface IProps {
