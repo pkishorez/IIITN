@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Monaco, IMonacoProps} from '../../Monaco';
 import {Runtime} from '../../Monaco/Runtime';
-import {SeqProgramOutput} from '../../Monaco/SeqProgramOutput';
+import {SeqProgramOutput} from '../../Monaco/SeqProgram';
 import {Layout, Section} from 'classui/Components/Layout';
 import * as _ from 'lodash';
 

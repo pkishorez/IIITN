@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Monaco, IMonacoProps} from '../../Monaco';
 import {IFunction, Runtime} from '../../Monaco/Runtime';
-import {SeqProgramOutput, SeqTestcaseOutput} from '../../Monaco/SeqProgram';
+import {SeqProgramOutput, SeqTestcaseOutput} from '../../Monaco/SeqProgram/';
 import * as _ from 'lodash';
 
 export interface IFQuestionProps {
