@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {CanvasMonaco} from '../Monaco/CanvasMonaco';
+import {runProgramInNewScope} from '../Monaco/Runtime/';
 import {compileCode} from '../Monaco/Runtime/typescript';
+import {CompileCanvasCode} from '../Monaco/Runtime/canvas';
 import {runProgram} from '../Monaco/Runtime/';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Dropdown} from 'classui/Components/Dropdown';
@@ -73,7 +75,11 @@ class Task_ extends React.Component<IProps, IState>{
 			currentTask: id
 		});
 		this.dropdown.dismiss();
-
+		console.log(task.question);
+		runProgramInNewScope(CompileCanvasCode(task.question, "tcanvas"));
+		let tc = (document.getElementById("tcanvas") as HTMLCanvasElement);
+		tc.width = 400;
+		tc.height = 250;
 		// Load the question in tcanvas. TODO
 	}
 	save() {
