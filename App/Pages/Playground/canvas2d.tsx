@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Monaco, IMonacoProps} from '../../Monaco';
-import {compileCode} from '../../Monaco/Runtime/typescript';
-import {runProgram} from '../../Monaco/Runtime/';
+import {runProgramInNewScope} from '../../Monaco/Runtime/';
+import {CompileCanvasCode} from '../../Monaco/Runtime/canvas';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item} from 'classui/Components/Menu';
 import {Flash} from 'classui/Components/Flash';
@@ -87,18 +87,14 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 		localStorage.setItem("PG2D", code);
 	}
 	runCode() {
-		let code = this.state.code.replace(/^import [^\n]*/g, "");
-		code = code.replace(/^[\n]import [^\n]*/g, "");
-		code = `(function(){
-			${code}
-		}())`;
+		let compiledCode = CompileCanvasCode(this.state.code);
 		if (document.getElementById("canvas")) {
-			runProgram(compileCode(code));
+			runProgramInNewScope(CompileCanvasCode(compiledCode));
 		}
 		else {
 			Flash.flash((dismiss)=>{
 				return <Canvas runCode={()=>{
-					runProgram(compileCode(code));				
+					runProgramInNewScope(CompileCanvasCode(compiledCode));				
 				}}/>
 			});	
 		}
