@@ -10,7 +10,7 @@ export interface IMonacoProps {
 	fontSize?: number
 	fontFamily?: string
 	lineNumbers?: "on" | "off"
-	editorRef?: (ref: monaco.editor.IStandaloneCodeEditor)=>void
+	editorRef?: (ref: monaco.editor.IStandaloneCodeEditor | monaco.editor.IStandaloneDiffEditor)=>void
 	diffContent?: {
 		content: string
 	}
@@ -151,8 +151,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				readOnly: this.props.readOnly,
 				suggestOnTriggerCharacters: false,
 				wordWrap: "on",
+				automaticLayout: true,				
 				minimap: {
-					enabled: false
+					enabled: true
 				},
 				enableSplitViewResizing: false,
 				renderSideBySide: false,
@@ -168,7 +169,20 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
-			})
+			});
+			this.diffEditor.getModifiedEditor().onKeyDown(e=>{
+				if (e.ctrlKey && e.code=="Enter") {
+					e.stopPropagation();
+					e.preventDefault();
+					e.browserEvent.stopImmediatePropagation();
+
+					// Add action if ctrlEnter. This will become famous keybinding for Monaco in IIITN.
+					this.props.ctrlEnterAction && this.props.ctrlEnterAction();
+				}
+			});
+			if (this.props.editorRef) {
+				this.props.editorRef(this.diffEditor);
+			}
 			if (this.props.autoFocus)
 				this.editor.focus();
 		})
