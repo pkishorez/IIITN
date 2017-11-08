@@ -68,7 +68,7 @@ class Task_ extends React.Component<IProps, IState>{
 				}
 			});
 			for (let i of _.difference(Object.keys(storedTasks), Object.keys(tasks))) {
-				(storedTasks[i] as any) = undefined;
+				delete storedTasks[i];
 			}
 			store.dispatch(A_Task.init(_.merge(storedTasks, tasks)));
 		});
