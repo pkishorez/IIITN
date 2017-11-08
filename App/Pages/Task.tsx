@@ -72,9 +72,10 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
-		let code = task.buffer?task.buffer:task.resetCode;
-		console.log(task);
-		this.editorRef.setValue(code?code:defaultCode);
+		let code = task.buffer?task.buffer:task.saved;
+		code = code?code:task.resetCode;
+		code = code?code:defaultCode;
+		this.editorRef.setValue(code);
 		this.setState({
 			currentTaskNum: taskNum,
 			currentTask: id
@@ -92,7 +93,9 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	resetCode() {
 		let code = this.props.tasks[this.state.currentTask];
-		this.editorRef.setValue(code.resetCode?code.resetCode:defaultCode);
+		let scode = code.saved?code.saved:code.resetCode;
+		scode = scode?scode: defaultCode;
+		this.editorRef.setValue(scode);
 	}
 	saveBuffer(value: string) {
 		store.dispatch(A_Task.saveBuffer(this.state.currentTask, value?value:""));
