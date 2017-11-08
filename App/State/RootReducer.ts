@@ -8,7 +8,7 @@ export interface IRootState {
 	tasks: ITaskState
 }
 
-let AppReducer = combineReducers<IRootState|undefined>({
+let AppReducer = combineReducers<IRootState>({
 	user: UserReducer,
 	tasks: TaskReducer
 });
@@ -16,7 +16,7 @@ let AppReducer = combineReducers<IRootState|undefined>({
 export let RootReducer = (state: IRootState|undefined, action: any)=>{
 	if (action.type=="USER_LOGOUT") {
 		state = undefined;
-		state = AppReducer(state, action) as IRootState;
+		state = AppReducer(state as any, action) as IRootState;
 		state.user = {
 			...state.user,
 			online: SocketIO.onlineStatus
