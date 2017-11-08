@@ -1,6 +1,5 @@
 import {RootReducer, IRootState} from './RootReducer';
 import {createStore, Store} from 'redux';
-import {User} from '../User';
 import * as _ from 'lodash';
 
 export {A_User, A_Task} from './Action';

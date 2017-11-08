@@ -11,9 +11,7 @@ export let A_User = {
 	},
 	logout(): IUserAction {
 		return {
-			type: "USER_LOGIN",
-			userid: null,
-			secretKey: null
+			type: "USER_LOGOUT"
 		};
 	},
 	goOnline(): IUserAction {

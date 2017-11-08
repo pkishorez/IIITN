@@ -9,7 +9,10 @@ let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected = true;
+	private connected: boolean = true;
+	public get onlineStatus(): boolean {
+		return this.connected;
+	}
 	private socket: SocketIOClient.Socket;
 	constructor() {
 		this.socket = io();
