@@ -37,7 +37,7 @@ let canvas = new Canvas(canvasElem, true);
 `;
 
 class Task_ extends React.Component<IProps, IState>{
-	editorRef: monaco.editor.IStandaloneCodeEditor;
+	editorRef: monaco.editor.IStandaloneDiffEditor;
 	dropdown: Dropdown;
 	constructor() {
 		super();
@@ -51,6 +51,7 @@ class Task_ extends React.Component<IProps, IState>{
 		this.resetCode = this.resetCode.bind(this);
 		this.saveBuffer = _.debounce(this.saveBuffer.bind(this), 200);
 		this.runCode = this.runCode.bind(this);
+		this.loadSavedCode = this.loadSavedCode.bind(this);
 	}
 	componentDidMount() {
 		TaskAction.get().then((ts)=>{
@@ -75,7 +76,9 @@ class Task_ extends React.Component<IProps, IState>{
 		let code = task.buffer?task.buffer:task.saved;
 		code = code?code:task.resetCode;
 		code = code?code:defaultCode;
-		this.editorRef.setValue(code);
+
+		this.editorRef.getOriginalEditor().setValue(task.resetCode?task.resetCode:"\n");
+		this.editorRef.getModifiedEditor().setValue(code);
 		this.setState({
 			currentTaskNum: taskNum,
 			currentTask: id
@@ -89,19 +92,25 @@ class Task_ extends React.Component<IProps, IState>{
 		// Load the question in tcanvas. TODO
 	}
 	save() {
-		TaskAction.save(this.state.currentTask, this.editorRef.getValue()).then(alert).catch(alert);
+		TaskAction.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()).then(alert).catch(alert);
+		store.dispatch(A_Task.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()));
+	}
+	loadSavedCode() {
+		let code = this.props.tasks[this.state.currentTask];
+		let scode = code.saved?code.saved:"\n";
+		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	resetCode() {
 		let code = this.props.tasks[this.state.currentTask];
-		let scode = code.saved?code.saved:code.resetCode;
+		let scode = code.resetCode;
 		scode = scode?scode: defaultCode;
-		this.editorRef.setValue(scode);
+		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	saveBuffer(value: string) {
 		store.dispatch(A_Task.saveBuffer(this.state.currentTask, value?value:""));
 	}
 	runCode() {
-		runProgramInNewScope(CompileCanvasCode(this.editorRef.getValue()));
+		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue()));
 	}
 	render() {
 		let tasks = [], index = 0;
@@ -110,22 +119,25 @@ class Task_ extends React.Component<IProps, IState>{
 			let ind = index;
 			tasks.push(<li key={i} onClick={()=>this.loadTask(ind, i)}>Task - {index}</li>);
 		}
-		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
+		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
-				<CanvasMonaco ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>this.editorRef=ref}/>
+				<CanvasMonaco diffContent={{content: ""}} content="" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
-			<Section width={402} style={{overflow: 'auto'}}>
-				<Layout gutter={20}>
+			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
+				<Layout gutter={10}>
 					<Section remain>
-						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskNum!=0)?`Task - ${this.state.currentTaskNum}`: "Tasks"}>
+						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskNum!=0)?`Task ${this.state.currentTaskNum}`: "Tasks"}>
 							{tasks}
 						</Dropdown>
 					</Section>
+					<Section><div className="button" onClick={this.loadSavedCode}>Last Saved Code</div></Section>
 					<Section><div className="button" onClick={this.resetCode}>Reset Code</div></Section>
 					<Section><div className="button" onClick={this.save}>Save</div></Section>
-					</Layout>
+				</Layout>
 				<canvas id="tcanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
-				<canvas id="ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+				<div style={{position: "relative"}}>
+					<canvas id="ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+				</div>
 			</Section>
 		</Layout>;
 	}
