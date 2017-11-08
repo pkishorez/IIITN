@@ -3,10 +3,11 @@ import * as ReactDOM from 'react-dom';
 import {CanvasMonaco} from '../Monaco/CanvasMonaco';
 import {runProgramInNewScope} from '../Monaco/Runtime/';
 import {compileCode} from '../Monaco/Runtime/typescript';
-import {CompileCanvasCode} from '../Monaco/Runtime/canvas';
+import {CompileCanvasCode, canvasElemId} from '../Monaco/Runtime/canvas';
 import {runProgram} from '../Monaco/Runtime/';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Dropdown} from 'classui/Components/Dropdown';
+import {Flash} from 'classui/Components/Flash';
 import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
 import {SocketIO} from '../SocketIO';
@@ -28,7 +29,7 @@ interface IState {
 let defaultCode = `import {Canvas} from 'canvas2d';
 import {Rectangle, Circle, Shape, CustomShape} from 'canvas2d/Shapes';
 
-let canvasElem = document.getElementById("canvas") as HTMLCanvasElement;
+let canvasElem = document.getElementById("${canvasElemId}") as HTMLCanvasElement;
 canvasElem.width = 500;
 canvasElem.height = 400;
 canvasElem.style.backgroundColor = "white";
@@ -52,6 +53,7 @@ class Task_ extends React.Component<IProps, IState>{
 		this.saveBuffer = _.debounce(this.saveBuffer.bind(this), 200);
 		this.runCode = this.runCode.bind(this);
 		this.loadSavedCode = this.loadSavedCode.bind(this);
+		this.runFullScreen = this.runFullScreen.bind(this);
 	}
 	componentDidMount() {
 		TaskAction.get().then((ts)=>{
@@ -85,7 +87,7 @@ class Task_ extends React.Component<IProps, IState>{
 		});
 		this.dropdown.dismiss();
 		console.log(task.question);
-		runProgramInNewScope(CompileCanvasCode(task.question, "tcanvas"));
+		runProgramInNewScope(CompileCanvasCode(task.question, "c_tcanvas"));
 		let tc = (document.getElementById("tcanvas") as HTMLCanvasElement);
 		tc.width = 400;
 		tc.height = 250;
@@ -110,7 +112,14 @@ class Task_ extends React.Component<IProps, IState>{
 		store.dispatch(A_Task.saveBuffer(this.state.currentTask, value?value:""));
 	}
 	runCode() {
-		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue()));
+		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_ycanvas"));
+	}
+	runFullScreen() {
+		Flash.flash((dismiss)=>{
+			return <canvas id="c_fullscreen" width={600} height={500} ref={()=>{
+				runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_fullscreen"));				
+			}}></canvas>;
+		}, false, true);
 	}
 	render() {
 		let tasks = [], index = 0;
@@ -134,9 +143,10 @@ class Task_ extends React.Component<IProps, IState>{
 					<Section><div className="button" onClick={this.resetCode}>Reset Code</div></Section>
 					<Section><div className="button" onClick={this.save}>Save</div></Section>
 				</Layout>
-				<canvas id="tcanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+				<canvas id="c_tcanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
 				<div style={{position: "relative"}}>
-					<canvas id="ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+					<canvas id="c_ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+					<span className="button" onClick={this.runFullScreen} style={{position: "absolute",display: "inline-block", bottom: 0, right: 0}}>FullScreen</span>
 				</div>
 			</Section>
 		</Layout>;
