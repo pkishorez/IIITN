@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 
+declare let monacoAmdRequire: any;
+
 export interface IMonacoProps {
 	width?: string|number
 	height?: string|number
@@ -59,8 +61,8 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			func();
 			return;
 		}
-		(window as any).require.config({ paths: { 'vs': '/assets/vs' }});
-		(window as any).require(['vs/editor/editor.main'], () => {
+		monacoAmdRequire.config({ paths: { 'vs': '/assets/vs' }});
+		monacoAmdRequire(['vs/editor/editor.main'], () => {
 			if(typeof monaco != "undefined") {
 				this._typescriptDefaults = {
 					compilerOptions: {
