@@ -41,6 +41,31 @@ export class Database {
 			})
 		})
 	}
+	static addTask(data: any) {
+		let error = Schema.validate(S_Task, data);
+		if (error){
+			return Promise.reject(error);
+		}
+
+		return this.db.then((db)=>{
+			return db.collection("task").insertOne(data).then(()=>{
+				return Promise.resolve("Successfully added.");
+			}).catch(REJECT("Couldn't add task."));
+		})
+	}
+	static modifyTask(data: any) {
+		let error = Schema.validate(S_Task, data);
+		if (error){
+			return Promise.reject(error);
+		}
+
+		return this.db.then((db)=>{
+			return db.collection("task").updateOne({_id: new mongodb.ObjectID(data.id)}, data).then(()=>{
+				return Promise.resolve("Successfully Modified.");
+			}).catch(REJECT("Couldn't modify task."));
+		})
+
+	}
 }
 
 export class User {
@@ -100,18 +125,6 @@ export class User {
 					});
 				}).catch(REJECT("Couldn't get tasks"));
 			}).catch(REJECT("Couldn't get tasks."));
-		})
-	}
-	addTask(data: any) {
-		let error = Schema.validate(S_Task, data);
-		if (error){
-			return Promise.reject(error);
-		}
-
-		return this.db.then((db)=>{
-			return db.collection("task").insertOne(data).then(()=>{
-				return Promise.resolve("Successfully added.");
-			}).catch(REJECT("Couldn't add task."));
 		})
 	}
 	saveTask(id: string, code: string) {

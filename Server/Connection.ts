@@ -1,6 +1,6 @@
 import {User, Database} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
-export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS" | "PROFILE" | "TASK_ADD" | "TASK_GET" | "TASK_SAVE"
+export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS" | "PROFILE" | "TASK_ADD" | "TASK_GET" | "TASK_SAVE" | "TASK_MODIFY"
 
 export interface IRequest {
 	id: number
@@ -45,7 +45,10 @@ export class Connection {
 		switch(request.type) {
 			// Authenticated actions goes here...
 			case "TASK_ADD": {
-				return this.user.addTask(request.data);
+				return Database.addTask(request.data);
+			}
+			case "TASK_MODIFY": {
+				return Database.modifyTask(request.data);
 			}
 			case "TASK_GET": {
 				return this.user.getTasks();
