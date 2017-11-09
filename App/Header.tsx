@@ -32,7 +32,7 @@ class _Header extends React.Component<IProps, IState> {
 			</Dropdown>
 			<Dropdown button="tasks" ref={(ref)=>this.dropdown2 = ref as Dropdown} push="left">
 				<RLink to="/task"><li onClick={()=>this.dropdown2.dismiss()}>My Tasks</li></RLink>
-				<RLink to="/task/add"><li onClick={()=>this.dropdown2.dismiss()}>Add Task</li></RLink>
+				<RLink to="/task/manage"><li onClick={()=>this.dropdown2.dismiss()}>Manage Tasks</li></RLink>
 				<li>Dashboard (TODO)</li>
 			</Dropdown>
 			{/*}

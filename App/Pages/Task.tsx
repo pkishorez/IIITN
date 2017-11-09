@@ -92,10 +92,6 @@ class Task_ extends React.Component<IProps, IState>{
 		this.dropdown.dismiss();
 		console.log(task.question);
 		runProgramInNewScope(CompileCanvasCode(task.question, "c_tcanvas"));
-		let tc = (document.getElementById("tcanvas") as HTMLCanvasElement);
-		tc.width = 400;
-		tc.height = 250;
-		// Load the question in tcanvas. TODO
 	}
 	save() {
 		TaskAction.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()).then(alert).catch(alert);
@@ -164,27 +160,64 @@ let mapStateToProps = (state: IRootState): IProps=>{
 };
 export let Task = connect(mapStateToProps)(Task_);
 
-class AddTask_ extends React.Component<IProps> {
+interface IAddTaskState {
+	currentTask: string | "NEW TASK"
+}
+class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 	resetCodeRef: monaco.editor.IStandaloneCodeEditor;
 	questionRef: monaco.editor.IStandaloneCodeEditor;
+	dropdown: Dropdown;
 	constructor() {
 		super();
+		this.state = {
+			currentTask: "NEW TASK"
+		};
 		this.addTask = this.addTask.bind(this);
 		this.runCode = this.runCode.bind(this);
+		this.loadTask = this.loadTask.bind(this);
+		this.modifyTask = this.modifyTask.bind(this);
+		this.saveTask = this.saveTask.bind(this);
 		SocketIO.request("TASK_GET").then(console.log).catch(console.log);
 	}
 	addTask() {
 		let data: any = {};
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
-		SocketIO.request("TASK_ADD", data).then((success)=>{
+		TaskAction.add(data).then((success)=>{
 			alert(success);
-			this.questionRef.setValue("");
-			this.resetCodeRef.setValue("");
+			this.questionRef.setValue(defaultCode);
+			this.resetCodeRef.setValue(defaultCode);
 		}).catch(alert);
+		Task_.initTasks();
 	}
-	loadTask() {
-
+	modifyTask() {
+		let data: any = {};
+		data.id = this.state.currentTask;
+		data.question = this.questionRef.getValue();
+		data.resetCode = this.resetCodeRef.getValue();
+		SocketIO.request("TASK_MODIFY", data).then(alert).catch(alert);
+		Task_.initTasks();
+	}
+	saveTask() {
+		if (this.state.currentTask!="NEW TASK") {
+			this.modifyTask();
+		}
+		else {
+			this.addTask();
+		}
+	}
+	loadTask(id: string) {
+		this.setState({
+			currentTask: id
+		});
+		this.dropdown.dismiss();
+		if (id=="") {
+			this.questionRef.setValue(defaultCode);
+			this.resetCodeRef.setValue(defaultCode);
+		}
+		let task = this.props.tasks[id];
+		this.resetCodeRef.setValue(task.resetCode?task.resetCode:"");
+		this.questionRef.setValue(task.question?task.question:"");
 	}
 	runCode() {
 		Flash.flash((dimsiss)=>{
@@ -195,18 +228,33 @@ class AddTask_ extends React.Component<IProps> {
 		}, false, true);
 	}
 	render() {
-		return <Layout gutter={20} equalWidth>
-			<Section>
-				<h3>Question
-					<span className="button" onClick={this.addTask}>Save</span>
-				</h3>
-				<CanvasMonaco height={500} content={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref)=>(this.questionRef as any)=ref}/>
-			</Section>
-			<Section>
-				<h3>ResetCode</h3>
-				<CanvasMonaco height={500} content={defaultCode} editorRef={(ref)=>(this.resetCodeRef as any)=ref}/>
-			</Section>
-		</Layout>
+		let tasks = [];
+		tasks.push(<li key={""} onClick={()=>this.loadTask("")}>New Task</li>)
+		for (let i in this.props.tasks) {
+			tasks.push(<li key={i} onClick={()=>this.loadTask(i)}>Task - {i}</li>);
+		}
+		return <div style={{display: 'inline-block', width: "100%"}}>
+			<Layout gutter={20} justify="start" style={{margin: 20}}>
+				<Section>
+					<span className="button" onClick={this.saveTask}>Save</span>
+				</Section>
+				<Section remain>
+					<div style={{zIndex: 10, position: "relative"}}>
+						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={this.state.currentTask=="NEW TASK"?this.state.currentTask:`Task ${this.state.currentTask}`}>
+							{tasks}
+						</Dropdown>
+					</div>
+				</Section>
+			</Layout>
+			<Layout gutter={20} equalWidth>
+				<Section>
+					<CanvasMonaco height={500} content={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref)=>(this.questionRef as any)=ref}/>
+				</Section>
+				<Section>
+					<CanvasMonaco height={500} content={defaultCode} editorRef={(ref)=>(this.resetCodeRef as any)=ref}/>
+				</Section>
+			</Layout>
+		</div>;
 	}
 }
 
@@ -215,4 +263,4 @@ let AddTaskmapStateToProps = (state: IRootState): IProps=>{
 		tasks: state.tasks
 	}
 };
-export let AddTask = connect(AddTaskmapStateToProps)(AddTask_);
+export let TaskManager = connect(AddTaskmapStateToProps)(TaskManager_);

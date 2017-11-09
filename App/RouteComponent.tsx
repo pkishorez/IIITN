@@ -6,7 +6,7 @@ import {RequireAuthentication} from './Pages/Presentation/Login';
 import {Lesson} from './Pages/Lesson';
 import {Typescript} from './Pages/Typescript';
 import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from './Pages/Playground/';
-import {Task, AddTask} from './Pages/Task';
+import {Task, TaskManager} from './Pages/Task';
 import {store} from './State';
 import {AddQuestion} from './Pages/Questions';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
@@ -35,7 +35,7 @@ export class RouteComponent extends React.Component<IProps, IState> {
 				}
 				return <Switch>
 					<Route path="/task" exact component={Task}/>
-					<Route path="/task/add" component={AddTask}/>
+					<Route path="/task/manage" component={TaskManager}/>
 					<Route path="/profile/:userid" render={(props)=><Profile userid={props.match.params.userid}/>} />
 				</Switch>;
 			}}/>
