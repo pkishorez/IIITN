@@ -25,10 +25,10 @@ interface IProps {
 };
 let _App = (props: IProps)=>{
 	return <BrowserRouter>
-		<ClassUI contentWidth={1024} offline={props.isOffline}>
+		<ClassUI contentWidth={1200} offline={props.isOffline}>
 			<History_ />
 			<Header />
-			<Content>
+			<Content fullHeight>
 			<RouteComponent />
 			</Content>
 		</ClassUI>
