@@ -55,7 +55,8 @@ class Task_ extends React.Component<IProps, IState>{
 		this.loadSavedCode = this.loadSavedCode.bind(this);
 		this.runFullScreen = this.runFullScreen.bind(this);
 	}
-	componentDidMount() {
+
+	static initTasks() {
 		TaskAction.get().then((ts)=>{
 			let storedTasks = store.getState().tasks;
 			let tasks: IRootState["tasks"] = {};
@@ -72,6 +73,9 @@ class Task_ extends React.Component<IProps, IState>{
 			}
 			store.dispatch(A_Task.init(_.merge(storedTasks, tasks)));
 		});
+	}
+	componentDidMount() {
+		Task_.initTasks();
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
@@ -160,21 +164,55 @@ let mapStateToProps = (state: IRootState): IProps=>{
 };
 export let Task = connect(mapStateToProps)(Task_);
 
-export class AddTask extends React.Component {
+class AddTask_ extends React.Component<IProps> {
+	resetCodeRef: monaco.editor.IStandaloneCodeEditor;
+	questionRef: monaco.editor.IStandaloneCodeEditor;
 	constructor() {
 		super();
 		this.addTask = this.addTask.bind(this);
+		this.runCode = this.runCode.bind(this);
 		SocketIO.request("TASK_GET").then(console.log).catch(console.log);
 	}
-	addTask(data: any) {
-		console.log(data);
-		SocketIO.request("TASK_ADD", data).then(alert).catch(alert);
+	addTask() {
+		let data: any = {};
+		data.question = this.questionRef.getValue();
+		data.resetCode = this.resetCodeRef.getValue();
+		SocketIO.request("TASK_ADD", data).then((success)=>{
+			alert(success);
+			this.questionRef.setValue("");
+			this.resetCodeRef.setValue("");
+		}).catch(alert);
+	}
+	loadTask() {
+
+	}
+	runCode() {
+		Flash.flash((dimsiss)=>{
+			return <canvas id="canvas" width={400} height={300} ref={()=>{
+				runProgramInNewScope(CompileCanvasCode(this.questionRef.getValue(), "canvas"));				
+			}}>
+			</canvas>;
+		}, false, true);
 	}
 	render() {
-		return <Form onSubmit={this.addTask}>
-			<Text type="area" name="question" >Question</Text>
-			<Text type="area" name="resetCode" >Reset Code :)</Text>
-			<input type="submit" />
-		</Form>
+		return <Layout gutter={20} equalWidth>
+			<Section>
+				<h3>Question
+					<span className="button" onClick={this.addTask}>Save</span>
+				</h3>
+				<CanvasMonaco height={500} content={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref)=>(this.questionRef as any)=ref}/>
+			</Section>
+			<Section>
+				<h3>ResetCode</h3>
+				<CanvasMonaco height={500} content={defaultCode} editorRef={(ref)=>(this.resetCodeRef as any)=ref}/>
+			</Section>
+		</Layout>
 	}
 }
+
+let AddTaskmapStateToProps = (state: IRootState): IProps=>{
+	return {
+		tasks: state.tasks
+	}
+};
+export let AddTask = connect(AddTaskmapStateToProps)(AddTask_);
