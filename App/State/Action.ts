@@ -1,5 +1,5 @@
-import {IUserAction} from './UserReducer';
-import {ITaskAction, ITaskState, ITask} from './TaskReducer';
+import {IUserAction} from './Reducers/UserReducer';
+import {ITaskAction, ITaskState, ITask} from './Reducers/TaskReducer';
 
 export let A_User = {
 	login(userid: string, secretKey: string): IUserAction {
