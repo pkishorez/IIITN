@@ -95,7 +95,10 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	save() {
 		TaskAction.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()).then(alert).catch(alert);
-		store.dispatch(A_Task.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()));
+		store.dispatch(A_Task.save({
+			id: this.state.currentTask,
+			code: this.editorRef.getModifiedEditor().getValue()
+		}));
 	}
 	loadSavedCode() {
 		let code = this.props.tasks[this.state.currentTask];
@@ -109,7 +112,10 @@ class Task_ extends React.Component<IProps, IState>{
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	saveBuffer(value: string) {
-		store.dispatch(A_Task.saveBuffer(this.state.currentTask, value?value:""));
+		store.dispatch(A_Task.saveBuffer({
+			id: this.state.currentTask,
+			code: value?value:""
+		}));
 	}
 	runCode() {
 		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_ycanvas"));

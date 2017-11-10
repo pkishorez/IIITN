@@ -2,13 +2,15 @@ import {IUserAction} from './Reducers/UserReducer';
 import {ITaskAction, ITaskState, ITask} from './Reducers/TaskReducer';
 
 export let A_User = {
-	login(userid: string, secretKey: string): IUserAction {
+	// NETWORK requests goes here.
+	login(data: {userid: string,secretKey: string}): IUserAction {
 		return {
 			type: "USER_LOGIN",
-			userid,
-			secretKey
+			...data
 		};
 	},
+
+	// Local Requests goes here.
 	logout(): IUserAction {
 		return {
 			type: "USER_LOGOUT"
@@ -27,31 +29,32 @@ export let A_User = {
 }
 
 export let A_Task = {
+
+	// NETWORK REQUESTS GOES HERE.
 	init(tasks: ITaskState): ITaskAction {
 		return {
 			type: "TASK_INIT",
 			tasks
 		};
 	},
-	add(id: string, task: ITask): ITaskAction {
+	add(data: {id: string,task: ITask}): ITaskAction {
 		return {
 			type: "TASK_ADD",
-			id,
-			task
+			...data
 		}
 	},
-	saveBuffer(id: string, code: string): ITaskAction {
-		return {
-			type: "TASK_SAVE_BUFFER",
-			id,
-			code
-		}
-	},
-	save(id: string, code: string): ITaskAction {
+	save(data: {id: string, code: string}): ITaskAction {
 		return {
 			type: "TASK_SAVE",
-			id,
-			code
+			...data
 		};
+	},
+
+	// Local requests.
+	saveBuffer(data: {id: string, code: string}): ITaskAction {
+		return {
+			type: "TASK_SAVE_BUFFER",
+			...data
+		}
 	}
 }

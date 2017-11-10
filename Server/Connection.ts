@@ -24,7 +24,7 @@ export class Connection {
 	processRequest(request: IRequest) {
 		switch(request.type) {
 			case "LOGIN": {
-				return User.login(request.data._id, request.data.password, request.data.secretKey).then((data)=>{
+				return User.login(request.data).then((data)=>{
 					this.user = data.ref;
 					return {secretKey: data.secretKey};
 				});
@@ -54,7 +54,7 @@ export class Connection {
 				return this.user.getTasks();
 			}
 			case "TASK_SAVE": {
-				return this.user.saveTask(request.data.id, request.data.code);
+				return this.user.saveTask(request.data);
 			}
 		}
 		return Promise.reject(`Request type ${request.type} not found.`);
@@ -63,12 +63,12 @@ export class Connection {
 	initialize() {
 		this.socket.on('request', (request: IRequest)=>{
 			// Process request and send response in data.
-			this.processRequest(request).then((data)=>{
+			this.processRequest(request).then((data: any)=>{
 				let response: IResponse = {
 					data
 				};
 				this.socket.emit(getResponseID(request.id), response);	
-			}).catch((error)=>{
+			}).catch((error: any)=>{
 				let response: IResponse = {
 					error
 				};

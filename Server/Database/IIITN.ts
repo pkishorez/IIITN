@@ -1,6 +1,7 @@
-import {DB} from './';
+import {MongoDB} from './';
 import {Schema} from 'classui/Components/Form/Schema';
 import {S_User, S_Task} from './Schema';
+import {INR_Task, INR_User} from '../../Common/ActionSignature'
 import {Promise} from 'es6-promise';
 import {v4} from 'uuid';
 import * as mongodb from 'mongodb';
@@ -13,12 +14,12 @@ let REJECT = (error: string)=>{
 
 export class Database {
 	private static get db(){
-		return DB.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
+		return MongoDB.db.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
 	}
 	private get db() {
 		return Database.db;
 	}
-	
+
 	// Database related Functions all goes here...
 
 	static getStudents() {
@@ -41,19 +42,22 @@ export class Database {
 			})
 		})
 	}
-	static addTask(data: any) {
-		let error = Schema.validate(S_Task, data);
+	static addTask(data: INR_Task["TASK_ADD"]) {
+		let error = Schema.validate(S_Task, data.task);
 		if (error){
 			return Promise.reject(error);
 		}
 
 		return this.db.then((db)=>{
-			return db.collection("task").insertOne(data).then(()=>{
-				return Promise.resolve("Successfully added.");
+			return db.collection("task").insertOne(data.task).then<INR_Task["TASK_ADD"]>((res)=>{
+				return Promise.resolve({
+					task: data.task,
+					id: res.insertedId.toString()
+				});
 			}).catch(REJECT("Couldn't add task."));
 		})
 	}
-	static modifyTask(data: any) {
+	static modifyTask(data: INR_Task["TASK_MODIFY"]) {
 		let error = Schema.validate(S_Task, data);
 		if (error){
 			return Promise.reject(error);
@@ -75,7 +79,7 @@ export class User {
 		this.userid = userid;
 	}
 	private static get db(){
-		return DB.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
+		return MongoDB.db.then<mongodb.Db>(db=>Promise.resolve(db), REJECT("Failed to connect database."));
 	}
 	private get db() {
 		return User.db;
@@ -94,16 +98,16 @@ export class User {
 			}).catch(REJECT("User Already Exist."));
 		});
 	}
-	static login(userid: string, password: string, secretKey: string) {
+	static login(data: INR_User["USER_LOGIN"]) {
 		return this.db.then((db)=>{
-			return db.collection("user").findOne({_id: userid}).then((res)=>{
+			return db.collection("user").findOne({_id: data.userid}).then((res)=>{
 				// User Found.
 				if (!res) {
 					return Promise.reject("User Not Found.");
 				}
-				if ((res.password==password) || (res.secretKey==secretKey)) {
+				if ((res.password==data.password) || (res.secretKey==data.secretKey)) {
 					return Promise.resolve({
-						ref: new User(userid),
+						ref: new User(data.userid),
 						secretKey: res.secretKey
 					});
 				}
@@ -127,12 +131,12 @@ export class User {
 			}).catch(REJECT("Couldn't get tasks."));
 		})
 	}
-	saveTask(id: string, code: string) {
-		let task: any = {};
-		task["tasks."+id] = code;
+	saveTask(data: INR_Task["TASK_SAVE"]) {
 		return this.db.then((db)=>{
 			return db.collection("user").updateOne({_id: this.userid}, {
-				$set: task
+				$set: {
+					["tasks."+data.id]: data.code
+				}
 			}).then(()=>{
 				return Promise.resolve("Successfully saved.");
 			}).catch((e)=>Promise.reject("Couldn't save."+JSON.stringify(e)));
