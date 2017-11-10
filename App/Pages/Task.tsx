@@ -14,7 +14,7 @@ import {Network} from '../Network';
 import {connect} from 'react-redux';
 import {IRootState, A_Task, store} from '../State';
 import {Task as TaskAction} from '../MyActions';
-import {ITask} from '../State/TaskReducer';
+import {ITask} from '../State/Reducers/TaskReducer';
 
 interface IProps {
 	tasks: IRootState["tasks"]
