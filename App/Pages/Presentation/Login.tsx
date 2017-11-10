@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {store} from '../../State';
 import {A_User} from '../../State/Action';
 import {S_UserLogin} from '../../../Server/Database/Schema';
-import {User} from '../../User';
+import {User} from '../../MyActions';
 import {History} from '../../History';
 
 interface IProps {

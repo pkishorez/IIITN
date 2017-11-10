@@ -6,7 +6,7 @@ import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Select} from 'classui/Components/Form/Select';
 import {S_User} from '../../../Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
-import {User} from '../../User';
+import {User} from '../../MyActions';
 import {RequireAuthentication} from './Login';
 import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 

@@ -13,7 +13,7 @@ import {Form, Text} from 'classui/Components/Form';
 import {Network} from '../Network';
 import {connect} from 'react-redux';
 import {IRootState, A_Task, store} from '../State';
-import {Task as TaskAction} from '../User';
+import {Task as TaskAction} from '../MyActions';
 import {ITask} from '../State/TaskReducer';
 
 interface IProps {

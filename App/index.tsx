@@ -6,7 +6,7 @@ import {Header} from './Header';
 import {History_} from './History';
 import {RouteComponent} from './RouteComponent';
 import {store, IRootState} from './State';
-import {User} from './User';
+import {User} from './MyActions';
 import {ServiceWorker} from './Network/ServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider, connect} from 'react-redux';
