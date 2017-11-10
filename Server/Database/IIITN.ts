@@ -51,8 +51,8 @@ export class Database {
 		return this.db.then((db)=>{
 			return db.collection("task").insertOne(data.task).then<INR_Task["TASK_ADD"]>((res)=>{
 				return Promise.resolve({
-					task: data.task,
-					id: res.insertedId.toString()
+					id: res.insertedId.toString(),
+					task: data.task
 				});
 			}).catch(REJECT("Couldn't add task."));
 		})
@@ -131,7 +131,7 @@ export class User {
 			}).catch(REJECT("Couldn't get tasks."));
 		})
 	}
-	saveTask(data: INR_Task["TASK_SAVE"]) {
+	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
 		return this.db.then((db)=>{
 			return db.collection("user").updateOne({_id: this.userid}, {
 				$set: {

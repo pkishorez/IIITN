@@ -1,6 +1,7 @@
 import {User, Database} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
-export type IRequestType = "LOGIN" | "REGISTER" | "STUDENTS" | "PROFILE" | "TASK_ADD" | "TASK_GET" | "TASK_SAVE" | "TASK_MODIFY"
+import {INR_Task, INR_User} from '../Common/ActionSignature';
+export type IRequestType = "REGISTER" | "STUDENTS" | "PROFILE" | keyof(INR_Task) | keyof(INR_User) | "TASK_GET"
 
 export interface IRequest {
 	id: number
@@ -23,7 +24,7 @@ export class Connection {
 
 	processRequest(request: IRequest) {
 		switch(request.type) {
-			case "LOGIN": {
+			case "USER_LOGIN": {
 				return User.login(request.data).then((data)=>{
 					this.user = data.ref;
 					return {secretKey: data.secretKey};
@@ -53,7 +54,7 @@ export class Connection {
 			case "TASK_GET": {
 				return this.user.getTasks();
 			}
-			case "TASK_SAVE": {
+			case "USER_TASK_SAVE": {
 				return this.user.saveTask(request.data);
 			}
 		}

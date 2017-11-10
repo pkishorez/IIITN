@@ -28,7 +28,7 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			};
 			break;
 		}
-		case "TASK_SAVE": {
+		case "USER_TASK_SAVE": {
 			state = {
 				...state,
 				[action.id]: {

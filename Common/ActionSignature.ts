@@ -13,13 +13,13 @@ export interface INR_Task {
 		id?: string // Mandatory for local, not mandatory for network.
 		task: ITask
 	}
-	TASK_SAVE: {
-		id: string
-		code: string
-	}
 	TASK_MODIFY: {
 		id: string
 		question: string
 		resetCode: string
+	}
+	USER_TASK_SAVE: {
+		id: string
+		code: string
 	}
 }

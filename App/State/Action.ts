@@ -26,6 +26,12 @@ export let A_User = {
 		return {
 			type: "USER_OFFLINE"
 		}
+	},
+	saveTask(data: INR_Task["USER_TASK_SAVE"]): ITaskAction {
+		return {
+			type: "USER_TASK_SAVE",
+			...data
+		};
 	}
 }
 
@@ -44,9 +50,9 @@ export let A_Task = {
 			...data
 		}
 	},
-	save(data: INR_Task["TASK_SAVE"]): ITaskAction {
+	modify(data: INR_Task["TASK_MODIFY"]): ITaskAction {
 		return {
-			type: "TASK_SAVE",
+			type: "TASK_MODIFY",
 			...data
 		};
 	},

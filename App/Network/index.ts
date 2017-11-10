@@ -4,6 +4,7 @@ import {getResponseID} from '../../Common/Utils';
 import {IRequestType, IRequest, IResponse} from '../../Server/Connection';
 import {A_User, store} from '../State';
 import * as io from 'socket.io-client';
+import * as _ from 'lodash';
 
 let Socket: _SocketIO;
 let g_reqid = 0;
@@ -55,6 +56,17 @@ class _SocketIO {
 				this.socket.off(responseID);
 			});
 		});
+	}
+	requestAndDispatch(req_type: IRequestType, data: any, userAction: any) {
+		return this.request(req_type, data).then((response)=>{
+			if (typeof response == "object") {
+				store.dispatch(userAction(_.merge(data, response)));				
+			}
+			else {
+				store.dispatch(userAction(data));
+			}
+			return response;
+		})
 	}
 }
 

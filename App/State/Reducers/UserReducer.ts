@@ -5,7 +5,7 @@ export interface IUserState {
 	online: boolean
 }
 
-export type IUserActionType = "USER_OFFLINE" | "USER_ONLINE" | keyof(INR_User)
+export type IUserActionType = "USER_LOGOUT" | "USER_OFFLINE" | "USER_ONLINE" | keyof(INR_User)
 
 export interface IUserAction {
 	type: IUserActionType
