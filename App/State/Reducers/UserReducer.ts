@@ -1,10 +1,11 @@
+import {INR_User} from '../../../Common/ActionSignature';
 export interface IUserState {
-	userid: string | null
-	secretKey: string | null
+	userid?: string | null
+	secretKey?: string | null
 	online: boolean
 }
 
-export type IUserActionType = "USER_LOGIN" | "USER_LOGOUT" | "USER_OFFLINE" | "USER_ONLINE"
+export type IUserActionType = "USER_OFFLINE" | "USER_ONLINE" | keyof(INR_User)
 
 export interface IUserAction {
 	type: IUserActionType

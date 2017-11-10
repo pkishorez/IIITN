@@ -1,9 +1,10 @@
 import {IUserAction} from './Reducers/UserReducer';
 import {ITaskAction, ITaskState, ITask} from './Reducers/TaskReducer';
+import {INR_Task, INR_User} from '../../Common/ActionSignature';
 
 export let A_User = {
 	// NETWORK requests goes here.
-	login(data: {userid: string,secretKey: string}): IUserAction {
+	login(data: INR_User["USER_LOGIN"]): IUserAction {
 		return {
 			type: "USER_LOGIN",
 			...data
@@ -37,13 +38,13 @@ export let A_Task = {
 			tasks
 		};
 	},
-	add(data: {id: string,task: ITask}): ITaskAction {
+	add(data: INR_Task["TASK_ADD"]): ITaskAction {
 		return {
 			type: "TASK_ADD",
 			...data
 		}
 	},
-	save(data: {id: string, code: string}): ITaskAction {
+	save(data: INR_Task["TASK_SAVE"]): ITaskAction {
 		return {
 			type: "TASK_SAVE",
 			...data
