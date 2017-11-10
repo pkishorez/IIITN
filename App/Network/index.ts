@@ -1,8 +1,8 @@
 import {NavBar} from 'classui/Navbar';
 import {Promise} from 'es6-promise';
-import {getResponseID} from '../Common/Utils';
-import {IRequestType, IRequest, IResponse} from '../Server/Connection';
-import {A_User, store} from './State';
+import {getResponseID} from '../../Common/Utils';
+import {IRequestType, IRequest, IResponse} from '../../Server/Connection';
+import {A_User, store} from '../State';
 import * as io from 'socket.io-client';
 
 let Socket: _SocketIO;
@@ -58,4 +58,4 @@ class _SocketIO {
 	}
 }
 
-export let SocketIO = new _SocketIO();
+export let Network = new _SocketIO();

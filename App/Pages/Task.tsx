@@ -10,7 +10,7 @@ import {Dropdown} from 'classui/Components/Dropdown';
 import {Flash} from 'classui/Components/Flash';
 import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
-import {SocketIO} from '../SocketIO';
+import {Network} from '../Network';
 import {connect} from 'react-redux';
 import {IRootState, A_Task, store} from '../State';
 import {Task as TaskAction} from '../User';
@@ -177,7 +177,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		this.loadTask = this.loadTask.bind(this);
 		this.modifyTask = this.modifyTask.bind(this);
 		this.saveTask = this.saveTask.bind(this);
-		SocketIO.request("TASK_GET").then(console.log).catch(console.log);
+		Network.request("TASK_GET").then(console.log).catch(console.log);
 	}
 	addTask() {
 		let data: any = {};
@@ -195,7 +195,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		data.id = this.state.currentTask;
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
-		SocketIO.request("TASK_MODIFY", data).then(alert).catch(alert);
+		Network.request("TASK_MODIFY", data).then(alert).catch(alert);
 		Task_.initTasks();
 	}
 	saveTask() {

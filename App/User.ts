@@ -1,36 +1,36 @@
-import {SocketIO} from './SocketIO';
+import {Network} from './Network/';
 
 export let User = {
 	login(data: any) {
-		return SocketIO.request("LOGIN", data);
+		return Network.request("LOGIN", data);
 	},
 	register(data: any) {
-		return SocketIO.request("REGISTER", data);
+		return Network.request("REGISTER", data);
 	}
 };
 
 export let Task = {
 	add(data: any) {
-		return SocketIO.request("TASK_ADD", data);
+		return Network.request("TASK_ADD", data);
 	},
 	get() {
-		return SocketIO.request("TASK_GET");
+		return Network.request("TASK_GET");
 	},
 	save(id: string, code: string) {
 		let data = {
 			id,
 			code
 		};
-		return SocketIO.request("TASK_SAVE", data);
+		return Network.request("TASK_SAVE", data);
 	}
 };
 
 export let Database = {
 	getStudents() {
-		return SocketIO.request("STUDENTS");
+		return Network.request("STUDENTS");
 	},
 	getProfile(userid: string) {
-		return SocketIO.request("PROFILE", {
+		return Network.request("PROFILE", {
 			userid
 		});
 	}

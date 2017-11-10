@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import {UserReducer, IUserState} from './UserReducer';
 import {TaskReducer, ITaskState} from './TaskReducer';
-import {SocketIO} from '../SocketIO';
+import {Network} from '../Network';
 
 export interface IRootState {
 	user: IUserState
@@ -19,7 +19,7 @@ export let RootReducer = (state: IRootState|undefined, action: any)=>{
 		state = AppReducer(state as any, action) as IRootState;
 		state.user = {
 			...state.user,
-			online: SocketIO.onlineStatus
+			online: Network.onlineStatus
 		};
 		return state;
 	}
