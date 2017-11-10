@@ -21,20 +21,27 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			break;
 		}
 		case "TASK_ADD": {
-			state[action.id] = action.task;
+			state = {
+				...state,
+				[action.id]: action.task
+			};
 			break;
 		}
 		case "TASK_SAVE": {
-			state[action.id] = {
-				...state[action.id],
-				saved: action.code
+			state = {
+				...state,
+				[action.id]: {
+					saved: action.code
+				}
 			};
 			break;
 		}
 		case "TASK_SAVE_BUFFER": {
-			state[action.id] = {
-				...state[action.id],
-				buffer: action.code
+			state = {
+				...state,
+				[action.id]: {
+					buffer: action.code
+				}
 			};
 			break;
 		}
