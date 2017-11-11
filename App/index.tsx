@@ -14,8 +14,8 @@ import {Provider, connect} from 'react-redux';
 if (store.getState().user.userid) {
 	// Reestablish session if user is already logged in.
 	User.login({
-		_id: store.getState().user.userid,
-		secretKey: store.getState().user.secretKey
+		userid: store.getState().user.userid as string,
+		secretKey: store.getState().user.secretKey as string
 	});	
 }
 ServiceWorker.initialize();

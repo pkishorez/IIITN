@@ -13,7 +13,7 @@ import {Form, Text} from 'classui/Components/Form';
 import {Network} from '../Network';
 import {connect} from 'react-redux';
 import {IRootState, A_Task, store} from '../State';
-import {Task as TaskAction} from '../MyActions';
+import {Task as TaskAction, User as UserAction} from '../MyActions';
 import {ITask} from '../State/Reducers/TaskReducer';
 
 interface IProps {
@@ -94,11 +94,10 @@ class Task_ extends React.Component<IProps, IState>{
 		runProgramInNewScope(CompileCanvasCode(task.question, "c_tcanvas"));
 	}
 	save() {
-		TaskAction.save(this.state.currentTask, this.editorRef.getModifiedEditor().getValue()).then(alert).catch(alert);
-		store.dispatch(A_Task.save({
+		UserAction.saveTask({
 			id: this.state.currentTask,
 			code: this.editorRef.getModifiedEditor().getValue()
-		}));
+		}).then(alert).catch(alert);
 	}
 	loadSavedCode() {
 		let code = this.props.tasks[this.state.currentTask];
