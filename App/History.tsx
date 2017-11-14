@@ -8,12 +8,12 @@ interface IState {};
 export class History extends React.Component<IProps & RouteComponentProps<any>, IState> {
 	private static instance: History;
 
-	constructor() {
+	constructor(props: any, context: any) {
 		if (History.instance) {
 			console.error("Only one instance of History should be rendered.");
 			return;
 		}
-		super();
+		super(props, context);
 		History.instance = this;
 	}
 	static get props() {

@@ -13,9 +13,8 @@ interface IState {};
 
 export class PlaygroundTypescript extends React.Component<IProps, IState> {
 	output: SeqProgramOutput|null;
-	constructor()
-	{
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.saveContent = _.debounce(this.saveContent.bind(this), 500, {
 			trailing: true,
 			leading: true

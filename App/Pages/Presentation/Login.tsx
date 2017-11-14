@@ -42,8 +42,8 @@ export class Login extends React.Component<IProps, IState> {
 }
 
 class Login_ extends React.Component<IProps, IState> {
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			error: undefined
 		};

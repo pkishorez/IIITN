@@ -9,8 +9,8 @@ interface IQuestionState {
 	output: string
 }
 export class Question extends React.Component<IQuestionProps, IQuestionState> {
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			output: ""
 		}
@@ -51,8 +51,8 @@ interface IPracticeState {
 	output: string
 }
 export class Practice extends React.Component<IPracticeProps, IPracticeState> {
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			output: ""
 		}

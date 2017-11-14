@@ -18,9 +18,8 @@ export class SeqTestcaseOutput extends React.Component<IProps, IState> {
 	static defaultProps = {
 		throttle: 10
 	};
-	constructor()
-	{
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			message: "",
 			testCases: 0

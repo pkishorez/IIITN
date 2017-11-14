@@ -20,8 +20,8 @@ export class FQuestion extends React.Component<IFQuestionProps, IFQuestionState>
 	throttleRun: any;
 	showOutput: SeqProgramOutput|null;
 	runTestCases: SeqTestcaseOutput|null;
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			testCases: 0,
 			testCaseMessage: "",

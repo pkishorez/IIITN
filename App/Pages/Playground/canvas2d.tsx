@@ -49,8 +49,8 @@ canvas.addObject(cshape);
 move(cshape, 0.3);`;
 
 export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		let savedCode = localStorage.getItem("PG2D");
 		if (savedCode && savedCode.trim()=="") {
 			savedCode = null;

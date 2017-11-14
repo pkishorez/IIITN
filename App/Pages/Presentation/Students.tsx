@@ -16,8 +16,8 @@ export class Students extends React.Component<IProps, IState> {
 			});
 		}).catch(console.error);
 	}
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			students: []
 		}

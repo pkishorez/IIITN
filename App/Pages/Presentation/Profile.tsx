@@ -11,8 +11,8 @@ interface IState {
 };
 
 export class Profile extends React.Component<IProps, IState> {
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			profile: null
 		};

@@ -30,8 +30,8 @@ export class Register extends React.Component<IProps, IState> {
 }
 
 class RegisterComponent extends React.Component<any, {error: string, registered: boolean}>{
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			error: "",
 			registered: false

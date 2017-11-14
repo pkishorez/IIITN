@@ -15,8 +15,8 @@ interface IState {};
 class _Header extends React.Component<IProps, IState> {
 	dropdown1: Dropdown;
 	dropdown2: Dropdown;
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.logout = this.logout.bind(this);
 	}
 	logout() {

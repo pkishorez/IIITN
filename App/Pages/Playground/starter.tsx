@@ -61,8 +61,8 @@ export class PlaygroundCanvas2dStarter extends React.Component<IProps, IState> {
 
 class Lesson extends React.Component<IProps, IState> {
 	_code = '';
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			lesson: 0
 		};

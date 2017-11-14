@@ -40,8 +40,8 @@ let canvas = new Canvas(canvasElem, true);
 class Task_ extends React.Component<IProps, IState>{
 	editorRef: monaco.editor.IStandaloneDiffEditor;
 	dropdown: Dropdown;
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			currentTaskNum: 0,
 			currentTask: "",
@@ -172,8 +172,8 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 	resetCodeRef: monaco.editor.IStandaloneCodeEditor;
 	questionRef: monaco.editor.IStandaloneCodeEditor;
 	dropdown: Dropdown;
-	constructor() {
-		super();
+	constructor(props: any, context: any) {
+		super(props, context);
 		this.state = {
 			currentTask: "NEW TASK"
 		};
