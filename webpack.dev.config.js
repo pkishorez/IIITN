@@ -42,6 +42,12 @@ module.exports = [
 			]),
 			new copyWebpackPlugin([
 				{
+					from: 'node_modules/classui/assets/font-awesome',
+					to: 'production/assets/font-awesome'
+				}
+			]),
+			new copyWebpackPlugin([
+				{
 					from: 'node_modules/@iiitn/canvas2d/bundle',
 					to: 'production/assets/canvas2d'
 				}

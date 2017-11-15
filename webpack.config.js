@@ -38,6 +38,12 @@ module.exports = [
 			]),
 			new copyWebpackPlugin([
 				{
+					from: 'node_modules/classui/assets/font-awesome',
+					to: 'production/assets/font-awesome'
+				}
+			]),
+			new copyWebpackPlugin([
+				{
 					from: 'node_modules/draft-js/dist/Draft.css',
 					to: 'production/assets/Draft.css'
 				}
