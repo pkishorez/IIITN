@@ -1,4 +1,4 @@
-import {User, Database} from './Database/IIITN';
+import {User, Task} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
 import {INR_Task, INR_User} from '../Common/ActionSignature';
 export type IRequestType = "REGISTER" | "STUDENTS" | "PROFILE" | keyof(INR_Task) | keyof(INR_User) | "TASK_GET"
@@ -25,7 +25,7 @@ export class Connection {
 	processRequest(request: IRequest) {
 		switch(request.type) {
 			case "USER_LOGIN": {
-				return User.login(request.data).then((data)=>{
+				return User.login(request.data).then((data: any)=>{
 					this.user = data.ref;
 					return {secretKey: data.secretKey};
 				});
@@ -34,10 +34,10 @@ export class Connection {
 				return User.register(request.data);
 			}
 			case "STUDENTS": {
-				return Database.getStudents();
+				return User.getStudents();
 			}
 			case "PROFILE": {
-				return Database.getProfile(request.data.userid);
+				return User.getProfile(request.data.userid);
 			}
 		}
 		if (!this.user) {
@@ -46,10 +46,10 @@ export class Connection {
 		switch(request.type) {
 			// Authenticated actions goes here...
 			case "TASK_ADD": {
-				return Database.addTask(request.data);
+				return Task.addTask(request.data);
 			}
 			case "TASK_MODIFY": {
-				return Database.modifyTask(request.data);
+				return Task.modifyTask(request.data);
 			}
 			case "TASK_GET": {
 				return this.user.getTasks();
