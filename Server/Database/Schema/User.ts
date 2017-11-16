@@ -24,14 +24,14 @@ export let S_User: IJSONSchema = {
 		},
 		branch: {
 			enum: ["CSE", "MME", "ECE", "MECH", "CHEMICAL"]
-		}	
+		}
 	}
 };
 
 export let S_UserLogin: IJSONSchema = {
 	type: "object",
 	properties: {
-		_id: (S_User.properties as any)._id,
+		userid: (S_User.properties as any)._id,
 		password: (S_User.properties as any).password	
 	}
 };

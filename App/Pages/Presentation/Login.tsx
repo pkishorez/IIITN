@@ -63,9 +63,9 @@ class Login_ extends React.Component<IProps, IState> {
 		return <div style={{backgroundColor: "white"}}>
 			<Link to="/register"><div className="button">Register Here.</div></Link>
 			{LoginMessage?<div style={{color: "darkgreen", margin: 10, marginBottom: 0}}>{LoginMessage}</div>:null}
-			<Formlayout schema={S_UserLogin} onSubmit={this.login.bind(this)} label="Login">
+			<Formlayout style={{width: 270}} schema={S_UserLogin} onSubmit={this.login.bind(this)} label="Login">
 				{this.state.error?<h5 style={{color: 'red'}}>{this.state.error}</h5>:null}
-				<TextField autoFocus name="_id" label="UserName (University ID)">Username</TextField>
+				<TextField autoFocus name="userid" label="UserName (University ID)">Username</TextField>
 				<TextField type="password" name="password" label="Password">Password</TextField>
 				<input type="submit"/>
 			</Formlayout>
