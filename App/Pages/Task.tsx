@@ -55,27 +55,8 @@ class Task_ extends React.Component<IProps, IState>{
 		this.loadSavedCode = this.loadSavedCode.bind(this);
 		this.runFullScreen = this.runFullScreen.bind(this);
 	}
-
-	static initTasks() {
-		TaskAction.get().then((ts)=>{
-			let storedTasks = store.getState().tasks;
-			let tasks: IRootState["tasks"] = {};
-			// Compute tasks from ts.
-			ts.mainTasks.map((t: any)=>{
-				tasks[t._id] = {
-					question: t.question,
-					resetCode: t.resetCode,
-					saved: ts.userTasks[0].tasks[t._id]
-				}
-			});
-			for (let i of _.difference(Object.keys(storedTasks), Object.keys(tasks))) {
-				delete storedTasks[i];
-			}
-			store.dispatch(A_Task.init(_.merge(storedTasks, tasks)));
-		});
-	}
 	componentDidMount() {
-		Task_.initTasks();
+		TaskAction.init();
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
@@ -111,10 +92,12 @@ class Task_ extends React.Component<IProps, IState>{
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	saveBuffer(value: string) {
-		store.dispatch(A_Task.saveBuffer({
-			id: this.state.currentTask,
-			code: value?value:""
-		}));
+		if (value) {
+			store.dispatch(A_Task.saveBuffer({
+				id: this.state.currentTask,
+				code: value?value:""
+			}));
+		}
 	}
 	runCode() {
 		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_ycanvas"));
@@ -135,7 +118,7 @@ class Task_ extends React.Component<IProps, IState>{
 		}
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
-				<CanvasMonaco diffContent={{content: ""}} content="" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>(this.editorRef as any)=ref}/>
+				<CanvasMonaco diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
 			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
@@ -182,8 +165,11 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		this.loadTask = this.loadTask.bind(this);
 		this.modifyTask = this.modifyTask.bind(this);
 		this.saveTask = this.saveTask.bind(this);
-		Network.request("TASK_GET").then(console.log).catch(console.log);
 	}
+	componentDidMount() {
+		TaskAction.init();
+	}
+
 	addTask() {
 		let data: any = {};
 		data.question = this.questionRef.getValue();
@@ -193,7 +179,6 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
 		}).catch(alert);
-		Task_.initTasks();
 	}
 	modifyTask() {
 		let data: any = {};
@@ -201,7 +186,6 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
 		Network.request("TASK_MODIFY", data).then(alert).catch(alert);
-		Task_.initTasks();
 	}
 	saveTask() {
 		if (this.state.currentTask!="NEW TASK") {
@@ -244,7 +228,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 					<span className="button" onClick={this.saveTask}>Save</span>
 				</Section>
 				<Section remain>
-					<div style={{zIndex: 10, position: "relative"}}>
+					<div style={{zIndex: 1, position: "relative"}}>
 						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={this.state.currentTask=="NEW TASK"?this.state.currentTask:`Task ${this.state.currentTask}`}>
 							{tasks}
 						</Dropdown>
