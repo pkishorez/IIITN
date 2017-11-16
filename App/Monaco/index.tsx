@@ -164,7 +164,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				original,
 				modified
 			});
-			this.diffEditor.getModel().modified.onDidChangeContent((e)=>{
+			this.diffEditor.getModifiedEditor().onDidChangeModelContent((e)=>{
 				let value = this.diffEditor.getValue();
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
@@ -199,7 +199,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div style={{border: '1px solid rgba(0, 0, 0, 0.2)'}}>
+		return <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', marginBottom: 20}}>
 			<div style={{
 				width: this.props.width,
 				height: this.props.height,
