@@ -1,4 +1,5 @@
 import {INR_Task} from '../../../Common/ActionSignature';
+import * as _ from 'lodash';
 export interface ITask {
 	question: string
 	resetCode: string
@@ -18,7 +19,17 @@ export interface ITaskAction {
 export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 	switch(action.type) {
 		case "TASK_INIT": {
-			state = {...action.tasks};
+			for (let i in action.tasks) {
+				state[i] = {
+					...state[i],
+					...action.tasks[i]
+				};
+			}
+			let deleted = _.difference(Object.keys(state), Object.keys(action.tasks));
+			for (let i=0; i<deleted.length; i++) {
+				delete state[deleted[i]];
+			}
+			state = {...state};
 			break;
 		}
 		case "TASK_ADD": {
@@ -32,6 +43,7 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			state = {
 				...state,
 				[action.id]: {
+					...state[action.id],
 					saved: action.code
 				}
 			};
@@ -39,12 +51,12 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 		}
 		case "TASK_MODIFY": {
 			let a: INR_Task["TASK_MODIFY"] = action as any;
+			let {id, ...updates} = a;
 			state = {
 				...state,
-				[a.id]: {
+				[id]: {
 					...state[a.id],
-					question: a.question,
-					resetCode: a.resetCode
+					...updates
 				}
 			}
 			break;
@@ -53,6 +65,7 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			state = {
 				...state,
 				[action.id]: {
+					...state[action.id],
 					buffer: action.code
 				}
 			};
