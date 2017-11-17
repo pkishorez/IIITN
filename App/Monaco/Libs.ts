@@ -2,17 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Monaco, IMonacoProps} from './';
 
-interface IProps extends IMonacoProps {};
-interface IState {
-	loaded: boolean
-};
-
-export class CanvasMonaco extends React.Component<IProps, IState> {
-	constructor(props: any, context: any) {
-		super(props, context);
-		this.state = {
-			loaded: false
-		};
+export let MonacoLibs = {
+	loadCanvas() {
 		fetch("/assets/canvas2d/Canvas_bundled.d.ts").then((res)=>{
 			let def = res.text().then((data)=>{
 				Monaco.INIT(()=>{
@@ -22,16 +13,8 @@ export class CanvasMonaco extends React.Component<IProps, IState> {
 						noUnusedLocals: false,
 						noUnusedParameters: false
 					});
-					this.setState({
-						loaded: true
-					});
 				})
 			});
 		}).catch((err)=>console.log(err));
-	}
-	render() {
-		if (this.state.loaded)
-			return <Monaco {...this.props}/>
-		return <div>Loading...</div>;
 	}
 };

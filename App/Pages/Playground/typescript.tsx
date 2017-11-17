@@ -4,6 +4,7 @@ import {Monaco, IMonacoProps} from '../../Monaco';
 import {Runtime} from '../../Monaco/Runtime/';
 import {SeqProgramOutput} from '../../Monaco/SeqProgram';
 import {Layout, Section} from 'classui/Components/Layout';
+import {PersistMonaco} from '../../State/Utils/PersistentMonaco';
 import * as _ from 'lodash';
 
 interface IProps {
@@ -15,32 +16,16 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 	output: SeqProgramOutput|null;
 	constructor(props: any, context: any) {
 		super(props, context);
-		this.saveContent = _.debounce(this.saveContent.bind(this), 500, {
-			trailing: true,
-			leading: true
-		});
 		this.runProgram = this.runProgram.bind(this);
-		console.log(this.output);
-	}
-	saveContent(value: string) {
-		if (value){
-			localStorage.setItem("PLAYGROUND", value);			
-		}
 	}
 	runProgram(value: string)
 	{
-		this.saveContent(value);
 		this.output?this.output.runProgram(value):null;
 	}
 	render() {
-		let oldContent = localStorage.getItem("PLAYGROUND");
-		let monacoprops: IMonacoProps = {
-			...this.props.monaco,
-			content: oldContent?oldContent:""
-		};
 		return <Layout align="center" style={{height: "calc(100vh - 50px)"}} gutter={10}>
 			<Section remain>
-				<Monaco {...monacoprops} fontSize={15} height="calc(100vh - 150px)" getOutput={this.runProgram}/>
+				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} height="calc(100vh - 150px)" getOutput={this.runProgram}/>
 			</Section>
 			<Section width={400} card>
 				<h3 style={{textAlign: "center"}}>Output</h3>

@@ -32,6 +32,13 @@ export let A_User = {
 			type: "USER_TASK_SAVE",
 			...data
 		};
+	},
+	saveEditorBuffer(id: string, code: string): IUserAction {
+		return {
+			type: "USER_SAVE_BUFFER",
+			id,
+			code
+		};
 	}
 }
 
@@ -55,13 +62,5 @@ export let A_Task = {
 			type: "TASK_MODIFY",
 			...data
 		};
-	},
-
-	// Local requests.
-	saveBuffer(data: {id: string, code: string}): ITaskAction {
-		return {
-			type: "TASK_SAVE_BUFFER",
-			...data
-		}
 	}
 }

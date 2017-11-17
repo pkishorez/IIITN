@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {CanvasMonaco} from '../Monaco/CanvasMonaco';
+import {PersistMonaco} from '../State/Utils/PersistentMonaco';
 import {runProgramInNewScope} from '../Monaco/Runtime/';
 import {compileCode} from '../Monaco/Runtime/typescript';
 import {CompileCanvasCode, canvasElemId} from '../Monaco/Runtime/canvas';
@@ -50,7 +50,6 @@ class Task_ extends React.Component<IProps, IState>{
 		this.loadTask = this.loadTask.bind(this);
 		this.save = this.save.bind(this);
 		this.resetCode = this.resetCode.bind(this);
-		this.saveBuffer = _.debounce(this.saveBuffer.bind(this), 200);
 		this.runCode = this.runCode.bind(this);
 		this.loadSavedCode = this.loadSavedCode.bind(this);
 		this.runFullScreen = this.runFullScreen.bind(this);
@@ -60,7 +59,8 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
-		let code = task.buffer?task.buffer:task.saved;
+		let buffer = store.getState().user.editorBuffers[id];
+		let code = buffer?buffer:task.saved;
 		code = code?code:task.resetCode;
 		code = code?code:defaultCode;
 
@@ -91,14 +91,6 @@ class Task_ extends React.Component<IProps, IState>{
 		scode = scode?scode: defaultCode;
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
-	saveBuffer(value: string) {
-		if (value) {
-			store.dispatch(A_Task.saveBuffer({
-				id: this.state.currentTask,
-				code: value?value:""
-			}));
-		}
-	}
 	runCode() {
 		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_ycanvas"));
 	}
@@ -118,7 +110,7 @@ class Task_ extends React.Component<IProps, IState>{
 		}
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
-				<CanvasMonaco diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveBuffer} editorRef={(ref)=>(this.editorRef as any)=ref}/>
+				<PersistMonaco id={this.state.currentTask} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
 			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
@@ -237,10 +229,10 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 			</Layout>
 			<Layout gutter={20} equalWidth>
 				<Section>
-					<CanvasMonaco height={500} content={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref)=>(this.questionRef as any)=ref}/>
+					<PersistMonaco id="" height={500} content={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref)=>(this.questionRef as any)=ref}/>
 				</Section>
 				<Section>
-					<CanvasMonaco height={500} content={defaultCode} editorRef={(ref)=>(this.resetCodeRef as any)=ref}/>
+					<PersistMonaco id="" height={500} content={defaultCode} editorRef={(ref)=>(this.resetCodeRef as any)=ref}/>
 				</Section>
 			</Layout>
 		</div>;

@@ -3,9 +3,12 @@ export interface IUserState {
 	userid: string | null
 	secretKey?: string | null
 	online: boolean
+	editorBuffers: {
+		[id: string]: string
+	}
 }
 
-export type IUserActionType = "USER_LOGOUT" | "USER_OFFLINE" | "USER_ONLINE" | keyof(INR_User)
+export type IUserActionType = "USER_LOGOUT" | "USER_OFFLINE" | "USER_ONLINE" | "USER_SAVE_BUFFER" | keyof(INR_User)
 
 export interface IUserAction {
 	type: IUserActionType
@@ -14,7 +17,8 @@ export interface IUserAction {
 let defaultState: IUserState = {
 	userid: null,
 	secretKey: null,
-	online: false
+	online: false,
+	editorBuffers: {}
 };
 
 export let UserReducer = (state: IUserState = defaultState, action: IUserAction) => {
@@ -38,6 +42,16 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 			state = {
 				...state,
 				online: true
+			}
+			break;
+		}
+		case "USER_SAVE_BUFFER": {
+			state = {
+				...state,
+				editorBuffers: {
+					...state.editorBuffers,
+					[action.id]: action.code
+				}
 			}
 			break;
 		}

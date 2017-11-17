@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Monaco, IMonacoProps} from '../../Monaco';
+import {PersistMonaco} from '../../State/Utils/PersistentMonaco';
 import {runProgramInNewScope} from '../../Monaco/Runtime/';
 import {CompileCanvasCode} from '../../Monaco/Runtime/canvas';
 import {Layout, Section} from 'classui/Components/Layout';
@@ -9,10 +9,7 @@ import {Flash} from 'classui/Components/Flash';
 import * as _ from 'lodash';
 
 interface IProps {};
-interface IState {
-	loaded: boolean
-	code: string
-};
+interface IState {};
 
 let defaultCode = `import {Canvas} from 'canvas2d';
 import {Rectangle, Circle, Shape, CustomShape} from 'canvas2d/Shapes';
@@ -49,45 +46,18 @@ canvas.addObject(cshape);
 move(cshape, 0.3);`;
 
 export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
+	editorRef: monaco.editor.IStandaloneCodeEditor;
 	constructor(props: any, context: any) {
 		super(props, context);
-		let savedCode = localStorage.getItem("PG2D");
-		if (savedCode && savedCode.trim()=="") {
-			savedCode = null;
-		}
-		this.state = {
-			loaded: false,
-			code: savedCode?savedCode:defaultCode
-		};
-		this.saveCode = _.throttle(this.saveCode.bind(this), 500, {
-			leading: true,
-			trailing: true
-		});
 		this.runCode = this.runCode.bind(this);
-		fetch("/assets/canvas2d/Canvas_bundled.d.ts").then((res)=>{
-			let def = res.text().then((data)=>{
-				Monaco.INIT(()=>{
-					monaco.languages.typescript.typescriptDefaults.addExtraLib(data);
-					monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-						...Monaco.typescriptDefaults.compilerOptions,
-						noUnusedLocals: false,
-						noUnusedParameters: false
-					});
-					this.setState({
-						loaded: true
-					});
-				})
-			});
-		}).catch((err)=>console.log(err));
 	}
 	saveCode(code: string) {
 		this.setState({
 			code
 		});
-		localStorage.setItem("PG2D", code);
 	}
 	runCode() {
-		let compiledCode = CompileCanvasCode(this.state.code);
+		let compiledCode = CompileCanvasCode(this.editorRef.getValue());
 		if (document.getElementById("canvas")) {
 			runProgramInNewScope(CompileCanvasCode(compiledCode));
 		}
@@ -100,13 +70,9 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 		}
 	}
 	render() {
-		let code = this.state.code;
 		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
 			<Section width={750}>
-				{this.state.loaded?
-					<Monaco content={code as string} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} getOutput={this.saveCode}/>:
-					<div>Loading...</div>
-				}
+					<PersistMonaco id="PG2D" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref: any)=>this.editorRef=ref}/>:
 			</Section>
 			<Section remain>
 				<Menu header="Canvas Playground">

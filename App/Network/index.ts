@@ -43,7 +43,6 @@ class _SocketIO {
 				type: req_type,
 				data
 			};
-			console.log("Request", request);
 			this.socket.emit("request", request);
 			let responseID = getResponseID(reqid);
 			this.socket.on(responseID, (json: IResponse)=>{

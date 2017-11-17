@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
+import {MonacoLibs} from './Libs';
+MonacoLibs.loadCanvas();
 
 declare let monacoAmdRequire: any;
 

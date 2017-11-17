@@ -14,6 +14,9 @@ export let User = {
 	},
 	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
 		return Network.requestAndDispatch("USER_TASK_SAVE", data, A_User.saveTask);
+	},
+	saveEditorBuffer(id: string, code: string) {
+		return store.dispatch(A_User.saveEditorBuffer(id, code));
 	}
 };
 
