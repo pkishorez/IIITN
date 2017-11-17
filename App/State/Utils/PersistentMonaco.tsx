@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 
 interface IProps extends IMonacoProps {
 	id: string
+	defaultContent?: string
 }
 export let PersistMonaco = (props: IProps)=>{
 	let persist = (value: string)=>{
@@ -23,7 +24,11 @@ export let PersistMonaco = (props: IProps)=>{
 			props.getOutput(value);
 		}
 	}
-	let content = store.getState().user.editorBuffers[props.id];
-	content = content?content:"";
+	let stored = store.getState().user.editorBuffers[props.id];
+	let content = stored?stored:"";
+	if (content.trim()=="") {
+		content = props.defaultContent?props.defaultContent:content;
+	}
+
 	return <Monaco content={content} {...props} getOutput={getOutput}/>
 }
