@@ -1,5 +1,5 @@
-import {store} from '../index';
-import {User} from '../../MyActions';
+import {__store} from '../index';
+import {Me} from '../../MyActions';
 import {IMonacoProps, Monaco} from '../../Monaco';
 import * as React from 'react';
 import * as _ from 'lodash';
@@ -17,7 +17,7 @@ export class PersistMonaco extends React.Component<IProps, any> {
 		this.persist = _.debounce(this.persist.bind(this), 500);
 	}
 	loadContent(props: IProps) {
-		let stored = store.getState().user.editorBuffers[props.id];
+		let stored = __store.getState().user.editorBuffers[props.id];
 		let content = stored?stored:"";
 		if (content.trim()=="") {
 			content = props.defaultContent?props.defaultContent:content;
@@ -34,7 +34,7 @@ export class PersistMonaco extends React.Component<IProps, any> {
 			return;
 		}
 		if (value) {
-			User.saveEditorBuffer(this.props.id, value);
+			Me.saveEditorBuffer(this.props.id, value);
 		}
 	}
 	getOutput(value: string) {

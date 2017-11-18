@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Login, Register, Profile, Students} from './Pages';
-import {Home} from './Pages/Presentation/Home';
-import {RequireAuthentication} from './Pages/Presentation/Login';
-import {Lesson} from './Pages/Lesson';
-import {Typescript} from './Pages/Typescript';
-import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from './Pages/Playground/';
-import {Task, TaskManager} from './Pages/Task';
-import {store} from './State';
-import {AddQuestion} from './Pages/Questions';
+import {Login, Register, Profile, Students} from '../Pages';
+import {Home} from '../Pages/Presentation/Home';
+import {RequireAuthentication} from '../Pages/Presentation/Login';
+import {Lesson} from '../Pages/Lesson';
+import {Typescript} from '../Pages/Typescript';
+import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from '../Pages/Playground/';
+import {Task, TaskManager} from '../Pages/Task';
+import {__store} from '../State';
+import {AddQuestion} from '../Pages/Questions';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
 interface IProps {};
@@ -30,7 +30,7 @@ export class RouteComponent extends React.Component<IProps, IState> {
 			<Route path="/" strict exact render={()=>{return <Redirect to="/playground"/>}}/>
 			{/* Authenticated Components goes here...*/}
 			<Route render={(props)=>{
-				if (!store.getState().user.userid) {
+				if (!__store.getState().user.userid) {
 					return <RequireAuthentication message="Please login to continue." redirect={props.location.pathname}/>;
 				}
 				return <Switch>

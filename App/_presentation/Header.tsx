@@ -5,7 +5,7 @@ import {RLink} from 'classui/Helper/RLink';
 import {Dropdown} from 'classui/Components/Dropdown';
 import {connect} from 'react-redux';
 import {IRootState} from '../State/RootReducer';
-import {store, A_User} from '../State';
+import {Me} from '../MyActions';
 
 interface IProps {
 	userid: string | null
@@ -17,10 +17,6 @@ class _Header extends React.Component<IProps, IState> {
 	dropdown2: Dropdown;
 	constructor(props: any, context: any) {
 		super(props, context);
-		this.logout = this.logout.bind(this);
-	}
-	logout() {
-		store.dispatch(A_User.logout());
 	}
 	render() {
 		return <NavBar fixed logo="Programmer's Club">
@@ -39,7 +35,7 @@ class _Header extends React.Component<IProps, IState> {
 			<RLink to="/typescript"><div className="button">Typescript</div></RLink>
 			<RLink to="/students"><div className="button">Students</div></RLink>
 			{*/}
-			<RLink to="/login"><div className="button" onClick={this.logout}>{this.props.userid?"logout":"Login"}</div></RLink>
+			<RLink to="/login"><div className="button" onClick={Me.logout}>{this.props.userid?"logout":"Login"}</div></RLink>
 		</NavBar>;
 	}
 }

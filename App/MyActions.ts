@@ -1,23 +1,36 @@
 import {Network} from './Network/';
-import {A_User, A_Task, store, IRootState} from './State';
+import {A_User, A_Task, __store, IRootState} from './State';
 import {INR_User, INR_Task} from '../Common/ActionSignature';
 import * as _ from 'lodash';
 
-export let User = {
-	// Network and local store request.
+export let Me = {
+	// Network and local state requests.
 	login(data: INR_User["USER_LOGIN"]) {
 		return Network.requestAndDispatch("USER_LOGIN", data, A_User.login);
-	},
-	// Only network request.
-	register(data: any) {
-		return Network.request("REGISTER", data);
 	},
 	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
 		return Network.requestAndDispatch("USER_TASK_SAVE", data, A_User.saveTask);
 	},
+
+	// Only network requests.
+	register(data: any) {
+		return Network.request("REGISTER", data);
+	},
+
+	// Only Local state requests.
 	saveEditorBuffer(id: string, code: string) {
-		return store.dispatch(A_User.saveEditorBuffer(id, code));
+		return __store.dispatch(A_User.saveEditorBuffer(id, code));
+	},
+	goOnline() {
+		__store.dispatch(A_User.goOnline());
+	},
+	goOffline() {
+		__store.dispatch(A_User.goOffline());
+	},
+	logout() {
+		__store.dispatch(A_User.logout());
 	}
+
 };
 
 export let Task = {
@@ -37,7 +50,7 @@ export let Task = {
 					saved: ts.userTasks[i]
 				};
 			}
-			store.dispatch(A_Task.init(tasks));
+			__store.dispatch(A_Task.init(tasks));
 		});
 	},
 	modify(data: INR_Task["TASK_MODIFY"]) {

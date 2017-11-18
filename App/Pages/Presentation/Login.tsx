@@ -6,10 +6,9 @@ import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Flash} from 'classui/Components/Flash';
 import {RouteComponentProps, Redirect, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {store} from '../../State';
 import {S_UserLogin} from '../../../Server/Database/Schema';
-import {User} from '../../MyActions';
-import {History} from '../../History';
+import {Me} from '../../MyActions';
+import {History} from '../../_presentation/History';
 
 interface IProps {
 	redirect?: string
@@ -49,7 +48,7 @@ class Login_ extends React.Component<IProps, IState> {
 		};
 	}
 	login(data: any) {
-		User.login(data).then((response: any)=>{
+		Me.login(data).then((response: any)=>{
 			LoginMessage = undefined;
 			(History.props as any).history.replace(RedirectURL);
 		}, (error: string)=>{

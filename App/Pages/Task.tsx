@@ -12,8 +12,8 @@ import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
 import {Network} from '../Network';
 import {connect} from 'react-redux';
-import {IRootState, A_Task, store} from '../State';
-import {Task as TaskAction, User as UserAction} from '../MyActions';
+import {IRootState, A_Task, __store} from '../State';
+import {Task as TaskAction, Me} from '../MyActions';
 import {ITask} from '../State/Reducers/TaskReducer';
 
 interface IProps {
@@ -59,7 +59,7 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
-		let buffer = store.getState().user.editorBuffers[id];
+		let buffer = __store.getState().user.editorBuffers[id];
 		let code = buffer?buffer:task.saved;
 		code = code?code:task.resetCode;
 		code = code?code:defaultCode;
@@ -75,7 +75,7 @@ class Task_ extends React.Component<IProps, IState>{
 		runProgramInNewScope(CompileCanvasCode(task.question, "c_tcanvas"));
 	}
 	save() {
-		UserAction.saveTask({
+		Me.saveTask({
 			id: this.state.currentTask,
 			code: this.editorRef.getModifiedEditor().getValue()
 		}).then(alert).catch(alert);
@@ -177,7 +177,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		data.id = this.state.currentTask;
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
-		Network.request("TASK_MODIFY", data).then(alert).catch(alert);
+		TaskAction.modify(data).then(alert).catch(alert);
 	}
 	saveTask() {
 		if (this.state.currentTask!="NEW TASK") {

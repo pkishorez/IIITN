@@ -2,9 +2,10 @@ import {NavBar} from 'classui/Navbar';
 import {Promise} from 'es6-promise';
 import {getResponseID} from '../../Common/Utils';
 import {IRequestType, IRequest, IResponse} from '../../Server/Connection';
-import {A_User, store} from '../State';
+import {A_User, __store} from '../State';
 import * as io from 'socket.io-client';
 import * as _ from 'lodash';
+import { Me } from '../MyActions';
 
 let Socket: _SocketIO;
 let g_reqid = 0;
@@ -21,13 +22,13 @@ class _SocketIO {
 			// Connected.
 			this.connected = true;
 			console.log("SocketIO Connection established.");
-			store.dispatch(A_User.goOnline());
+			Me.goOnline();
 		});
 		this.socket.on("disconnect", ()=>{
 			// Disconnected.
 			this.connected = false;
 			console.log("SocketIO Connection Disconnected.");
-			store.dispatch(A_User.goOffline());
+			Me.goOffline();
 		});
 	}
 
@@ -59,10 +60,10 @@ class _SocketIO {
 	requestAndDispatch(req_type: IRequestType, data: any, userAction: any) {
 		return this.request(req_type, data).then((response)=>{
 			if (typeof response == "object") {
-				store.dispatch(userAction(_.merge(data, response)));				
+				__store.dispatch(userAction(_.merge(data, response)));				
 			}
 			else {
-				store.dispatch(userAction(data));
+				__store.dispatch(userAction(data));
 			}
 			return response;
 		})

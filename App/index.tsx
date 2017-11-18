@@ -5,17 +5,17 @@ import {Content} from 'classui/Content';
 import {Header} from './_presentation/Header';
 import {History_} from './_presentation/History';
 import {RouteComponent} from './_presentation/RouteComponent';
-import {store, IRootState} from './State';
-import {User} from './MyActions';
+import {GetState, IRootState} from './State';
+import {Me} from './MyActions';
 import {ServiceWorker} from './Network/ServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider, connect} from 'react-redux';
 
-if (store.getState().user.userid) {
+if (GetState().user.userid) {
 	// Reestablish session if user is already logged in.
-	User.login({
-		userid: store.getState().user.userid as string,
-		secretKey: store.getState().user.secretKey as string
+	Me.login({
+		userid: GetState().user.userid as string,
+		secretKey: GetState().user.secretKey as string
 	});	
 }
 ServiceWorker.initialize();
