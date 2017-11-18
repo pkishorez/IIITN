@@ -1,4 +1,4 @@
-import {__store} from '../index';
+import {GetState} from '../index';
 import {Me} from '../../MyActions';
 import {IMonacoProps, Monaco} from '../../Monaco';
 import * as React from 'react';
@@ -17,7 +17,7 @@ export class PersistMonaco extends React.Component<IProps, any> {
 		this.persist = _.debounce(this.persist.bind(this), 500);
 	}
 	loadContent(props: IProps) {
-		let stored = __store.getState().user.editorBuffers[props.id];
+		let stored = GetState().user.editorBuffers[props.id];
 		let content = stored?stored:"";
 		if (content.trim()=="") {
 			content = props.defaultContent?props.defaultContent:content;

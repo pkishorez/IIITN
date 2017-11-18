@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
 import {Network} from '../Network';
 import {connect} from 'react-redux';
-import {IRootState, A_Task, __store} from '../State';
+import {IRootState, A_Task, GetState} from '../State';
 import {Task as TaskAction, Me} from '../MyActions';
 import {ITask} from '../State/Reducers/TaskReducer';
 
@@ -59,7 +59,7 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks[id];
-		let buffer = __store.getState().user.editorBuffers[id];
+		let buffer = GetState().user.editorBuffers[id];
 		let code = buffer?buffer:task.saved;
 		code = code?code:task.resetCode;
 		code = code?code:defaultCode;

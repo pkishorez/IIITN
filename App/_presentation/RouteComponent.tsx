@@ -7,7 +7,7 @@ import {Lesson} from '../Pages/Lesson';
 import {Typescript} from '../Pages/Typescript';
 import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from '../Pages/Playground/';
 import {Task, TaskManager} from '../Pages/Task';
-import {__store} from '../State';
+import {GetState} from '../State';
 import {AddQuestion} from '../Pages/Questions';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export class RouteComponent extends React.Component<IProps, IState> {
 			<Route path="/" strict exact render={()=>{return <Redirect to="/playground"/>}}/>
 			{/* Authenticated Components goes here...*/}
 			<Route render={(props)=>{
-				if (!__store.getState().user.userid) {
+				if (!GetState().user.userid) {
 					return <RequireAuthentication message="Please login to continue." redirect={props.location.pathname}/>;
 				}
 				return <Switch>

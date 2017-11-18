@@ -6,7 +6,7 @@ import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Select} from 'classui/Components/Form/Select';
 import {S_User} from '../../../Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
-import {User} from '../../MyActions';
+import {Me} from '../../MyActions';
 import {RequireAuthentication} from './Login';
 import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 
@@ -38,7 +38,7 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 		};
 	}
 	register(data: any) {
-		User.register(data).then(
+		Me.register(data).then(
 			(data)=>{
 				this.setState({registered: true});
 			},
@@ -52,8 +52,8 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 		}
 		return <div style={{minWidth: 230}}>
 			<Link to="/login"><div className="button">Login here.</div></Link>
-			<Formlayout schema={S_User} label="Register" onSubmit={this.register.bind(this)}>
-				{this.state.error?<h5 style={{color: "red"}}>{this.state.error}</h5>:null}
+			<Formlayout style={{width: 270}} schema={S_User} label="Register" onSubmit={this.register.bind(this)}>
+			{this.state.error?<h5 style={{color: "red"}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="University ID">University ID</TextField>
 				<TextField name="name" label="Name">Name</TextField>
 				<TextField name="email" label="Email ID">Email</TextField>
