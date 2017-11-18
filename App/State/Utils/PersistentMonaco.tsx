@@ -8,27 +8,45 @@ interface IProps extends IMonacoProps {
 	id: string
 	defaultContent?: string
 }
-export let PersistMonaco = (props: IProps)=>{
-	let persist = (value: string)=>{
-		if (props.id==""){
+
+export class PersistMonaco extends React.Component<IProps, any> {
+	constructor(props: any, context: any) {
+		super(props, context);
+		this.getOutput = this.getOutput.bind(this);
+
+		this.persist = _.debounce(this.persist.bind(this), 500);
+	}
+	loadContent(props: IProps) {
+		let stored = store.getState().user.editorBuffers[props.id];
+		let content = stored?stored:"";
+		if (content.trim()=="") {
+			content = props.defaultContent?props.defaultContent:content;
+		}
+		return content
+	}
+	componentWillReceiveProps(nextProps: IProps) {
+		if (nextProps.id!=this.props.id) {
+			let content = this.loadContent(nextProps);
+		}
+	}
+	persist(value: string){
+		if (this.props.id==""){
 			return;
 		}
 		if (value) {
-			User.saveEditorBuffer(props.id, value);
+			User.saveEditorBuffer(this.props.id, value);
 		}
 	}
-	persist = _.debounce(persist, 500);
-	let getOutput = (value: string)=>{
-		persist(value);
-		if (props.getOutput) {
-			props.getOutput(value);
+	getOutput(value: string) {
+		this.persist(value);
+		if (this.props.getOutput) {
+			this.props.getOutput(value);
 		}
 	}
-	let stored = store.getState().user.editorBuffers[props.id];
-	let content = stored?stored:"";
-	if (content.trim()=="") {
-		content = props.defaultContent?props.defaultContent:content;
-	}
+	componentDidMount() {
 
-	return <Monaco content={content} {...props} getOutput={getOutput}/>
+	}
+	render() {
+		return <Monaco content={this.loadContent(this.props)} {...this.props} getOutput={this.getOutput}/>;
+	}
 }
