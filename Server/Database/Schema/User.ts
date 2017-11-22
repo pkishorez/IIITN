@@ -5,8 +5,7 @@ export let S_User: IJSONSchema = {
 	properties: {
 		_id: {
 			type: "string",
-			maxLength: 7,
-			minLength: 7
+			pattern: "(^N\\d{6}$)|(admin)"
 		},
 		name: {
 			type: "string"
