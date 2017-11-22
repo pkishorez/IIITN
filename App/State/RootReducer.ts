@@ -1,15 +1,17 @@
 import {combineReducers} from 'redux';
-import {UserReducer, IUserState, TaskReducer, ITaskState} from './Reducers';
+import {UserReducer, IUserState, TaskReducer, ITaskState, GuideReducer, IGuideState} from './Reducers';
 import {Network} from '../Network';
 
 export interface IRootState {
 	user: IUserState
 	tasks: ITaskState
+	guides: IGuideState
 }
 
 let AppReducer = combineReducers<IRootState>({
 	user: UserReducer,
-	tasks: TaskReducer
+	tasks: TaskReducer,
+	guides: GuideReducer
 });
 
 export let RootReducer = (state: IRootState|undefined, action: any)=>{

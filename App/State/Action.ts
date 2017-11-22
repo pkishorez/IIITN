@@ -1,6 +1,7 @@
 import {IUserAction} from './Reducers/UserReducer';
 import {ITaskAction, ITaskState, ITask} from './Reducers/TaskReducer';
 import {INR_Task, INR_User} from '../../Common/ActionSignature';
+import { IGuideAction } from './Reducers/GuideReducer';
 
 export let A_User = {
 	// NETWORK requests goes here.
@@ -64,3 +65,34 @@ export let A_Task = {
 		};
 	}
 }
+
+export let A_Guide = (guide_id: string)=>{
+	return {
+		addLesson(title: string, editorState: string): IGuideAction {
+			return {
+				type: "GUIDE_LESSON_ADD",
+				title,
+				editorState
+			}
+		},
+		deleteLesson(lesson_id: string): IGuideAction {
+			return {
+				type: "GUIDE_LESSON_DELETE",
+				lesson_id
+			}
+		},
+		reoderLessons(order: string[]): IGuideAction {
+			return {
+				type: "GUIDE_LESSONS_REORDER",
+				order
+			}
+		},
+		editLesson(lesson_id: string, data: {title?: string, editorState?: string}): IGuideAction {
+			return {
+				type: "GUIDE_LESSON_MODIFY",
+				lesson_id,
+				data
+			}
+		}
+	}
+};
