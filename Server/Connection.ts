@@ -1,7 +1,11 @@
-import {User, Task} from './Database/IIITN';
+import {User, Task, KeyValue} from './Database/IIITN';
 import {getResponseID} from '../Common/Utils';
 import {INR_Task, INR_User} from '../Common/ActionSignature';
-export type IRequestType = "REGISTER" | "STUDENTS" | "PROFILE" | keyof(INR_Task) | keyof(INR_User) | "TASK_GET"
+export type IRequestType = 
+	"REGISTER" | "STUDENTS" | "PROFILE"
+	| keyof(INR_Task) | keyof(INR_User)
+	| "TASK_GET"
+	| "KEYVALUE_GET" | "KEYVALUE_SET"
 
 export interface IRequest {
 	id: number
@@ -56,6 +60,17 @@ export class Connection {
 			}
 			case "USER_TASK_SAVE": {
 				return this.user.saveTask(request.data);
+			}
+		}
+		// Admin actions goes here...
+		if (this.user.userid=="admin") {
+			switch(request.type) {
+				case "KEYVALUE_SET": {
+					return KeyValue.set(request.data.key, request.data.value);
+				}
+				case "KEYVALUE_GET": {
+					return KeyValue.get(request.data.key);
+				}
 			}
 		}
 		return Promise.reject(`Request type ${request.type} not found.`);

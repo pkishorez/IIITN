@@ -2,6 +2,7 @@ import {Network} from './Network/';
 import {A_User, A_Task, __store, IRootState} from './State';
 import {INR_User, INR_Task} from '../Common/ActionSignature';
 import * as _ from 'lodash';
+import { A_Guide, D_Guide } from './State/Action';
 
 export let Me = {
 	// Network and local state requests.
@@ -55,6 +56,46 @@ export let Task = {
 	},
 	modify(data: INR_Task["TASK_MODIFY"]) {
 		return Network.requestAndDispatch("TASK_MODIFY", data, A_Task.modify);
+	}
+};
+
+let KeyValue = {
+	set(key: string, value: string) {
+		return Network.request("KEYVALUE_SET", {
+			key,
+			value
+		})
+	},
+	get(key: string) {
+		return Network.request("KEYVALUE_GET", {
+			key
+		});
+	}
+}
+
+export let Guide ={
+	get: D_Guide,
+	save() {
+		if (_.isEqual(__store.getState().guides, {})) {
+			alert("Empty Guides. Cannot save :(");
+			return;
+		}
+		KeyValue.set("GUIDES", JSON.stringify(__store.getState().guides));
+	},
+	init() {
+		KeyValue.get("GUIDES").then((data: string)=>{
+			let remoteGuides = JSON.parse(data);
+			let localGuides = __store.getState().guides;
+			if (_.isEqual(localGuides, {})) {
+				__store.dispatch(A_Guide.INIT(remoteGuides));
+				return;
+			}
+			if (!_.isEqual(localGuides, remoteGuides)) {
+				if (confirm("Do you want to override local guides with remote guides?")) {
+					__store.dispatch(A_Guide.INIT(remoteGuides));
+				}
+			}
+		})
 	}
 };
 

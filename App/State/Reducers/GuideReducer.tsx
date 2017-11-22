@@ -10,11 +10,15 @@ interface ILesson {
 	editorState: any
 }
 export interface IGuideAction {
-	type: "GUIDE_LESSON_ADD" | "GUIDE_LESSON_MODIFY" | "GUIDE_LESSON_DELETE" | "GUIDE_LESSONS_REORDER"
+	type: "GUIDE_INIT" | "GUIDE_LESSON_ADD" | "GUIDE_LESSON_MODIFY" | "GUIDE_LESSON_DELETE" | "GUIDE_LESSONS_REORDER"
 	[id: string]: any
 }
 let LessonReducer = (state: ILessons = {lessons: {},order: []}, action: IGuideAction) => {
 	switch(action.type) {
+		case "GUIDE_INIT": {
+			state = {...action.state};
+			break;
+		}
 		case "GUIDE_LESSON_ADD": {
 			let lesson: ILesson = {
 				title: action.title,
