@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
 import {runProgramInNewScope} from 'App/Monaco/Runtime/';
 import {compileCode} from 'App/Monaco/Runtime/typescript';
-import {CompileCanvasCode, canvasElemId} from 'App/Monaco/Runtime/canvas';
+import {CanvasView, canvasElemId} from 'App/Canvas';
 import {runProgram} from 'App/Monaco/Runtime/';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Dropdown} from 'classui/Components/Dropdown';
@@ -22,8 +22,7 @@ interface IProps {
 interface IState {
 	currentTaskNum: number
 	currentTask: string
-	question: string
-	
+	userCode: string
 };
 
 let defaultCode = `import {Canvas} from 'canvas2d';
@@ -45,7 +44,7 @@ class Task_ extends React.Component<IProps, IState>{
 		this.state = {
 			currentTaskNum: 0,
 			currentTask: "",
-			question: ""
+			userCode: ""
 		};
 		this.loadTask = this.loadTask.bind(this);
 		this.save = this.save.bind(this);
@@ -71,8 +70,6 @@ class Task_ extends React.Component<IProps, IState>{
 			currentTask: id
 		});
 		this.dropdown.dismiss();
-		console.log(task.question);
-		runProgramInNewScope(CompileCanvasCode(task.question, "c_tcanvas"));
 	}
 	save() {
 		Me.saveTask({
@@ -92,13 +89,13 @@ class Task_ extends React.Component<IProps, IState>{
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	runCode() {
-		runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_ycanvas"));
+		this.setState({
+			userCode: this.editorRef.getModifiedEditor().getValue()
+		});
 	}
 	runFullScreen() {
 		Flash.flash((dismiss)=>{
-			return <canvas id="c_fullscreen" width={600} height={500} ref={()=>{
-				runProgramInNewScope(CompileCanvasCode(this.editorRef.getModifiedEditor().getValue(), "c_fullscreen"));				
-			}}></canvas>;
+			return <CanvasView width={600} height={500} code={this.editorRef.getModifiedEditor().getValue()}/>;
 		}, false, true);
 	}
 	render() {
@@ -108,6 +105,7 @@ class Task_ extends React.Component<IProps, IState>{
 			let ind = index;
 			tasks.push(<li key={i} onClick={()=>this.loadTask(ind, i)}>Task - {index}</li>);
 		}
+		let question_code = this.props.tasks[this.state.currentTask]?this.props.tasks[this.state.currentTask].question:"";
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
 				<PersistMonaco id={this.state.currentTask} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
@@ -123,9 +121,9 @@ class Task_ extends React.Component<IProps, IState>{
 					<Section><div className="button" onClick={this.resetCode}>Reset Code</div></Section>
 					<Section><div className="button" onClick={this.save}>Save</div></Section>
 				</Layout>
-				<canvas id="c_tcanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+				<CanvasView code={question_code} width={400} height={250} style={{border: '1px solid black'}} />
 				<div style={{position: "relative"}}>
-					<canvas id="c_ycanvas" width={400} height={250} style={{border: '1px solid black'}}></canvas>
+					<CanvasView code={this.state.userCode} width={400} height={250} style={{border: '1px solid black'}} />
 					<span className="button" onClick={this.runFullScreen} style={{position: "absolute",display: "inline-block", bottom: 0, right: 0}}>FullScreen</span>
 				</div>
 			</Section>
@@ -202,10 +200,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 	}
 	runCode() {
 		Flash.flash((dimsiss)=>{
-			return <canvas id="canvas" width={400} height={300} ref={()=>{
-				runProgramInNewScope(CompileCanvasCode(this.questionRef.getValue(), "canvas"));				
-			}}>
-			</canvas>;
+			return <CanvasView width={400} height={300} code={this.questionRef.getValue()} />
 		}, false, true);
 	}
 	render() {

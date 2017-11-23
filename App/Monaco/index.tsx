@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import {MonacoLibs} from './Libs';
-MonacoLibs.loadCanvas();
 
 declare let monacoAmdRequire: any;
 
@@ -201,7 +200,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div style={{border: '1px solid rgba(0, 0, 0, 0.2)', marginBottom: 20}}>
+		return <div className="monaco__editor" style={{border: '1px solid rgba(0, 0, 0, 0.2)', marginBottom: 20}}>
 			<div style={{
 				width: this.props.width,
 				height: this.props.height,

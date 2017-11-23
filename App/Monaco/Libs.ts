@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Monaco, IMonacoProps} from './';
+import {Monaco} from './';
 
 export let MonacoLibs = {
 	loadCanvas() {

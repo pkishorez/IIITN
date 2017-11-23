@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
 import {runProgramInNewScope} from 'App/Monaco/Runtime/';
-import {CompileCanvasCode} from 'App/Monaco/Runtime/canvas';
+import {CanvasView} from 'App/Canvas';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item} from 'classui/Components/Menu';
 import {Flash} from 'classui/Components/Flash';
@@ -57,17 +57,9 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 		});
 	}
 	runCode() {
-		let compiledCode = CompileCanvasCode(this.editorRef.getValue());
-		if (document.getElementById("canvas")) {
-			runProgramInNewScope(CompileCanvasCode(compiledCode));
-		}
-		else {
-			Flash.flash((dismiss)=>{
-				return <Canvas runCode={()=>{
-					runProgramInNewScope(CompileCanvasCode(compiledCode));				
-				}}/>
-			});	
-		}
+		Flash.flash((dismiss)=>{
+			return <CanvasView  width={300} height={250} code={this.editorRef.getValue()} />
+		});
 	}
 	render() {
 		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
@@ -80,17 +72,5 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 				</Menu>
 			</Section>
 		</Layout>;
-	}
-}
-
-interface ICanvasProps {
-	runCode: any
-}
-class Canvas extends React.Component<ICanvasProps> {
-	componentDidMount() {
-		this.props.runCode();
-	}
-	render() {
-		return <canvas id="canvas" width={300} height={250}></canvas>;
 	}
 }

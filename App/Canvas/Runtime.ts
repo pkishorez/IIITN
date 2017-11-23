@@ -1,6 +1,6 @@
-import {compileCode} from './typescript';
+import {compileCode} from 'App/Monaco/Runtime/typescript';
 
-export let canvasElemId = "__document_canvas_element__";
+export const canvasElemId = "__document_canvas_element__";
 export let CompileCanvasCode = (code: string, canvasId?: string)=>{
 	code = code.replace(/import [^\n]*\n/g, "");
 	
