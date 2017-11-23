@@ -169,6 +169,6 @@ let Screen = (props: any)=>{
 		<Section width={580} remain style={{overflow: "hidden"}}>
 			{props.question}
 		</Section>
-		<Section width={500} card style={{overflow: "auto", height: `calc(100vh - 100px)`}}>{props.description}</Section>
+		<Section width={500} style={{overflow: "auto", height: `calc(100vh - 100px)`}}>{props.description}</Section>
 	</Layout>;
 }

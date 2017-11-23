@@ -93,7 +93,7 @@ class Lesson extends React.Component<IProps, IState> {
 
 	render() {
 		return <Layout gutter={20}>
-			<Section width={600} card style={{overflow: "hidden"}}>
+			<Section width={600} style={{overflow: "hidden"}}>
 				<Layout>
 					<Section remain>
 						<h4 style={{margin: 15}}>Canvas2D Demo</h4>

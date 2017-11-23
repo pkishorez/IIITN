@@ -49,7 +49,7 @@ export class Lesson extends React.Component<IProps, IState> {
 		};
 	}
 	render() {
-		return <Layout c_props={{card: false}} gutter={15} align="start">
+		return <Layout gutter={15} align="start">
 			<Section minWidth={225}>
 				<Menu header="Lessons">
 					<Item>1. Working with Console.</Item>
@@ -60,7 +60,7 @@ export class Lesson extends React.Component<IProps, IState> {
 					<div className="button">Kishore</div>
 				</Menu>
 			</Section>
-			<Section remain card>
+			<Section remain>
 				<h3>Console.Log</h3>
 				Console.log is used to print the contents on the console.
 				It accepts String.<br/>
