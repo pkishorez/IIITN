@@ -1,6 +1,7 @@
 var copyWebpackPlugin = require("copy-webpack-plugin");
 var fs = require("fs");
 var serverConfig = require("./webpack.server.config");
+var path = require("path");
 
 module.exports = [
 	{
@@ -30,7 +31,12 @@ module.exports = [
 			]
 		},
 		resolve: {
-			extensions: [".tsx", ".ts", ".js"]
+			extensions: [".tsx", ".ts", ".js"],
+			alias: {
+				App: path.join(__dirname, 'App/'),
+				Server: path.join(__dirname, "Server/"),
+				Common: path.join(__dirname, "Common/")
+			},
 		},
 
 		plugins: [

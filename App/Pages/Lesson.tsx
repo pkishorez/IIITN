@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Monaco} from '../Monaco';
+import {Monaco} from 'App/Monaco';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
 import {Question, Practice} from './Questions/Question';

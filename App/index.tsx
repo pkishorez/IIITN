@@ -6,8 +6,8 @@ import {Header} from './_presentation/Header';
 import {History_} from './_presentation/History';
 import {RouteComponent} from './_presentation/RouteComponent';
 import {GetState, IRootState} from './State';
-import {Me} from './MyActions';
-import {ServiceWorker} from './Network/ServiceWorker';
+import {Me} from 'App/MyActions';
+import {ServiceWorker} from 'App/Network/ServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider, connect} from 'react-redux';
 

@@ -1,11 +1,11 @@
 import {NavBar} from 'classui/Navbar';
 import {Promise} from 'es6-promise';
-import {getResponseID} from '../../Common/Utils';
-import {IRequestType, IRequest, IResponse} from '../../Server/Connection';
-import {A_User, __store} from '../State';
+import {getResponseID} from 'Common/Utils';
+import {IRequestType, IRequest, IResponse} from 'Server/Connection';
+import {A_User, __store} from 'App/State';
 import * as io from 'socket.io-client';
 import * as _ from 'lodash';
-import { Me } from '../MyActions';
+import { Me } from 'App/MyActions';
 
 let Socket: _SocketIO;
 let g_reqid = 0;

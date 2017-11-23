@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Flash} from 'classui/Components/Flash';
 import {Layout, Section} from 'classui/Components/Layout';
-import {Monaco} from '../../Monaco';
-import {runProgramInNewScope} from '../../Monaco/Runtime/';
-import {compileCode} from '../../Monaco/Runtime/typescript';
+import {Monaco} from 'App/Monaco';
+import {runProgramInNewScope} from 'App/Monaco/Runtime/';
+import {compileCode} from 'App/Monaco/Runtime/typescript';
 import * as _ from 'lodash';
 
 interface IProps {};

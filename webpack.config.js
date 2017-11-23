@@ -27,7 +27,13 @@ module.exports = [
 			"monaco": "monaco"
 		},
 		resolve: {
-			extensions: [".tsx", ".ts", ".js"]
+			extensions: [".tsx", ".ts", ".js"],
+			alias: {
+				App: path.join(__dirname, 'App/'),
+				Server: path.join(__dirname, "Server/"),
+				Common: path.join(__dirname, "Common/")
+			},
+
 		},
 		plugins: [
 			new copyWebpackPlugin([

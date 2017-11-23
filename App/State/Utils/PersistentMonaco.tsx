@@ -1,6 +1,6 @@
 import {GetState} from '../index';
-import {Me} from '../../MyActions';
-import {IMonacoProps, Monaco} from '../../Monaco';
+import {Me} from 'App/MyActions';
+import {IMonacoProps, Monaco} from 'App/Monaco';
 import * as React from 'react';
 import * as _ from 'lodash';
 

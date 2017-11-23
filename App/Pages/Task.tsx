@@ -1,20 +1,20 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {PersistMonaco} from '../State/Utils/PersistentMonaco';
-import {runProgramInNewScope} from '../Monaco/Runtime/';
-import {compileCode} from '../Monaco/Runtime/typescript';
-import {CompileCanvasCode, canvasElemId} from '../Monaco/Runtime/canvas';
-import {runProgram} from '../Monaco/Runtime/';
+import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
+import {runProgramInNewScope} from 'App/Monaco/Runtime/';
+import {compileCode} from 'App/Monaco/Runtime/typescript';
+import {CompileCanvasCode, canvasElemId} from 'App/Monaco/Runtime/canvas';
+import {runProgram} from 'App/Monaco/Runtime/';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Dropdown} from 'classui/Components/Dropdown';
 import {Flash} from 'classui/Components/Flash';
 import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
-import {Network} from '../Network';
+import {Network} from 'App/Network';
 import {connect} from 'react-redux';
-import {IRootState, A_Task, GetState} from '../State';
-import {Task as TaskAction, Me} from '../MyActions';
-import {ITask} from '../State/Reducers/TaskReducer';
+import {IRootState, A_Task, GetState} from 'App/State';
+import {Task as TaskAction, Me} from 'App/MyActions';
+import {ITask} from 'App/State/Reducers/TaskReducer';
 
 interface IProps {
 	tasks: IRootState["tasks"]

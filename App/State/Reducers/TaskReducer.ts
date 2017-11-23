@@ -1,4 +1,4 @@
-import {INR_Task} from '../../../Common/ActionSignature';
+import {INR_Task} from 'Common/ActionSignature';
 import * as _ from 'lodash';
 export interface ITask {
 	question: string

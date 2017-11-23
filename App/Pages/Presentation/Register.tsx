@@ -4,9 +4,9 @@ import {Layout, Section} from 'classui/Components/Layout';
 import {Formlayout} from 'classui/Components/Formlayout';
 import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Select} from 'classui/Components/Form/Select';
-import {S_User} from '../../../Server/Database/Schema';
+import {S_User} from 'Server/Database/Schema';
 import {Flash} from 'classui/Components/Flash';
-import {Me} from '../../MyActions';
+import {Me} from 'App/MyActions';
 import {RequireAuthentication} from './Login';
 import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 

@@ -4,8 +4,8 @@ import {NavBar, NavbarRemain} from 'classui/Navbar';
 import {RLink} from 'classui/Helper/RLink';
 import {Dropdown} from 'classui/Components/Dropdown';
 import {connect} from 'react-redux';
-import {IRootState} from '../State/RootReducer';
-import {Me} from '../MyActions';
+import {IRootState} from 'App/State/RootReducer';
+import {Me} from 'App/MyActions';
 
 interface IProps {
 	userid: string | null

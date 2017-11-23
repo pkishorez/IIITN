@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Monaco} from '../../Monaco';
-import {IFunction, Runtime} from '../../Monaco/Runtime/';
+import {Monaco} from 'App/Monaco';
+import {IFunction, Runtime} from 'App/Monaco/Runtime/';
 
 interface IQuestionProps {
 	answer: string

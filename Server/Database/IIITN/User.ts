@@ -1,8 +1,8 @@
-import {Collection} from '../index';
+import {Collection} from 'Server/Database/index';
 import {v4} from 'uuid';
 import {Schema} from 'classui/Components/Form/Schema';
 import {S_User} from '../Schema/index';
-import {INR_Task, INR_User} from '../../../Common/ActionSignature';
+import {INR_Task, INR_User} from 'Common/ActionSignature';
 import {TaskDB} from './Task';
 
 export let UserDB: Collection = new Collection("user");

@@ -1,8 +1,8 @@
-import {Network} from './Network/';
-import {A_User, A_Task, __store, IRootState} from './State';
-import {INR_User, INR_Task} from '../Common/ActionSignature';
+import {Network} from 'App/Network/';
+import {A_User, A_Task, __store, IRootState} from 'App/State';
+import {INR_User, INR_Task} from 'Common/ActionSignature';
 import * as _ from 'lodash';
-import { A_Guide, D_Guide } from './State/Action';
+import { A_Guide, D_Guide } from 'App/State/Action';
 
 export let Me = {
 	// Network and local state requests.

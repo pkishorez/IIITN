@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Monaco, IMonacoProps} from '../../Monaco';
-import {Runtime} from '../../Monaco/Runtime/';
-import {SeqProgramOutput} from '../../Monaco/SeqProgram';
+import {Monaco, IMonacoProps} from 'App/Monaco';
+import {Runtime} from 'App/Monaco/Runtime/';
+import {SeqProgramOutput} from 'App/Monaco/SeqProgram';
 import {Layout, Section} from 'classui/Components/Layout';
-import {PersistMonaco} from '../../State/Utils/PersistentMonaco';
+import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
 import * as _ from 'lodash';
 
 interface IProps {

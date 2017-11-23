@@ -1,6 +1,6 @@
-import {Collection} from '../index';
+import {Collection} from 'Server/Database/index';
 import {S_Task} from '../Schema/index';
-import {INR_Task} from '../../../Common/ActionSignature';
+import {INR_Task} from 'Common/ActionSignature';
 
 export let TaskDB: Collection = new Collection("task");
 

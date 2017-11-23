@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import {UserReducer, IUserState, TaskReducer, ITaskState, GuideReducer, IGuideState} from './Reducers';
-import {Network} from '../Network';
+import {Network} from 'App/Network';
 
 export interface IRootState {
 	user: IUserState

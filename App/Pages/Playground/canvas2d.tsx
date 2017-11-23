@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {PersistMonaco} from '../../State/Utils/PersistentMonaco';
-import {runProgramInNewScope} from '../../Monaco/Runtime/';
-import {CompileCanvasCode} from '../../Monaco/Runtime/canvas';
+import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
+import {runProgramInNewScope} from 'App/Monaco/Runtime/';
+import {CompileCanvasCode} from 'App/Monaco/Runtime/canvas';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item} from 'classui/Components/Menu';
 import {Flash} from 'classui/Components/Flash';

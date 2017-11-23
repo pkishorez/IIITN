@@ -6,9 +6,9 @@ import {TextField} from 'classui/Components/Formlayout/TextField';
 import {Flash} from 'classui/Components/Flash';
 import {RouteComponentProps, Redirect, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {S_UserLogin} from '../../../Server/Database/Schema';
-import {Me} from '../../MyActions';
-import {History} from '../../_presentation/History';
+import {S_UserLogin} from 'Server/Database/Schema';
+import {Me} from 'App/MyActions';
+import {History} from 'App/_presentation/History';
 
 interface IProps {
 	redirect?: string

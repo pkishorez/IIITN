@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
-import {Database} from '../../MyActions';
+import {Database} from 'App/MyActions';
 
 interface IProps {
 	userid: string

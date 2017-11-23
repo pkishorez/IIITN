@@ -2,9 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
-import {DraftEditorRender, convertToRaw} from '../../../DraftEditor';
-import {connect, IRootState} from '../../../State';
-import {ILessons, ILesson} from '../../../State/Reducers/GuideReducer';
+import {DraftEditorRender, convertToRaw} from 'App/DraftEditor';
+import {connect, IRootState} from 'App/State';
+import {ILessons, ILesson} from 'App/State/Reducers/GuideReducer';
 
 interface IProps extends ILessons{};
 interface IState {

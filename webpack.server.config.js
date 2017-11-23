@@ -1,5 +1,6 @@
 var nodeExternals = require('webpack-node-externals');
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
 	target: 'node',
@@ -22,7 +23,12 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: [".ts", ".js"]
+		extensions: [".ts", ".js"],
+		alias: {
+			App: path.join(__dirname, 'App/'),
+			Server: path.join(__dirname, "Server/"),
+			Common: path.join(__dirname, "Common/")
+		}
 	},
 	plugins: [
 		new webpack.DefinePlugin({ // <-- key to reducing React's size

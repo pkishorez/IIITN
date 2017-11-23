@@ -1,4 +1,4 @@
-import {ITask} from '../App/State/Reducers/TaskReducer';
+import {ITask} from 'App/State/Reducers/TaskReducer';
 
 export interface INR_User {
 	USER_LOGIN: {

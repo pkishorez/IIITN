@@ -1,6 +1,6 @@
-import {Collection} from '../index';
+import {Collection} from 'Server/Database';
 import {S_Task} from '../Schema/index';
-import {INR_Task} from '../../../Common/ActionSignature';
+import {INR_Task} from 'Common/ActionSignature';
 
 export let KeyValueDB: Collection = new Collection("keyvalue");
 

@@ -1,6 +1,6 @@
-import {User, Task, KeyValue} from './Database/IIITN';
-import {getResponseID} from '../Common/Utils';
-import {INR_Task, INR_User} from '../Common/ActionSignature';
+import {User, Task, KeyValue} from 'Server/Database/IIITN';
+import {getResponseID} from 'Common/Utils';
+import {INR_Task, INR_User} from 'Common/ActionSignature';
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
 	| keyof(INR_Task) | keyof(INR_User)

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Login, Register, Profile, Students, LearnByDoing, StarterView, StarterManagement} from '../Pages';
-import {Home} from '../Pages/Presentation/Home';
-import {RequireAuthentication} from '../Pages/Presentation/Login';
-import {Lesson} from '../Pages/Lesson';
-import {Typescript} from '../Pages/Typescript';
-import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from '../Pages/Playground/';
-import {Task, TaskManager} from '../Pages/Task';
-import {GetState} from '../State';
-import {AddQuestion} from '../Pages/Questions';
+import {Login, Register, Profile, Students, LearnByDoing, StarterView, StarterManagement} from 'App/Pages';
+import {Home} from 'App/Pages/Presentation/Home';
+import {RequireAuthentication} from 'App/Pages/Presentation/Login';
+import {Lesson} from 'App/Pages/Lesson';
+import {Typescript} from 'App/Pages/Typescript';
+import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from 'App/Pages/Playground/';
+import {Task, TaskManager} from 'App/Pages/Task';
+import {GetState} from 'App/State';
+import {AddQuestion} from 'App/Pages/Questions';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
 interface IProps {};

@@ -1,4 +1,4 @@
-import {INR_User} from '../../../Common/ActionSignature';
+import {INR_User} from 'Common/ActionSignature';
 export interface IUserState {
 	userid: string | null
 	secretKey?: string | null

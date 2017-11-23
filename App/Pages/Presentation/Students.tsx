@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Me, Database} from '../../MyActions';
+import {Me, Database} from 'App/MyActions';
 import {Layout, Section} from 'classui/Components/Layout';
 
 interface IProps {};
