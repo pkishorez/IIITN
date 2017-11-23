@@ -76,7 +76,7 @@ export let A_Guide = {
 	},
 }
 
-export let D_Guide = (guide_id: string)=>{
+export let D_Guide = (guide_id: "STARTER")=>{
 	return {
 		addLesson(title: string, editorState: string) {
 			let action: IGuideAction = {

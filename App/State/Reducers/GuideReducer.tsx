@@ -1,13 +1,13 @@
 import {v4} from 'uuid';
-interface ILessons {
+export interface ILessons {
 	lessons: {
 		[id: string]: ILesson
 	}
 	order: string[]
 }
-interface ILesson {
+export interface ILesson {
 	title: string
-	editorState: any
+	editorState: string
 }
 export interface IGuideAction {
 	type: "GUIDE_INIT" | "GUIDE_LESSON_ADD" | "GUIDE_LESSON_MODIFY" | "GUIDE_LESSON_DELETE" | "GUIDE_LESSONS_REORDER"
@@ -77,7 +77,9 @@ export interface IGuideState {
 	[id: string]: ILessons
 }
 
-export let GuideReducer = (state: IGuideState = {}, action: any)=>{
+export let GuideReducer = (state: IGuideState = {
+	STARTER: {lessons: {}, order: []}
+}, action: any)=>{
 	state = {
 		...state,
 		[action.guide_id]: LessonReducer(state[action.guide_id], action)

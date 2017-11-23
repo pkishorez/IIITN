@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Login, Register, Profile, Students} from '../Pages';
+import {Login, Register, Profile, Students, LearnByDoing, StarterView, StarterManagement} from '../Pages';
 import {Home} from '../Pages/Presentation/Home';
 import {RequireAuthentication} from '../Pages/Presentation/Login';
 import {Lesson} from '../Pages/Lesson';
@@ -24,6 +24,9 @@ export class RouteComponent extends React.Component<IProps, IState> {
 			<Route path="/2dplayground" component={PlaygroundCanvas2D} />
 			<Route path="/starter" component={PlaygroundCanvas2dStarter} />
 			<Route path="/lesson" component={Lesson} />
+			<Route path="/lbd/starter/manage" component={StarterManagement} />
+			<Route path="/lbd/starter" component={StarterView} />
+			<Route path="/lbd" component={LearnByDoing} />
 			<Route path="/typescript" component={Typescript} />
 			<Route path="/questions" component={AddQuestion} />
 			<Route path="/students" component={Students} />

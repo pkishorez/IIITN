@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 export {A_User, A_Task} from './Action';
 export {IRootState} from './RootReducer';
+export {connect} from 'react-redux';
 export {IUserAction, IUserActionType, IUserState} from './Reducers/UserReducer';
 export let __store: Store<IRootState>;
 
