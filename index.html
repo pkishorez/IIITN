@@ -6,7 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link rel="stylesheet" href="/bundle/classui.css">
+	<link rel="stylesheet" href="/bundle/Draft.css">
 	<link rel="stylesheet" href="/assets/Inconsolata.css">
+	<link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.min.css">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<title>CSE Code Ground</title>
 	<style>
@@ -16,13 +18,38 @@
 				SMALL HACK.
 				CAVEAT: Responsive design is not possible :(
 			*/
-			max-width: inherit !important;
+			/*max-width: inherit !important;*/
+		}
+		.monaco__editor, .monaco__editor * {
+			width: 100%;
+		}
+		.draftEditor .nostyle {
+			margin: 25px 0px;
+			font-size: 18px;
+			color: rgba(0,0,0,0.92);
+			line-height: 1.6;
+		}
+		.draftEditor h1, .draftEditor h2, .draftEditor h3, .draftEditor h4, .draftEditor h5 {
+			margin: 15px 0px;
+		}
+
+		.hideOnHover {
+			opacity: 0.3;
+			transition: 8s all;
+		}
+		.hideOnHover:hover {
+			opacity: 1;
+			transition: 0.5s all;
 		}
 	</style>
 </head>
 <body>
 	<div id="app"></div>
 	<script src="/assets/vs/loader.js"></script>
+	<script>
+		var monacoAmdRequire = require;
+	</script>
 	<script src="/bundle/bundle.js"></script>
+	<script src="/assets/canvas2d/global.js"></script>
 </body>
 </html>
