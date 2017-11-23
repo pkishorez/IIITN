@@ -69,7 +69,7 @@ export class User {
 	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
 		return UserDB.raw.updateOne({_id: this.userid}, {
 			$set: {
-				[`tasks.${data.id}`]: data.code
+				[`tasks.${data._id}`]: data.code
 			}
 		}).then(()=>{
 			return Promise.resolve("Successfully saved.");

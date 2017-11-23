@@ -10,13 +10,16 @@ export interface INR_User {
 
 export interface INR_Task {
 	TASK_ADD: ({
-		id?: string // Mandatory for local, not mandatory for network.
+		_id?: string // Mandatory for local, not mandatory for network.
 	} & ITask)
 	TASK_MODIFY: ({
-		id: string
+		_id: string
 	} & Partial<ITask>)
 	USER_TASK_SAVE: {
-		id: string
+		_id: string
 		code: string
+	}
+	TASK_DELETE: {
+		_id: string
 	}
 }

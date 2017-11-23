@@ -50,11 +50,11 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 		}
 		case "TASK_MODIFY": {
 			let a: INR_Task["TASK_MODIFY"] = action as any;
-			let {id, ...updates} = a;
+			let {_id, ...updates} = a;
 			state = {
 				...state,
-				[id]: {
-					...state[a.id],
+				[_id]: {
+					...state[a._id],
 					...updates
 				}
 			}

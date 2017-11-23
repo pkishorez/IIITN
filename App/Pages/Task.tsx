@@ -73,7 +73,7 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	save() {
 		Me.saveTask({
-			id: this.state.currentTask,
+			_id: this.state.currentTask,
 			code: this.editorRef.getModifiedEditor().getValue()
 		}).then(alert).catch(alert);
 	}
@@ -165,17 +165,21 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
 		TaskAction.add(data).then((success)=>{
-			alert(success);
+			alert("SUCCESS : "+ success);
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
 		}).catch(alert);
 	}
+	deleteTask() {
+		TaskAction
+	}
 	modifyTask() {
-		let data: any = {};
-		data.id = this.state.currentTask;
-		data.question = this.questionRef.getValue();
-		data.resetCode = this.resetCodeRef.getValue();
-		TaskAction.modify(data).then(alert).catch(alert);
+		alert(this.state.currentTask);
+		TaskAction.modify({
+			_id: this.state.currentTask,
+			question: this.questionRef.getValue(),
+			resetCode: this.resetCodeRef.getValue()
+		}).then(alert).catch(alert);
 	}
 	saveTask() {
 		if (this.state.currentTask!="NEW TASK") {
