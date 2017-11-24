@@ -1,28 +1,43 @@
 import {Collection} from 'Server/Database/index';
 import {S_Task} from '../Schema/index';
-import {INR_Task} from 'Common/ActionSignature';
+import {ITaskAction, ITask} from 'App/State/Reducers/TaskReducer';
+import {OrderedMap} from 'Utils/OrderedMap';
+import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
 
-export let TaskDB: Collection = new Collection("task");
-
-export class Task{
+export class _Task{
+	private orderedMap: OrderedMap<ITask>
 	// Update task. One action should be there.
-	static addTask(data: INR_Task["TASK_ADD"]) {
-		return TaskDB.insert(data, S_Task).then((res)=>{
-			return Promise.resolve("Successfully added task.");
-		})
+	constructor() {
+		setTimeout(()=>{
+			KeyValue.get("TASKS_DB").then((data)=>{
+				if (data) {
+					data = data.data;
+				}
+				this.orderedMap = new OrderedMap(data);
+				console.log("Connected TasksDB of KeyValue", data, this.orderedMap.getState());
+			});
+		}, 5000)
 	}
-	static modifyTask(data: INR_Task["TASK_MODIFY"]) {
-		return TaskDB.update(data, S_Task).then((res)=>{
-			return Promise.resolve("Successfully updated task.");
-		})
-	}
-	static deleteTask(data: INR_Task["TASK_DELETE"]) {
-		if (data._id.length!=24) {
-			return Promise.reject("Invalid ID to delete.");
-		}
-		return TaskDB.raw.remove({_id: new mongodb.ObjectID(data._id)}).then((res)=>{
-			return Promise.resolve("Successfully deleted task.");
-		})
+	performAction(action: ITaskAction) {
+		return new Promise<ITaskAction>((resolve, reject)=>{
+			if (!this.orderedMap) {
+				reject("Database Error. Couldn't perform task.");
+			}
+			if (action.orderedMapAction.type=="INIT") {
+				resolve({
+					...action,
+					orderedMapAction: {
+						...action.orderedMapAction,
+						state: this.orderedMap.getState()
+					}
+				});
+			}
+			this.orderedMap.performAction(action.orderedMapAction);
+			KeyValue.set("TASKS_DB", this.orderedMap.getState());
+			resolve(action);
+		}).catch(console.error);
 	}
 }
+
+export let Task = new _Task();
