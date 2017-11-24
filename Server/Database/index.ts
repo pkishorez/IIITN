@@ -26,7 +26,6 @@ export class Collection{
 		this.getMany = this.getMany.bind(this);
 		this.update = this.update.bind(this);
 		this.insert = this.insert.bind(this);
-		this.updateOrInsert = this.updateOrInsert.bind(this);
 		this.init = this.init.bind(this);
 
 		this.init(collection);
@@ -60,14 +59,6 @@ export class Collection{
 					return json;
 				})
 			}
-		}
-	}
-	async updateOrInsert(data: any, schema?: IJSONSchema) {
-		if (data._id) {
-			return await this.update(data, schema);
-		}
-		else {
-			return await this.insert(data, schema);
 		}
 	}
 	async update(data: any, schema?: IJSONSchema) {
