@@ -1,12 +1,27 @@
 import {v4} from 'uuid';
 import * as _ from 'lodash';
 
-interface IOrderedMap<T>{
+export interface IOrderedMap<T>{
 	map: {
 		[id: string]: T
 	},
 	order: string[]
 }
+
+export type IOrderedMapAction<T> = {
+	type: "ADD"
+	value: T
+} | {
+	type: "MODIFY"
+	id: string
+	value: T
+} | {
+	type: "DELETE"
+	id: string
+} | {
+	type: "REORDER"
+	order: string[]
+};
 
 export class OrderedMap<T> {
 	private orderedMap: IOrderedMap<T>;
@@ -22,6 +37,28 @@ export class OrderedMap<T> {
 		else {
 			console.error("SERIOUS ERROR : ORDERED MAP ERROR. KEYS IN ORDER AND MAPKEYS MISMATCH.");
 		}
+	}
+
+	performAction(action: IOrderedMapAction<T>): IOrderedMap<T> {
+		switch(action.type) {
+			case "ADD": {
+				return this.add(action.value);
+			}
+			case "DELETE": {
+				return this.del(action.id);
+			}
+			case "MODIFY": {
+				return this.modify(action.id, action.value);
+			}
+			case "REORDER": {
+				return this.reorder(action.order);
+			}
+		}
+		return this.orderedMap;
+	}
+
+	getState() {
+		return this.orderedMap;
 	}
 
 	toString() {
