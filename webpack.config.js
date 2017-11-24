@@ -31,7 +31,8 @@ module.exports = [
 			alias: {
 				App: path.join(__dirname, 'App/'),
 				Server: path.join(__dirname, "Server/"),
-				Common: path.join(__dirname, "Common/")
+				Common: path.join(__dirname, "Common/"),
+				Utils: path.join(__dirname, "Utils/")
 			},
 
 		},
