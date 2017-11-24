@@ -220,6 +220,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		if (id=="") {
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
+			return;
 		}
 		let task = this.props.tasks.map[id];
 		this.resetCodeRef.setValue(task.resetCode?task.resetCode:"");

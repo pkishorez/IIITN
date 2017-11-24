@@ -15,7 +15,6 @@ export class _Task{
 					data = data.data;
 				}
 				this.orderedMap = new OrderedMap(data);
-				console.log("Connected TasksDB of KeyValue", data, this.orderedMap.getState());
 			});
 		}, 5000)
 	}
@@ -33,7 +32,7 @@ export class _Task{
 					}
 				});
 			}
-			this.orderedMap.performAction(action.orderedMapAction);
+			action.orderedMapAction = this.orderedMap.performAction(action.orderedMapAction);
 			KeyValue.set("TASKS_DB", this.orderedMap.getState());
 			resolve(action);
 		}).catch(console.error);

@@ -29,7 +29,6 @@ export type IOrderedMapAction<T> = {
 
 export class OrderedMap<T> {
 	private orderedMap: IOrderedMap<T>;
-	performAction: OrderedMap<T>["_performAction"];
 	constructor(orderedMap: IOrderedMap<T>) {
 		if (!orderedMap) {
 			orderedMap = {map: {}, order: []};
@@ -37,7 +36,7 @@ export class OrderedMap<T> {
 		this.orderedMap = this.init(orderedMap);
 	}
 
-	private _performAction(action: IOrderedMapAction<T>): IOrderedMapAction<T> {
+	performAction(action: IOrderedMapAction<T>): IOrderedMapAction<T> {
 		switch(action.type) {
 			case "INIT": {
 				this.orderedMap = this.init(action.state);
