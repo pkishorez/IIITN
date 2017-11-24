@@ -15,10 +15,6 @@ export interface IGuideAction {
 }
 let LessonReducer = (state: ILessons = {lessons: {},order: []}, action: IGuideAction) => {
 	switch(action.type) {
-		case "GUIDE_INIT": {
-			state = {...action.state};
-			break;
-		}
 		case "GUIDE_LESSON_ADD": {
 			let lesson: ILesson = {
 				title: action.title,
@@ -77,12 +73,19 @@ export interface IGuideState {
 	[id: string]: ILessons
 }
 
-export let GuideReducer = (state: IGuideState = {
-	STARTER: {lessons: {}, order: []}
-}, action: any)=>{
-	state = {
-		...state,
-		[action.guide_id]: LessonReducer(state[action.guide_id], action)
-	};
+export let GuideReducer = (state: IGuideState = {}, action: any)=>{
+	switch(action.type) {
+		case "GUIDE_INIT": {
+			state = {...action.state};
+			break;
+		}
+		default: {
+			state = {
+				...state,
+				[action.guide_id]: LessonReducer(state[action.guide_id], action)
+			};
+			break;		
+		}
+	}
 	return state;
 }
