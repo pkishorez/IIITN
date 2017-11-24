@@ -2,7 +2,7 @@ import {NavBar} from 'classui/Navbar';
 import {Promise} from 'es6-promise';
 import {getResponseID} from 'Common/Utils';
 import {IRequestType, IRequest, IResponse} from 'Server/Connection';
-import {A_User, __store} from 'App/State';
+import {__store} from 'App/State';
 import * as io from 'socket.io-client';
 import * as _ from 'lodash';
 import { Me } from 'App/MyActions';
@@ -55,15 +55,25 @@ class _SocketIO {
 				}
 				this.socket.off(responseID);
 			});
-		});
+		}).catch((error)=>{console.error(error);return Promise.reject("Server Error : "+JSON.stringify(error));});
 	}
-	requestAndDispatch(req_type: IRequestType, data: any, userAction: any) {
-		return this.request(req_type, data).then((response)=>{
+	requestAndDispatch(req_type: IRequestType, data: any) {
+		console.log("REQUEST : ", req_type, data);
+		return this.request(req_type, data).then((response: any)=>{
+			console.log("RESPONSE :): ", response);
+
 			if (typeof response == "object") {
-				__store.dispatch(userAction(_.merge(data, response)));				
+				__store.dispatch({
+					type: req_type,
+					...data,
+					...response
+				});
 			}
 			else {
-				__store.dispatch(userAction(data));
+				__store.dispatch({
+					type: req_type,
+					...data
+				});
 			}
 			return response;
 		})
