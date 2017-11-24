@@ -64,6 +64,12 @@ export let A_Task = {
 			type: "TASK_MODIFY",
 			...data
 		};
+	},
+	delete(data: INR_Task["TASK_DELETE"]): ITaskAction {
+		return {
+			type: "TASK_DELETE",
+			...data
+		};
 	}
 }
 

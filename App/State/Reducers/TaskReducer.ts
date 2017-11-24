@@ -60,6 +60,12 @@ export let TaskReducer = (state: ITaskState = {}, action: ITaskAction) => {
 			}
 			break;
 		}
+		case "TASK_DELETE": {
+			let a: INR_Task["TASK_DELETE"] = action as any;
+			delete state[a._id];
+			state = {...state};
+			break;
+		}
 	}
 	return state;
 }

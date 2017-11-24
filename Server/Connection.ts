@@ -61,6 +61,9 @@ export class Connection {
 			case "USER_TASK_SAVE": {
 				return this.user.saveTask(request.data);
 			}
+			case "TASK_DELETE": {
+				return Task.deleteTask(request.data);
+			}
 		}
 		// Admin actions goes here...
 		if (this.user.userid=="admin") {

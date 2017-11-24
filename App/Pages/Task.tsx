@@ -155,6 +155,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		this.loadTask = this.loadTask.bind(this);
 		this.modifyTask = this.modifyTask.bind(this);
 		this.saveTask = this.saveTask.bind(this);
+		this.deleteTask = this.deleteTask.bind(this);
 	}
 	componentDidMount() {
 		TaskAction.init();
@@ -165,16 +166,17 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 		data.question = this.questionRef.getValue();
 		data.resetCode = this.resetCodeRef.getValue();
 		TaskAction.add(data).then((success)=>{
-			alert("SUCCESS : "+ success);
+			alert(success);
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
 		}).catch(alert);
 	}
 	deleteTask() {
-		TaskAction
+		TaskAction.delete({
+			_id: this.state.currentTask
+		}).then(alert).catch(alert);
 	}
 	modifyTask() {
-		alert(this.state.currentTask);
 		TaskAction.modify({
 			_id: this.state.currentTask,
 			question: this.questionRef.getValue(),
@@ -218,12 +220,15 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 				<Section>
 					<span className="button" onClick={this.saveTask}>Save</span>
 				</Section>
-				<Section remain>
+				<Section>
 					<div style={{zIndex: 1, position: "relative"}}>
 						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={this.state.currentTask=="NEW TASK"?this.state.currentTask:`Task ${this.state.currentTask}`}>
 							{tasks}
 						</Dropdown>
 					</div>
+				</Section>
+				<Section>
+					<span className="button" onClick={this.deleteTask}>Delete</span>
 				</Section>
 			</Layout>
 			<Layout gutter={20} equalWidth>

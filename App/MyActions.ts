@@ -56,6 +56,9 @@ export let Task = {
 	},
 	modify(data: INR_Task["TASK_MODIFY"]) {
 		return Network.requestAndDispatch("TASK_MODIFY", data, A_Task.modify);
+	},
+	delete(data: INR_Task["TASK_DELETE"]) {
+		return Network.requestAndDispatch("TASK_DELETE", data, A_Task.delete)
 	}
 };
 

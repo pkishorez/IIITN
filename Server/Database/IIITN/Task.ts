@@ -1,6 +1,7 @@
 import {Collection} from 'Server/Database/index';
 import {S_Task} from '../Schema/index';
 import {INR_Task} from 'Common/ActionSignature';
+import * as mongodb from 'mongodb';
 
 export let TaskDB: Collection = new Collection("task");
 
@@ -17,7 +18,10 @@ export class Task{
 		})
 	}
 	static deleteTask(data: INR_Task["TASK_DELETE"]) {
-		return TaskDB.raw.remove({_id: data._id}).then((res)=>{
+		if (data._id.length!=24) {
+			return Promise.reject("Invalid ID to delete.");
+		}
+		return TaskDB.raw.remove({_id: new mongodb.ObjectID(data._id)}).then((res)=>{
 			return Promise.resolve("Successfully deleted task.");
 		})
 	}
