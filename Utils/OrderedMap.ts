@@ -9,15 +9,19 @@ export interface IOrderedMap<T>{
 }
 
 export type IOrderedMapAction<T> = {
+	type: "INIT"
+	state: IOrderedMap<T>
+} | {
 	type: "ADD"
+	_id?: string
 	value: T
 } | {
 	type: "MODIFY"
-	id: string
-	value: T
+	_id: string
+	value: Partial<T>
 } | {
 	type: "DELETE"
-	id: string
+	_id: string
 } | {
 	type: "REORDER"
 	order: string[]
@@ -25,36 +29,42 @@ export type IOrderedMapAction<T> = {
 
 export class OrderedMap<T> {
 	private orderedMap: IOrderedMap<T>;
-	constructor(orderedMap: IOrderedMap<T> = {map: {}, order: []}) {
-		this.orderedMap = orderedMap;
-		// Integrity check to make sure all keys in map are present in order.
-		let mapKeys = Object.keys(this.orderedMap.map).sort();
-		let order = this.orderedMap.order.sort();
-
-		if (_.isEqual(mapKeys, order)) {
-			// Good :)
+	performAction: OrderedMap<T>["_performAction"];
+	constructor(orderedMap: IOrderedMap<T>) {
+		if (!orderedMap) {
+			orderedMap = {map: {}, order: []};
 		}
-		else {
-			console.error("SERIOUS ERROR : ORDERED MAP ERROR. KEYS IN ORDER AND MAPKEYS MISMATCH.");
-		}
+		this.orderedMap = this.init(orderedMap);
 	}
 
-	performAction(action: IOrderedMapAction<T>): IOrderedMap<T> {
+	private _performAction(action: IOrderedMapAction<T>): IOrderedMapAction<T> {
 		switch(action.type) {
+			case "INIT": {
+				this.orderedMap = this.init(action.state);
+				break;
+			}
 			case "ADD": {
-				return this.add(action.value);
+				let addedMap = this.add(action.value, action._id);
+				if (addedMap!=this.orderedMap) {
+					this.orderedMap = addedMap;
+					action._id = this.orderedMap.order[this.orderedMap.order.length-1];
+				}
+				break;
 			}
 			case "DELETE": {
-				return this.del(action.id);
+				this.orderedMap = this.del(action._id);
+				break;
 			}
 			case "MODIFY": {
-				return this.modify(action.id, action.value);
+				this.orderedMap = this.modify(action._id, action.value);
+				break;
 			}
 			case "REORDER": {
-				return this.reorder(action.order);
+				this.orderedMap = this.reorder(action.order);
+				break;
 			}
 		}
-		return this.orderedMap;
+		return action;
 	}
 
 	getState() {
@@ -65,18 +75,37 @@ export class OrderedMap<T> {
 		return JSON.stringify(this.orderedMap);
 	}
 
-	add(value: T): IOrderedMap<T> {
-		let uid = v4();
+	init(orderedMap: IOrderedMap<T>): IOrderedMap<T> {
+		// Integrity check to make sure all keys in map are present in order.
+		let mapKeys = Object.keys(orderedMap.map).sort();
+		let order = orderedMap.order.sort();
 
+		if (_.isEqual(mapKeys, order)) {
+			// INTEGRITY IS Good :)
+			if (_.isEqual(orderedMap, this.orderedMap)) {
+				// NO CHANGE.
+				return this.orderedMap;
+			}
+			return orderedMap;
+		}
+		// Operation rejected. Integrity failure.
+		return this.orderedMap;
+	}
+
+	add(value: T, _id = v4()): IOrderedMap<T> {
+
+		if (this.orderedMap.map[_id]) {
+			return this.orderedMap;
+		}
 		this.orderedMap = {
 			...this.orderedMap,
 			map: {
 				...this.orderedMap.map,
-				[uid]: value
+				[_id]: value
 			},
 			order: [
 				...this.orderedMap.order,
-				uid
+				_id
 			]
 		};
 		return this.orderedMap;
@@ -84,6 +113,9 @@ export class OrderedMap<T> {
 
 	del(map_id: string): IOrderedMap<T> {
 		let filtered = this.orderedMap.order.filter(id=>map_id!=id);
+		if (_.isEqual(filtered, this.orderedMap.order)) {
+			return this.orderedMap;
+		}
 		this.orderedMap = {
 			...this.orderedMap,
 			map: _.pick(this.orderedMap.map as any, filtered),
@@ -92,7 +124,7 @@ export class OrderedMap<T> {
 		return this.orderedMap;
 	}
 
-	modify(map_id: string, value: T): IOrderedMap<T> {
+	modify(map_id: string, value: Partial<T>): IOrderedMap<T> {
 		if (this.orderedMap.map[map_id]) {
 			this.orderedMap = {
 				...this.orderedMap,
