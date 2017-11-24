@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Me, Database} from 'App/MyActions';
+import {Me} from 'App/MyActions';
 import {Layout, Section} from 'classui/Components/Layout';
 
 interface IProps {};
@@ -10,11 +10,13 @@ interface IState {
 
 export class Students extends React.Component<IProps, IState> {
 	componentDidMount() {
+		/*
 		Database.getStudents().then((data)=>{
 			this.setState({
 				students:data
 			});
 		}).catch(console.error);
+		*/
 	}
 	constructor(props: any, context: any) {
 		super(props, context);

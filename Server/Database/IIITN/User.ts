@@ -2,8 +2,7 @@ import {Collection} from 'Server/Database/index';
 import {v4} from 'uuid';
 import {Schema} from 'classui/Components/Form/Schema';
 import {S_User} from '../Schema/index';
-import {INR_Task, INR_User} from 'Common/ActionSignature';
-import {TaskDB} from './Task';
+import {INR_User} from 'Common/ActionSignature';
 
 export let UserDB: Collection = new Collection("user");
 
@@ -53,20 +52,7 @@ export class User {
 			return Promise.reject("Error getting profile details.");
 		});
 	}
-	getTasks() {
-		return Promise.all([
-			TaskDB.getMany({}).toObject(),
-			UserDB.getMany({_id: this.userid}, {tasks: 1}).toArray()
-		]).then(([mainTasks, userTasks])=>{
-			return Promise.resolve({
-				userTasks: userTasks[0].tasks,
-				mainTasks
-			});
-		}).catch(()=>{
-			return Promise.reject("Error getting tasks.")
-		});
-	}
-	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
+	saveTask(data: {code: string, _id: string}) {
 		return UserDB.raw.updateOne({_id: this.userid}, {
 			$set: {
 				[`tasks.${data._id}`]: data.code

@@ -4,7 +4,6 @@ import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
 import {DraftEditor, convertToRaw} from 'App/DraftEditor';
 import {Flash} from 'classui/Components/Flash';
-import {Guide} from 'App/MyActions';
 import {connect, IRootState} from 'App/State';
 import {ILessons, ILesson} from 'App/State/Reducers/GuideReducer';
 
@@ -44,13 +43,17 @@ export let AddOrEditLesson = (id?: string, lesson?: ILesson)=>{
 		let title = input.value;
 		let editorState = JSON.stringify(convertToRaw(editor.getCurrentContent()));
 		if (id) {
+			/*
 			Guide.get("STARTER").editLesson(id, {
 				title,
 				editorState
 			})
+			*/
 		}
 		else {
+			/*
 			Guide.get("STARTER").addLesson(title, editorState);
+			*/
 		}
 		dismiss();
 	}

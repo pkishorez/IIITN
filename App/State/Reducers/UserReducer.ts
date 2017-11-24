@@ -8,12 +8,23 @@ export interface IUserState {
 	}
 }
 
-export type IUserActionType = "USER_LOGOUT" | "USER_OFFLINE" | "USER_ONLINE" | "USER_SAVE_BUFFER" | keyof(INR_User)
-
-export interface IUserAction {
-	type: IUserActionType
-	[id: string]: any
+export type IUserAction = {
+	type: "USER_LOGOUT"
+} | {
+	type: "USER_LOGIN"
+	userid: string
+	secretKey: string
+	password?: string
+} | {
+	type: "USER_ONLINE" | "USER_OFFLINE"
+} | {
+	type: "USER_SAVE_BUFFER"
+	id: string
+	code: string
 }
+
+export type IUserActionType = IUserAction["type"] | keyof(INR_User)
+
 let defaultState: IUserState = {
 	userid: null,
 	secretKey: null,

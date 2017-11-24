@@ -1,3 +1,3 @@
 export {User, UserDB} from './User';
-export {TaskDB, Task} from './Task';
-export {KeyValue, KeyValueDB} from './KeyValue';
+export {Task} from './Task';
+export {KeyValue} from './_KeyValue';

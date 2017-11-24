@@ -1,10 +1,10 @@
 import {User, Task, KeyValue} from 'Server/Database/IIITN';
 import {getResponseID} from 'Common/Utils';
-import {INR_Task, INR_User} from 'Common/ActionSignature';
+import {INR_User} from 'Common/ActionSignature';
+import {ITaskAction, ITaskActionType} from 'App/State/Reducers/TaskReducer';
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
-	| keyof(INR_Task) | keyof(INR_User)
-	| "TASK_GET"
+	| keyof(INR_User) | ITaskActionType
 	| "KEYVALUE_GET" | "KEYVALUE_SET"
 
 export interface IRequest {
@@ -43,27 +43,15 @@ export class Connection {
 			case "PROFILE": {
 				return User.getProfile(request.data.userid);
 			}
+			case "TASK_ACTION": {
+				return Task.performAction(request.data);
+			}
 		}
 		if (!this.user) {
 			return Promise.reject("User should be authenticated first.");
 		}
 		switch(request.type) {
 			// Authenticated actions goes here...
-			case "TASK_ADD": {
-				return Task.addTask(request.data);
-			}
-			case "TASK_MODIFY": {
-				return Task.modifyTask(request.data);
-			}
-			case "TASK_GET": {
-				return this.user.getTasks();
-			}
-			case "USER_TASK_SAVE": {
-				return this.user.saveTask(request.data);
-			}
-			case "TASK_DELETE": {
-				return Task.deleteTask(request.data);
-			}
 		}
 		// Admin actions goes here...
 		if (this.user.userid=="admin") {

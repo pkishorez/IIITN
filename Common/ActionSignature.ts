@@ -7,19 +7,3 @@ export interface INR_User {
 		secretKey?: string
 	}
 }
-
-export interface INR_Task {
-	TASK_ADD: ({
-		_id?: string // Mandatory for local, not mandatory for network.
-	} & ITask)
-	TASK_MODIFY: ({
-		_id: string
-	} & Partial<ITask>)
-	USER_TASK_SAVE: {
-		_id: string
-		code: string
-	}
-	TASK_DELETE: {
-		_id: string
-	}
-}
