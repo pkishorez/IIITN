@@ -28,7 +28,6 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} height="calc(100vh - 150px)" getOutput={this.runProgram}/>
 			</Section>
 			<Section width={400}>
-				<h3 style={{textAlign: "center"}}>Output</h3>
 				<SeqProgramOutput debounce={100} ref={(ref)=>{this.output=ref}} style={{
 					height: `calc(100vh - 150px)`
 				}}/>
