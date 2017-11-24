@@ -10,7 +10,7 @@ export interface IRootState {
 
 let AppReducer = combineReducers<IRootState>({
 	user: UserReducer,
-	tasks: TaskReducer,
+	tasks: TaskReducer as any,
 	guides: GuideReducer
 });
 

@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import {Form, Text} from 'classui/Components/Form';
 import {Network} from 'App/Network';
 import {connect} from 'react-redux';
-import {IRootState, A_Task, GetState} from 'App/State';
+import {IRootState, GetState} from 'App/State';
 import {Task as TaskAction, Me} from 'App/MyActions';
 import {ITask} from 'App/State/Reducers/TaskReducer';
 
@@ -57,7 +57,7 @@ class Task_ extends React.Component<IProps, IState>{
 		TaskAction.init();
 	}
 	loadTask(taskNum: number, id: string) {
-		let task = this.props.tasks[id];
+		let task = this.props.tasks.map[id];
 		let buffer = GetState().user.editorBuffers[id];
 		let code = buffer?buffer:task.saved;
 		code = code?code:task.resetCode;
@@ -72,18 +72,19 @@ class Task_ extends React.Component<IProps, IState>{
 		this.dropdown.dismiss();
 	}
 	save() {
-		Me.saveTask({
+		/*Me.saveTask({
 			_id: this.state.currentTask,
 			code: this.editorRef.getModifiedEditor().getValue()
-		}).then(alert).catch(alert);
+		}).then(alert).catch(alert);*/
+		alert("Functionality not implemented yet.");
 	}
 	loadSavedCode() {
-		let code = this.props.tasks[this.state.currentTask];
+		let code = this.props.tasks.map[this.state.currentTask];
 		let scode = code.saved?code.saved:"\n";
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	resetCode() {
-		let code = this.props.tasks[this.state.currentTask];
+		let code = this.props.tasks.map[this.state.currentTask];
 		let scode = code.resetCode;
 		scode = scode?scode: defaultCode;
 		this.editorRef.getModifiedEditor().setValue(scode);
@@ -100,12 +101,12 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	render() {
 		let tasks = [], index = 0;
-		for (let i in this.props.tasks) {
+		for (let i in this.props.tasks.map) {
 			index++;
 			let ind = index;
 			tasks.push(<li key={i} onClick={()=>this.loadTask(ind, i)}>Task - {index}</li>);
 		}
-		let question_code = this.props.tasks[this.state.currentTask]?this.props.tasks[this.state.currentTask].question:"";
+		let question_code = this.props.tasks.map[this.state.currentTask]?this.props.tasks.map[this.state.currentTask].question:"";
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
 				<PersistMonaco id={this.state.currentTask} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
@@ -162,25 +163,45 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 	}
 
 	addTask() {
-		let data: any = {};
-		data.question = this.questionRef.getValue();
-		data.resetCode = this.resetCodeRef.getValue();
-		TaskAction.add(data).then((success)=>{
-			alert(success);
+		let data = {
+			question: this.questionRef.getValue(),
+			resetCode: this.resetCodeRef.getValue()
+		};
+		TaskAction.perform({
+			type: "TASK_ACTION",
+			orderedMapAction: {
+				type: "ADD",
+				value: {
+					...data,
+					saved: data.resetCode
+				}
+			}
+		}).then((success)=>{
+			alert("Successfully added.");
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
 		}).catch(alert);
 	}
 	deleteTask() {
-		TaskAction.delete({
-			_id: this.state.currentTask
+		TaskAction.perform({
+			type: "TASK_ACTION",
+			orderedMapAction: {
+				type: "DELETE",
+				_id: this.state.currentTask
+			}
 		}).then(alert).catch(alert);
 	}
 	modifyTask() {
-		TaskAction.modify({
-			_id: this.state.currentTask,
-			question: this.questionRef.getValue(),
-			resetCode: this.resetCodeRef.getValue()
+		TaskAction.perform({
+			type: "TASK_ACTION",
+			orderedMapAction: {
+				type: "MODIFY",
+				_id: this.state.currentTask,
+				value: {
+					question: this.questionRef.getValue(),
+					resetCode: this.resetCodeRef.getValue()
+				}
+			}
 		}).then(alert).catch(alert);
 	}
 	saveTask() {
@@ -200,7 +221,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 			this.questionRef.setValue(defaultCode);
 			this.resetCodeRef.setValue(defaultCode);
 		}
-		let task = this.props.tasks[id];
+		let task = this.props.tasks.map[id];
 		this.resetCodeRef.setValue(task.resetCode?task.resetCode:"");
 		this.questionRef.setValue(task.question?task.question:"");
 	}
@@ -212,7 +233,7 @@ class TaskManager_ extends React.Component<IProps, IAddTaskState> {
 	render() {
 		let tasks = [];
 		tasks.push(<li key={""} onClick={()=>this.loadTask("")}>New Task</li>)
-		for (let i in this.props.tasks) {
+		for (let i in this.props.tasks.map) {
 			tasks.push(<li key={i} onClick={()=>this.loadTask(i)}>Task - {i}</li>);
 		}
 		return <div style={{display: 'inline-block', width: "100%"}}>
