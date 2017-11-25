@@ -12,7 +12,7 @@ export type IGuideAction = {
 	state: IGuideState
 } | {
 	type: "GUIDE_MODULE_ACTION"
-	guide_id: string
+	guide_id: "STARTER"
 	orderedMapAction: IOrderedMapAction<IModule>
 }
 
@@ -32,13 +32,15 @@ export interface IGuideState {
 	[id: string]: IGuide
 }
 
-export let GuideReducer = (state: IGuideState = {}, action: IGuideAction)=>{
+export let GuideReducer = (state: IGuideState = {
+	"STARTER": {map: {}, order: []}
+}, action: IGuideAction)=>{
 	switch(action.type) {
 		case "GUIDE_INIT": {
 			state = {...action.state};
 			break;
 		}
-		default: {
+		case "GUIDE_MODULE_ACTION": {
 			state = {
 				...state,
 				[action.guide_id]: ModuleReducer(state[action.guide_id], action)
