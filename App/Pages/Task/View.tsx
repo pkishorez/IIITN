@@ -40,9 +40,13 @@ class Task_ extends React.Component<IProps, IState>{
 	}
 	loadTask(taskNum: number, id: string) {
 		let task = this.props.tasks.map[id];
+		// Load from buffer.
 		let buffer = GetState().user.editorBuffers[id];
-		let code = buffer?buffer:task.saved;
+		// Load from User Saved task.
+		let code = buffer?buffer:GetState().user.tasks[id];
+		// Load from reset Code.
 		code = code?code:task.resetCode;
+		// Load from default code.
 		code = code?code:defaultCode;
 
 		this.editorRef.getOriginalEditor().setValue(task.resetCode?task.resetCode:"\n");
@@ -54,15 +58,15 @@ class Task_ extends React.Component<IProps, IState>{
 		this.dropdown.dismiss();
 	}
 	save() {
-		/*Me.saveTask({
-			_id: this.state.currentTask,
+		Me.saveTask({
+			id: this.state.currentTask,
 			code: this.editorRef.getModifiedEditor().getValue()
-		}).then(alert).catch(alert);*/
-		alert("Functionality not implemented yet.");
+		}).then(alert).catch(alert);
 	}
 	loadSavedCode() {
-		let code = this.props.tasks.map[this.state.currentTask];
-		let scode = code.saved?code.saved:"\n";
+		// Load From Saved Task.
+		let savedTask = GetState().user.tasks[this.state.currentTask];
+		let scode = savedTask?savedTask:"NO SAVED TASK FOUND :(";
 		this.editorRef.getModifiedEditor().setValue(scode);
 	}
 	resetCode() {

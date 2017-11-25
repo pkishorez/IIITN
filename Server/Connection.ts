@@ -5,7 +5,6 @@ import {ITaskAction, ITaskActionType} from 'App/State/Reducers/TaskReducer';
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
 	| keyof(INR_User) | ITaskActionType
-	| "KEYVALUE_GET" | "KEYVALUE_SET"
 
 export interface IRequest {
 	id: number
@@ -29,9 +28,10 @@ export class Connection {
 	processRequest(request: IRequest) {
 		switch(request.type) {
 			case "USER_LOGIN": {
-				return User.login(request.data).then((data: any)=>{
-					this.user = data.ref;
-					return {secretKey: data.secretKey};
+				return User.login(request.data).then((data)=>{
+					let {ref, ...loggedInData} = data;
+					this.user = ref;
+					return loggedInData;
 				});
 			}
 			case "REGISTER": {
@@ -52,17 +52,13 @@ export class Connection {
 		}
 		switch(request.type) {
 			// Authenticated actions goes here...
+			case "USER_SAVE_TASK": {
+				return this.user.saveTask(request.data);
+			}
 		}
 		// Admin actions goes here...
 		if (this.user.userid=="admin") {
-			switch(request.type) {
-				case "KEYVALUE_SET": {
-					return KeyValue.set(request.data.key, request.data.value);
-				}
-				case "KEYVALUE_GET": {
-					return KeyValue.get(request.data.key);
-				}
-			}
+			
 		}
 		return Promise.reject(`Request type ${request.type} not found.`);
 	}

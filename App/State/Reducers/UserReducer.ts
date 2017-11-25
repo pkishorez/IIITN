@@ -6,22 +6,24 @@ export interface IUserState {
 	editorBuffers: {
 		[id: string]: string
 	}
+	tasks: {
+		[id: string]: string
+	}
 }
 
 export type IUserAction = {
 	type: "USER_LOGOUT"
-} | {
-	type: "USER_LOGIN"
-	userid: string
-	secretKey: string
-	password?: string
 } | {
 	type: "USER_ONLINE" | "USER_OFFLINE"
 } | {
 	type: "USER_SAVE_BUFFER"
 	id: string
 	code: string
-}
+} | (INR_User["USER_SAVE_TASK"] & {
+	type: "USER_SAVE_TASK"
+})| (INR_User["USER_LOGIN"] & {
+	type: "USER_LOGIN"
+})
 
 export type IUserActionType = IUserAction["type"] | keyof(INR_User)
 
@@ -29,7 +31,8 @@ let defaultState: IUserState = {
 	userid: null,
 	secretKey: null,
 	online: false,
-	editorBuffers: {}
+	editorBuffers: {},
+	tasks: {}
 };
 
 export let UserReducer = (state: IUserState = defaultState, action: IUserAction) => {
@@ -38,7 +41,8 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 			state = {
 				...state,
 				userid: action.userid,
-				secretKey: action.secretKey
+				secretKey: action.secretKey,
+				tasks: action.tasks?action.tasks:{}
 			}
 			break;
 		}
@@ -65,6 +69,15 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 				}
 			}
 			break;
+		}
+		case "USER_SAVE_TASK": {
+			state = {
+				...state,
+				tasks: {
+					...state.tasks,
+					[action.id]: action.code
+				}
+			}
 		}
 	}
 	return state;

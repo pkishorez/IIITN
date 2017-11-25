@@ -11,11 +11,10 @@ export let Me = {
 	login(data: INR_User["USER_LOGIN"]) {
 		return Network.requestAndDispatch("USER_LOGIN", data);
 	},
-	/*
-	saveTask(data: INR_Task["USER_TASK_SAVE"]) {
-		return Network.requestAndDispatch("USER_TASK_SAVE", data, A_User.saveTask);
+
+	saveTask(data: INR_User["USER_SAVE_TASK"]) {
+		return Network.requestAndDispatch("USER_SAVE_TASK", data);
 	},
-	**/
 
 	// Only network requests.
 	register(data: any) {

@@ -5,5 +5,10 @@ export interface INR_User {
 		userid: string
 		password?: string
 		secretKey?: string
+		tasks?: any
+	}
+	USER_SAVE_TASK: {
+		id: string
+		code: string
 	}
 }

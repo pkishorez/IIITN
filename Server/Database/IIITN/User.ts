@@ -21,18 +21,16 @@ export class User {
 			return Promise.resolve(`User ${user._id} successfully registered.`);
 		}).catch((e)=>Promise.reject("User already exists."));
 	}
-	static login(data: INR_User["USER_LOGIN"]): Promise<{
-		ref: User,
-		secretKey: string
-	}> {
-		return UserDB.findOne({_id: data.userid}).then((user)=>{
+	static login(data: INR_User["USER_LOGIN"]): Promise<{ref: User} & INR_User["USER_LOGIN"]> {
+		return UserDB.findOne({_id: data.userid}).then((user: any)=>{
 			if (!user) {
 				return Promise.reject("User Not Found.");
 			}
 			if ((user.password==data.password) || (user.secretKey==data.secretKey)) {
 				return Promise.resolve({
 					ref: new User(data.userid),
-					secretKey: user.secretKey
+					secretKey: user.secretKey,
+					tasks: user.tasks
 				});
 			}
 			return Promise.reject("Invalid password.");
@@ -52,13 +50,13 @@ export class User {
 			return Promise.reject("Error getting profile details.");
 		});
 	}
-	saveTask(data: {code: string, _id: string}) {
+	saveTask(data: INR_User["USER_SAVE_TASK"]) {
 		return UserDB.raw.updateOne({_id: this.userid}, {
 			$set: {
-				[`tasks.${data._id}`]: data.code
+				[`tasks.${data.id}`]: data.code
 			}
 		}).then(()=>{
-			return Promise.resolve("Successfully saved.");
+			return Promise.resolve(data);
 		}).catch(()=>{
 			return Promise.reject("Couldn't save.")
 		});

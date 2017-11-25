@@ -3,7 +3,6 @@ import {IOrderedMapAction, OrderedMap, IOrderedMap} from 'Utils/OrderedMap';
 export interface ITask {
 	question: string
 	resetCode: string
-	saved: string
 }
 export type ITaskState = IOrderedMap<ITask>;
 
