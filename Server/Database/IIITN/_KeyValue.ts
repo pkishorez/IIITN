@@ -3,7 +3,7 @@ import {S_Task} from '../Schema/index';
 
 let KeyValueDB: Collection = new Collection("keyvalue");
 
-type IKeyValueDBS = "TASKS_DB"
+type IKeyValueDBS = "TASKS_DB" | "GUIDE_DB"
 
 export class KeyValue{
 	// Update task. One action should be there.
@@ -15,6 +15,11 @@ export class KeyValue{
 		});
 	}
 	static get(key: IKeyValueDBS) {
-		return KeyValueDB.findOne({_id: key})
+		return KeyValueDB.findOne({_id: key}).then((data)=>{
+			if (data) {
+				return data.data;
+			}
+			return Promise.reject("Data not found.");
+		});
 	}
 }

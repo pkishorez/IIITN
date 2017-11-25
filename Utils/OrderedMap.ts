@@ -39,7 +39,12 @@ export class OrderedMap<T> {
 	performAction(action: IOrderedMapAction<T>): IOrderedMapAction<T> {
 		switch(action.type) {
 			case "INIT": {
-				this.orderedMap = this.init(action.state);
+				if (action.state) {
+					this.orderedMap = this.init(action.state);					
+				}
+				else {
+					action.state = this.orderedMap;
+				}
 				break;
 			}
 			case "ADD": {

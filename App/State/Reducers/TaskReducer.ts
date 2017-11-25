@@ -6,7 +6,6 @@ export interface ITask {
 }
 export type ITaskState = IOrderedMap<ITask>;
 
-export type ITaskActionType = ITaskAction["type"]
 export type ITaskAction = {
 	type: "TASK_ACTION"
 	orderedMapAction: IOrderedMapAction<ITask>

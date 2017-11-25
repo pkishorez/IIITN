@@ -11,26 +11,14 @@ export class _Task{
 	constructor() {
 		setTimeout(()=>{
 			KeyValue.get("TASKS_DB").then((data)=>{
-				if (data) {
-					data = data.data;
-				}
 				this.orderedMap = new OrderedMap(data);
-			});
+			}).catch(console.error);
 		}, 5000)
 	}
 	performAction(action: ITaskAction) {
 		return new Promise<ITaskAction>((resolve, reject)=>{
 			if (!this.orderedMap) {
 				reject("Database Error. Couldn't perform task.");
-			}
-			if (action.orderedMapAction.type=="INIT") {
-				resolve({
-					...action,
-					orderedMapAction: {
-						...action.orderedMapAction,
-						state: this.orderedMap.getState()
-					}
-				});
 			}
 			action.orderedMapAction = this.orderedMap.performAction(action.orderedMapAction);
 			KeyValue.set("TASKS_DB", this.orderedMap.getState());

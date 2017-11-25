@@ -1,10 +1,11 @@
 import {User, Task, KeyValue} from 'Server/Database/IIITN';
 import {getResponseID} from 'Common/Utils';
 import {INR_User} from 'Common/ActionSignature';
-import {ITaskAction, ITaskActionType} from 'App/State/Reducers/TaskReducer';
+import {ITaskAction} from 'App/State/Reducers/TaskReducer';
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
-	| keyof(INR_User) | ITaskActionType
+	| keyof(INR_User)
+	| ITaskAction["type"]
 
 export interface IRequest {
 	id: number
@@ -58,7 +59,7 @@ export class Connection {
 		}
 		// Admin actions goes here...
 		if (this.user.userid=="admin") {
-			
+
 		}
 		return Promise.reject(`Request type ${request.type} not found.`);
 	}
