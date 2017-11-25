@@ -3,6 +3,7 @@ import {getResponseID} from 'Common/Utils';
 import {INR_User} from 'Common/ActionSignature';
 import {ITaskAction} from 'App/State/Reducers/TaskReducer';
 import { IGuideAction } from 'App/State/Reducers/GuideReducer';
+import * as _ from 'lodash';
 
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
@@ -61,7 +62,7 @@ export class Connection {
 			}
 			case "GUIDE_INIT":
 			case "GUIDE_MODULE_ACTION": {
-				return Guide.performAction(request.data);
+				return Guide.performAction(request.type, request.data);
 			}
 		}
 		// Admin actions goes here...
@@ -72,19 +73,40 @@ export class Connection {
 	}
 
 	initialize() {
-		this.socket.on('request', (request: IRequest)=>{
-			// Process request and send response in data.
+		// Queue requests one after the other.
+		let requests: IRequest[] = [];
+		let processInProgress = false;
+		let functionQueue = ()=>{
+			if (processInProgress) {
+				return;
+			}
+			processInProgress = true;
+			if (requests.length==0) {
+				processInProgress = false;
+				return;
+			}
+			let request = requests[0];
+			requests = _.drop(requests);
 			this.processRequest(request).then((data: any)=>{
 				let response: IResponse = {
 					data
 				};
-				this.socket.emit(getResponseID(request.id), response);	
+				this.socket.emit(getResponseID(request.id), response);
+				processInProgress = false;
+				functionQueue();
 			}).catch((error: any)=>{
 				let response: IResponse = {
 					error
 				};
-				this.socket.emit(getResponseID(request.id), response)
+				this.socket.emit(getResponseID(request.id), response);
+				processInProgress = false;
+				functionQueue();
 			});
+		}
+		this.socket.on('request', (request: IRequest)=>{
+			// Process request and send response in data.
+			requests.push(request);
+			functionQueue();
 		});
 	}
 }
