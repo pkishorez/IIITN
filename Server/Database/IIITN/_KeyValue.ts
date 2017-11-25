@@ -19,7 +19,7 @@ export class KeyValue{
 			if (data) {
 				return data.data;
 			}
-			return Promise.reject("Data not found.");
+			return null;
 		});
 	}
 }
