@@ -23,24 +23,24 @@ export let Me = {
 
 	// Only Local state requests.
 	saveEditorBuffer(id: string, code: string) {
-		this._dispatch({
+		Me._dispatch({
 			type: "USER_SAVE_BUFFER",
 			id,
 			code
 		});
 	},
 	goOnline() {
-		this._dispatch({
+		Me._dispatch({
 			type: "USER_ONLINE"
 		});
 	},
 	goOffline() {
-		this._dispatch({
+		Me._dispatch({
 			type: "USER_OFFLINE"
 		});
 	},
 	logout() {
-		this._dispatch({
+		Me._dispatch({
 			type: "USER_LOGOUT"
 		});
 	},
@@ -51,7 +51,7 @@ export let Me = {
 
 export let Task = {
 	init() {
-		this.perform({
+		Task.perform({
 			type: "TASK_ACTION",
 			orderedMapAction: {
 				type: "INIT"
