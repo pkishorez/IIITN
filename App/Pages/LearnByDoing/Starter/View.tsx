@@ -5,6 +5,7 @@ import {Menu, Item, Divider} from 'classui/Components/Menu';
 import {DraftEditorRender, convertToRaw} from 'App/DraftEditor';
 import {connect, IRootState} from 'App/State';
 import {IGuide, IModule} from 'App/State/Reducers/GuideReducer';
+import { Guide } from 'App/MyActions';
 
 interface IProps extends IGuide{};
 interface IState {
@@ -17,6 +18,9 @@ class StarterView_ extends React.Component<IProps, IState> {
 		this.state = {
 			lesson_id: ""
 		};
+	}
+	componentDidMount() {
+		Guide.init();
 	}
 	render() {
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">

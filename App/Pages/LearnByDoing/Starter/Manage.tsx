@@ -6,11 +6,15 @@ import {DraftEditor, convertToRaw} from 'App/DraftEditor';
 import {Flash} from 'classui/Components/Flash';
 import {connect, IRootState} from 'App/State';
 import {IGuide, IModule} from 'App/State/Reducers/GuideReducer';
+import {Guide} from 'App/MyActions';
 
 interface IProps extends IGuide {};
 interface IState {};
 
 class StarterManage_ extends React.Component<IProps> {
+	componentDidMount() {
+		Guide.init();
+	}
 	render() {
 		return <div>
 			<div className="button" style={{marginTop: 10}} onClick={()=>AddOrEditLesson()}>Add Lesson.</div>
@@ -42,17 +46,31 @@ export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
 		let title = input.value;
 		let editorState = JSON.stringify(convertToRaw(editor.getCurrentContent()));
 		if (id) {
-			/*
-			Guide.get("STARTER").editLesson(id, {
-				title,
-				editorState
+			Guide.perform({
+				type: "GUIDE_MODULE_ACTION",
+				guide_id: "STARTER",
+				orderedMapAction: {
+					type: "MODIFY",
+					_id: id,
+					value: {
+						title,
+						editorState
+					}
+				}
 			})
-			*/
 		}
 		else {
-			/*
-			Guide.get("STARTER").addLesson(title, editorState);
-			*/
+			Guide.perform({
+				type: "GUIDE_MODULE_ACTION",
+				guide_id: "STARTER",
+				orderedMapAction: {
+					type: "ADD",
+					value: {
+						editorState,
+						title
+					}
+				}
+			});
 		}
 		dismiss();
 	}
