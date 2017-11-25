@@ -33,6 +33,9 @@ export class CanvasView extends React.Component<IProps, IState> {
 	}
 	render()
 	{
-		return <canvas id={this.uid} style={this.props.style} width={this.props.width} height={this.props.height}></canvas>;
+		return <canvas id={this.uid} style={{
+			maxWidth: "100%",
+			...this.props.style
+		}} width={this.props.width} height={this.props.height}></canvas>;
 	}
 }
