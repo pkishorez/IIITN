@@ -11,7 +11,7 @@ export interface IRootState {
 let AppReducer = combineReducers<IRootState>({
 	user: UserReducer,
 	tasks: TaskReducer as any,
-	guides: GuideReducer
+	guides: GuideReducer as any
 });
 
 export let RootReducer = (state: IRootState|undefined, action: any)=>{

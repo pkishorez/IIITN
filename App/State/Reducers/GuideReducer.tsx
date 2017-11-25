@@ -1,68 +1,27 @@
 import {v4} from 'uuid';
-export interface ILessons {
-	lessons: {
-		[id: string]: ILesson
-	}
-	order: string[]
-}
-export interface ILesson {
+import { IOrderedMap, IOrderedMapAction, OrderedMap } from 'Utils/OrderedMap';
+
+export type IGuide = IOrderedMap<IModule>;
+
+export interface IModule {
 	title: string
 	editorState: string
 }
-export interface IGuideAction {
-	type: "GUIDE_INIT" | "GUIDE_LESSON_ADD" | "GUIDE_LESSON_MODIFY" | "GUIDE_LESSON_DELETE" | "GUIDE_LESSONS_REORDER"
-	[id: string]: any
+export type IGuideAction = {
+	type: "GUIDE_INIT"
+	state: IGuideState
+} | {
+	type: "GUIDE_MODULE_ACTION"
+	guide_id: string
+	orderedMapAction: IOrderedMapAction<IModule>
 }
-let LessonReducer = (state: ILessons = {lessons: {},order: []}, action: IGuideAction) => {
+
+let ModuleReducer = (state: IGuide = {map: {},order: []}, action: IGuideAction) => {
 	switch(action.type) {
-		case "GUIDE_LESSON_ADD": {
-			let lesson: ILesson = {
-				title: action.title,
-				editorState: action.editorState
-			};
-			let lesson_id = v4();
-			state = {
-				...state,
-				lessons: {
-					...state.lessons,
-					[lesson_id]: lesson					
-				},
-				order: [
-					...state.order,
-					lesson_id
-				]
-			};
-			break;
-		}
-		case "GUIDE_LESSON_MODIFY": {
-			let lesson = state.lessons[action.lesson_id];
-			if (lesson) {
-				state = {
-					...state,
-					lessons: {
-						...state.lessons,
-						[action.lesson_id]: {
-							...state.lessons[action.lesson_id],
-							...action.data
-						}
-					}
-				}
-			}
-			break;
-		}
-		case "GUIDE_LESSONS_REORDER": {
-			state = {
-				...state,
-				order: action.order
-			}
-			break;
-		}
-		case "GUIDE_LESSON_DELETE": {
-			delete state.lessons[action.lesson_id];
-			state = {
-				...state,
-				order: state.order.splice(state.order.indexOf(action.lesson_id), 1)
-			}
+		case "GUIDE_MODULE_ACTION": {
+			let orderedMapState = new OrderedMap(state);
+			orderedMapState.performAction(action.orderedMapAction);
+			state = orderedMapState.getState();
 			break;
 		}
 	}
@@ -70,10 +29,10 @@ let LessonReducer = (state: ILessons = {lessons: {},order: []}, action: IGuideAc
 }
 
 export interface IGuideState {
-	[id: string]: ILessons
+	[id: string]: IGuide
 }
 
-export let GuideReducer = (state: IGuideState = {}, action: any)=>{
+export let GuideReducer = (state: IGuideState = {}, action: IGuideAction)=>{
 	switch(action.type) {
 		case "GUIDE_INIT": {
 			state = {...action.state};
@@ -82,9 +41,9 @@ export let GuideReducer = (state: IGuideState = {}, action: any)=>{
 		default: {
 			state = {
 				...state,
-				[action.guide_id]: LessonReducer(state[action.guide_id], action)
+				[action.guide_id]: ModuleReducer(state[action.guide_id], action)
 			};
-			break;		
+			break;
 		}
 	}
 	return state;

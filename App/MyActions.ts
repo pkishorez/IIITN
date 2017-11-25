@@ -4,7 +4,7 @@ import {ITaskAction} from 'App/State/Reducers/TaskReducer';
 import {IUserAction} from 'App/State/Reducers/UserReducer';
 import {INR_User} from 'Common/ActionSignature';
 import * as _ from 'lodash';
-import { A_Guide, D_Guide } from 'App/State/Action';
+import { IGuideAction } from 'App/State/Reducers/GuideReducer';
 
 export let Me = {
 	// Network and local state requests.
@@ -62,3 +62,12 @@ export let Task = {
 		return Network.requestAndDispatch("TASK_ACTION", action);
 	}
 };
+
+export let Guide = {
+	init() {
+		Network.requestAndDispatch("GUIDE_INIT", {});
+	},
+	perform(action: IGuideAction) {
+		return Network.requestAndDispatch("GUIDE_MODULE_ACTION", action);
+	}
+}

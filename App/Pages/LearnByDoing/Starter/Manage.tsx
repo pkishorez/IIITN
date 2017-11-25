@@ -5,9 +5,9 @@ import {Menu, Item, Divider} from 'classui/Components/Menu';
 import {DraftEditor, convertToRaw} from 'App/DraftEditor';
 import {Flash} from 'classui/Components/Flash';
 import {connect, IRootState} from 'App/State';
-import {ILessons, ILesson} from 'App/State/Reducers/GuideReducer';
+import {IGuide, IModule} from 'App/State/Reducers/GuideReducer';
 
-interface IProps extends ILessons {};
+interface IProps extends IGuide {};
 interface IState {};
 
 class StarterManage_ extends React.Component<IProps> {
@@ -17,8 +17,8 @@ class StarterManage_ extends React.Component<IProps> {
 			{
 				this.props.order.map((id)=>{
 					return <div key={id} style={{marginTop: 10}} className="button"
-					onClick={()=>AddOrEditLesson(id, this.props.lessons[id])}>
-						{this.props.lessons[id].title}
+					onClick={()=>AddOrEditLesson(id, this.props.map[id])}>
+						{this.props.map[id].title}
 					</div>
 				})
 			}
@@ -27,13 +27,12 @@ class StarterManage_ extends React.Component<IProps> {
 }
 let mapStateToProps = (state: IRootState): IProps=>{
 	return {
-		lessons: state.guides["STARTER"].lessons,
-		order: state.guides["STARTER"].order
+		...state.guides["STARTER"],
 	}
 }
 export let StarterManagement = connect(mapStateToProps)(StarterManage_);
 
-export let AddOrEditLesson = (id?: string, lesson?: ILesson)=>{
+export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
 	let input: HTMLInputElement|null, editor: any, dismiss: any;
 	let add = () => {
 		if (!input || input.value.trim()=="") {

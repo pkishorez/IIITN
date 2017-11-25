@@ -1,11 +1,14 @@
-import {User, Task, KeyValue} from 'Server/Database/IIITN';
+import {User, Task, KeyValue, Guide} from 'Server/Database/IIITN';
 import {getResponseID} from 'Common/Utils';
 import {INR_User} from 'Common/ActionSignature';
 import {ITaskAction} from 'App/State/Reducers/TaskReducer';
+import { IGuideAction } from 'App/State/Reducers/GuideReducer';
+
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
 	| keyof(INR_User)
 	| ITaskAction["type"]
+	| IGuideAction["type"]
 
 export interface IRequest {
 	id: number
@@ -55,6 +58,10 @@ export class Connection {
 			// Authenticated actions goes here...
 			case "USER_SAVE_TASK": {
 				return this.user.saveTask(request.data);
+			}
+			case "GUIDE_INIT":
+			case "GUIDE_MODULE_ACTION": {
+				return Guide.performAction(request.data);
 			}
 		}
 		// Admin actions goes here...
