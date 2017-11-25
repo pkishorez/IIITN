@@ -8,17 +8,15 @@ import * as mongodb from 'mongodb';
 export class _Task{
 	private orderedMap: OrderedMap<ITask>
 	// Update task. One action should be there.
-	constructor() {
-		setTimeout(()=>{
-			KeyValue.get("TASKS_DB").then((data)=>{
-				this.orderedMap = new OrderedMap(data);
-			}).catch(console.error);
-		}, 5000)
+	__init() {
+		return KeyValue.get("TASKS_DB").then((data)=>{
+			return new OrderedMap<ITask>(data);
+		});
 	}
 	performAction(action: ITaskAction) {
-		return new Promise<ITaskAction>((resolve, reject)=>{
+		return new Promise<ITaskAction>(async (resolve, reject)=>{
 			if (!this.orderedMap) {
-				reject("Database Error. Couldn't perform task.");
+				this.orderedMap = await this.__init()
 			}
 			action.orderedMapAction = this.orderedMap.performAction(action.orderedMapAction);
 			KeyValue.set("TASKS_DB", this.orderedMap.getState());

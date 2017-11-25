@@ -4,30 +4,36 @@ import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
 
 class _Guide{
-	private guideMap: IGuideState
+	private guideState: IGuideState
 
 	// Update task. One action should be there.
-	constructor() {
-		setTimeout(()=>{
-			KeyValue.get("GUIDE_DB").then((data)=>{
-				this.guideMap = data;
-			}).catch(console.error);
-		}, 5000)
+	__init() {
+		return KeyValue.get("GUIDE_DB").then((data)=>{
+			if (!data) {
+				data = {};
+			}
+			return data;
+		});
 	}
-	performAction(action: IGuideAction) {
-		return new Promise<IGuideAction>((resolve, reject)=>{
-			if (!this.guideMap) {
-				reject("Database Error. Couldn't perform task.");
+	performAction(type: IGuideAction["type"], action: IGuideAction) {
+		action.type = type;
+		return new Promise<IGuideAction>(async (resolve, reject)=>{
+			if (!this.guideState) {
+				this.guideState = await this.__init()
 			}
 			switch(action.type) {
 				case "GUIDE_INIT": {
-					action.state = this.guideMap;
+					action.state = this.guideState;
 					break;
 				}
 				case "GUIDE_MODULE_ACTION": {
-					let guide = this.guideMap[action.guide_id];
-					let oMap = new OrderedMap(guide);
-					action.orderedMapAction = oMap.performAction(action.orderedMapAction);
+					if (!action.guide_id) {
+						return reject("Guide id should be provided.");
+					}
+					let guide = new OrderedMap(this.guideState[action.guide_id]);
+					action.orderedMapAction = guide.performAction(action.orderedMapAction);
+					this.guideState[action.guide_id] = guide.getState();
+					KeyValue.set("GUIDE_DB", this.guideState);
 					break;
 				}
 			}
