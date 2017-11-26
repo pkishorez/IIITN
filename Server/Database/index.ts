@@ -63,7 +63,7 @@ export class Collection{
 	}
 	async update(data: any, schema?: IJSONSchema) {
 		if (schema) {
-			let error = Schema.validatePartial(schema, data);
+			let error = Schema.validate(schema, data);
 			if (error) {
 				return Promise.reject(error);
 			}

@@ -72,7 +72,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 						noUnusedParameters: true,
 						noImplicitReturns: true,
 						alwaysStrict: true,
-						noUnusedLocals: true,
+						noUnusedLocals: false,
 						allowNonTsExtensions: true,
 						strictNullChecks: true
 					}
@@ -202,9 +202,10 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	render() {
 		return <div style={{
 			border: '1px solid rgba(0, 0, 0, 0.2)',
-			overflow: "hidden",
+			//overflow: "hidden",
 			width: this.props.width,
 			height: this.props.height,
+			marginBottom: 25,
 			backgroundColor: 'white'
 		}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
 	}

@@ -36,7 +36,6 @@ class _SocketIO {
 		return new Promise<any>((resolve, reject)=>{
 			if (!this.connected) {
 				reject("Failed connecting to server.");
-				return;
 			}
 			let reqid = g_reqid++;
 			let request: IRequest = {
@@ -55,7 +54,10 @@ class _SocketIO {
 				}
 				this.socket.off(responseID);
 			});
-		}).catch((error)=>{console.error(error);return Promise.reject("Server Error : "+JSON.stringify(error));});
+		}).catch((error)=>{
+			console.error(error);
+			return Promise.reject("Server Error: "+JSON.stringify(error));
+		});
 	}
 	requestAndDispatch(req_type: IRequestType, data: any) {
 		console.log("REQUEST : ", req_type, data);
