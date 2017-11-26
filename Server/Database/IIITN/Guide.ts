@@ -1,5 +1,5 @@
 import {IGuideState, IGuide, IGuideAction} from 'App/State/Reducers/GuideReducer';
-import {OrderedMap} from 'Utils/OrderedMap';
+import {OrderedMap} from 'classui/DataStructures/OrderedMap';
 import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
 

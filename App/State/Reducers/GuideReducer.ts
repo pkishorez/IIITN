@@ -1,5 +1,5 @@
 import {v4} from 'uuid';
-import { IOrderedMap, IOrderedMapAction, OrderedMap } from 'Utils/OrderedMap';
+import { IOrderedMap, IOrderedMapAction, OrderedMap } from 'classui/DataStructures/OrderedMap';
 
 export type IGuide = IOrderedMap<IModule>;
 

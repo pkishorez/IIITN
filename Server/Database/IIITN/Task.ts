@@ -1,7 +1,7 @@
 import {Collection} from 'Server/Database/index';
 import {S_Task} from '../Schema/index';
 import {ITaskAction, ITask} from 'App/State/Reducers/TaskReducer';
-import {OrderedMap} from 'Utils/OrderedMap';
+import {OrderedMap} from 'classui/DataStructures/OrderedMap';
 import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
 

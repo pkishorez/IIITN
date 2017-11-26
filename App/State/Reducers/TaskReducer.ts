@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {IOrderedMapAction, OrderedMap, IOrderedMap} from 'Utils/OrderedMap';
+import {IOrderedMapAction, OrderedMap, IOrderedMap} from 'classui/DataStructures/OrderedMap';
 export interface ITask {
 	question: string
 	resetCode: string
