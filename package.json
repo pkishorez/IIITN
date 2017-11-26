@@ -18,7 +18,7 @@
 		"@types/socket.io-client": "^1.4.32",
 		"@types/systemjs": "^0.20.6",
 		"@types/uuid": "^3.4.3",
-		"classui": "0.0.69",
+		"classui": "file:../Class-UI/classui.tgz",
 		"draft-js": "^0.10.4",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.1",
@@ -28,7 +28,7 @@
 	},
 	"devDependencies": {
 		"compression-webpack-plugin": "^1.0.1",
-		"copy-webpack-plugin": "^4.2.1",
+		"copy-webpack-plugin": "^4.2.3",
 		"express": "^4.16.2",
 		"socket.io": "^2.0.4",
 		"webpack": "^3.8.0",

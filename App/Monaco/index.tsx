@@ -200,12 +200,12 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor();
 	}
 	render() {
-		return <div className="monaco__editor" style={{border: '1px solid rgba(0, 0, 0, 0.2)', marginBottom: 20}}>
-			<div style={{
-				width: this.props.width,
-				height: this.props.height,
-				backgroundColor: 'white'
-			}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
-		</div>;
+		return <div style={{
+			border: '1px solid rgba(0, 0, 0, 0.2)',
+			overflow: "hidden",
+			width: this.props.width,
+			height: this.props.height,
+			backgroundColor: 'white'
+		}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
 	}
 };
