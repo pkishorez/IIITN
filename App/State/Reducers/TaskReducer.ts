@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import {IOrderedMapAction, OrderedMap, IOrderedMap} from 'classui/DataStructures/OrderedMap';
-export interface ITask {
-	question: string
-	resetCode: string
-}
+import {ITask} from 'Server/Database/Schema/Task';
+
+export {ITask} from 'Server/Database/Schema/Task';
+
 export type ITaskState = IOrderedMap<ITask>;
 
 export type ITaskAction = {

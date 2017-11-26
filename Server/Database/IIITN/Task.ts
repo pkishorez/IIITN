@@ -10,7 +10,7 @@ export class _Task{
 	// Update task. One action should be there.
 	__init() {
 		return KeyValue.get("TASKS_DB").then((data)=>{
-			return new OrderedMap<ITask>(data);
+			return new OrderedMap<ITask>(data, S_Task);
 		});
 	}
 	performAction(action: ITaskAction) {
