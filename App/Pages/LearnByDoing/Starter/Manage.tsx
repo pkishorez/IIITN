@@ -7,6 +7,7 @@ import {Flash} from 'classui/Components/Flash';
 import {connect, IRootState} from 'App/State';
 import {IGuide, IModule} from 'App/State/Reducers/GuideReducer';
 import {Guide} from 'App/MyActions';
+import {OrderedMapList} from 'classui/Components/OrderedMapList';
 
 interface IProps extends IGuide {};
 interface IState {};
@@ -16,16 +17,24 @@ class StarterManage_ extends React.Component<IProps> {
 		Guide.init();
 	}
 	render() {
-		return <div>
+		return <div style={{width: 500, margin: "auto"}}>
 			<div className="button" style={{marginTop: 10}} onClick={()=>AddOrEditLesson()}>Add Lesson.</div>
-			{
-				this.props.order.map((id)=>{
-					return <div key={id} style={{marginTop: 10}} className="button"
-					onClick={()=>AddOrEditLesson(id, this.props.map[id])}>
-						{this.props.map[id].title}
-					</div>
+
+			<OrderedMapList onClick={(id)=>{
+				AddOrEditLesson(id, this.props.map[id])
+			}} orderedMap={{map: this.props.map, order: this.props.order}}
+			onOrderChange={(order)=>{
+				console.log("REOREDERED : ", order);
+				Guide.perform({
+					type:"GUIDE_MODULE_ACTION",
+					guide_id: "STARTER",
+					orderedMapAction: {
+						type: "REORDER",
+						order
+					}
 				})
-			}
+			}}
+			/>
 		</div>
 	}
 }
