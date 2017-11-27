@@ -6,6 +6,7 @@ import {Dropdown} from 'classui/Components/Dropdown';
 import {connect} from 'react-redux';
 import {IRootState} from 'App/State/RootReducer';
 import {Me} from 'App/MyActions';
+import { FlashPlaygroundTypescript } from 'App/Pages/Playground/typescript';
 
 interface IProps {
 	userid: string | null
@@ -22,7 +23,7 @@ class _Header extends React.Component<IProps, IState> {
 		return <NavBar fixed logo="Programmer's Club">
 			<NavbarRemain/>
 			<Dropdown button="Playground" ref={(ref)=>this.dropdown1 = ref as Dropdown} push="left">
-				<RLink to="/playground"><li onClick={()=>this.dropdown1.dismiss()}>Typescript</li></RLink>
+				<li onClick={()=>{FlashPlaygroundTypescript();this.dropdown1.dismiss()}}>Typescript</li>
 				<RLink to="/2dplayground"><li onClick={()=>this.dropdown1.dismiss()}>Canvas2D</li></RLink>
 				<RLink to="/starter"><li onClick={()=>this.dropdown1.dismiss()}>Demo</li></RLink>
 			</Dropdown>
