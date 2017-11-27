@@ -5,9 +5,6 @@ export let S_Task: IJSONSchema = {
 		{
 			type: "object",
 			properties: {
-				_id: {
-					type: "string"
-				},
 				type: {
 					const: "CANVAS2D"
 				},
@@ -28,7 +25,6 @@ export let S_Task: IJSONSchema = {
 };
 
 export type ITask = {
-	_id?: string
 	type: "CANVAS2D"
 	title: string
 	question: string

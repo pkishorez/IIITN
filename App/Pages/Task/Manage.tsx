@@ -17,25 +17,14 @@ interface IProps {
 class TaskManager_ extends React.Component<IProps> {
 	constructor(props: any, context: any) {
 		super(props, context);
-		this.deleteTask = this.deleteTask.bind(this);
 	}
 	componentDidMount() {
 		TaskAction.init();
 	}
-
-	deleteTask(_id: string) {
-		TaskAction.perform({
-			type: "TASK_ACTION",
-			orderedMapAction: {
-				type: "DELETE",
-				_id
-			}
-		}).then(alert).catch(alert);
-	}
 	render() {
 		return <div>
-				<div style={{width: 500, margin: "auto"}}>
-					<div className="button" style={{marginTop: 10}} onClick={()=>{
+				<div style={{width: 500, margin: "auto", paddingTop: 20}}>
+					<div className="button" onClick={()=>{
 						AddOrEditTask({
 							title: "",
 							type: "CANVAS2D",
@@ -44,11 +33,10 @@ class TaskManager_ extends React.Component<IProps> {
 						});
 					}}>Add Task.</div>
 
-					<OrderedMapList onClick={(id)=>{
+					<OrderedMapList onClick={(task_id)=>{
 						AddOrEditTask({
-							...this.props.tasks.map[id],
-							_id: id
-						});
+							...this.props.tasks.map[task_id]
+						}, task_id);
 					}} orderedMap={this.props.tasks}
 					onOrderChange={(order)=>{
 						TaskAction.perform({
@@ -59,14 +47,15 @@ class TaskManager_ extends React.Component<IProps> {
 							}
 						})
 					}}
-					onDelete={(id)=>{
+					onDelete={(task_id)=>{
+						confirm("Do you want to delete task?")?
 						TaskAction.perform({
 							type: "TASK_ACTION",
 							orderedMapAction: {
 								type: "DELETE",
-								_id: id
+								_id: task_id
 							}
-						})
+						}):null
 					}}
 					/>
 				</div>
@@ -75,7 +64,7 @@ class TaskManager_ extends React.Component<IProps> {
 }
 
 interface IAddEditProps extends ITask{}
-let AddOrEditTask = (props: IAddEditProps)=>{
+let AddOrEditTask = (props: IAddEditProps, task_id?: string)=>{
 	let resetCodeRef: monaco.editor.IStandaloneCodeEditor|null;
 	let questionRef: monaco.editor.IStandaloneCodeEditor|null;
 	let input: HTMLInputElement|null;
@@ -94,15 +83,15 @@ let AddOrEditTask = (props: IAddEditProps)=>{
 							question: questionRef?questionRef.getValue():"",
 							resetCode: resetCodeRef?resetCodeRef.getValue():""
 						};
-						if (props._id) {
+						if (task_id) {
 							TaskAction.perform({
 								type: "TASK_ACTION",
 								orderedMapAction: {
 									type: "MODIFY",
-									_id: props._id,
+									_id: task_id,
 									value: task
 								}
-							});
+							}).then(dismiss);
 						}
 						else {
 							TaskAction.perform({
@@ -111,9 +100,8 @@ let AddOrEditTask = (props: IAddEditProps)=>{
 									type: "ADD",
 									value: task
 								}
-							});
+							}).then(dismiss);
 						}
-						dismiss();
 					}}>Save</div>
 				</Section>
 			</Layout>
