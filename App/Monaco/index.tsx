@@ -8,6 +8,8 @@ declare let monacoAmdRequire: any;
 export interface IMonacoProps {
 	width?: string|number
 	height?: string|number
+	shouldHaveMarginBottom?: boolean
+	shouldHaveMarginTop?: boolean
 	fontSize?: number
 	fontFamily?: string
 	lineNumbers?: "on" | "off"
@@ -30,11 +32,13 @@ export interface IMonacoState {
 export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	private editor: monaco.editor.IStandaloneCodeEditor;
 	private diffEditor: monaco.editor.IStandaloneDiffEditor;
-	static defaultProps = {
+	static defaultProps: IMonacoProps = {
 		width: "100%",
 		height: 150,
 		fontSize: 15,
 		fontFamily: 'Inconsolata',
+		shouldHaveMarginBottom: false,
+		shouldHaveMarginTop: false,
 		content: "",
 		quickSuggestions: true,
 		parameterHints: true,
@@ -200,13 +204,23 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor();
 	}
 	render() {
+		let height = `calc(100% - ${(this.props.shouldHaveMarginBottom?25:0) + (this.props.shouldHaveMarginTop?25:0)}px)`
 		return <div style={{
-			border: '1px solid rgba(0, 0, 0, 0.2)',
-			//overflow: "hidden",
-			width: this.props.width,
-			height: this.props.height,
-			marginBottom: 25,
-			backgroundColor: 'white'
-		}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
+				position: "relative",
+				height: this.props.height,
+				width: this.props.width
+			}}>
+			<div style={{
+				position: "absolute",
+				top: "0px",
+				left: "0px",
+				border: '1px solid rgba(0, 0, 0, 0.2)',
+				height: height,
+				width: "100%",
+				marginBottom: this.props.shouldHaveMarginBottom?25:"auto",
+				marginTop: this.props.shouldHaveMarginTop?25:"auto",
+				backgroundColor: 'white'
+			}} ref={this.props.diffContent?this.initDiffMonaco:this.initMonaco}></div>
+		</div>;
 	}
 };
