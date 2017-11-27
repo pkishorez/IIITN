@@ -18,10 +18,10 @@ class StarterManage_ extends React.Component<IProps> {
 	}
 	render() {
 		return <div style={{width: 500, margin: "auto"}}>
-			<div className="button" style={{marginTop: 10}} onClick={()=>AddOrEditLesson()}>Add Lesson.</div>
+			<div className="button" style={{marginTop: 10}} onClick={()=>AddOrEditModule()}>Add Lesson.</div>
 
 			<OrderedMapList onClick={(id)=>{
-				AddOrEditLesson(id, this.props.map[id])
+				AddOrEditModule(id, this.props.map[id])
 			}} orderedMap={{map: this.props.map, order: this.props.order}}
 			onOrderChange={(order)=>{
 				console.log("REOREDERED : ", order);
@@ -45,7 +45,7 @@ let mapStateToProps = (state: IRootState): IProps=>{
 }
 export let StarterManagement = connect(mapStateToProps)(StarterManage_);
 
-export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
+export let AddOrEditModule = (id?: string, module?: IModule)=>{
 	let input: HTMLInputElement|null, editor: any, dismiss: any;
 	let add = () => {
 		if (!input || input.value.trim()=="") {
@@ -66,7 +66,7 @@ export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
 						editorState
 					}
 				}
-			})
+			}).then(dismiss);
 		}
 		else {
 			Guide.perform({
@@ -79,9 +79,8 @@ export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
 						title
 					}
 				}
-			});
+			}).then(dismiss);
 		}
-		dismiss();
 	}
 	Flash.flash((d)=>{
 		dismiss = d;
@@ -91,9 +90,9 @@ export let AddOrEditLesson = (id?: string, lesson?: IModule)=>{
 					<Section remain><h3 style={{padding: "0px 10px"}}>Add/Edit Module Here.</h3></Section>
 					<Section><div className="button" onClick={add}>Save</div></Section>
 				</Layout>
-				<input autoFocus type="text" ref={(ref)=>input=ref} defaultValue={lesson?lesson.title:""} style={{padding: 10}} placeholder="Lesson Title"/>
-				<DraftEditor defaultState={lesson?lesson.editorState:undefined} onChange={(e)=>{editor=e}} style={{padding: 10}}/>
+				<input autoFocus type="text" ref={(ref)=>input=ref} defaultValue={module?module.title:""} style={{padding: 10, width: "100%", boxSizing: "border-box"}} placeholder="Lesson Title"/>
+				<DraftEditor defaultState={module?module.editorState:undefined} onChange={(e)=>{editor=e}} style={{padding: 10}}/>
 			</Section>
 		</Layout>;
-	}, false, false, "card-5");
+	}, false, true, true, "card-5");
 }

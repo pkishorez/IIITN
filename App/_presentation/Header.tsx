@@ -14,22 +14,23 @@ interface IProps {
 interface IState {};
 
 class _Header extends React.Component<IProps, IState> {
-	dropdown1: Dropdown;
-	dropdown2: Dropdown;
+	playgroundDD: Dropdown;
+	tasksDD: Dropdown;
 	constructor(props: any, context: any) {
 		super(props, context);
 	}
 	render() {
 		return <NavBar fixed logo="Programmer's Club">
 			<NavbarRemain/>
-			<Dropdown button="Playground" ref={(ref)=>this.dropdown1 = ref as Dropdown} push="left">
-				<li onClick={()=>{FlashPlaygroundTypescript();this.dropdown1.dismiss()}}>Typescript</li>
-				<RLink to="/2dplayground"><li onClick={()=>this.dropdown1.dismiss()}>Canvas2D</li></RLink>
-				<RLink to="/starter"><li onClick={()=>this.dropdown1.dismiss()}>Demo</li></RLink>
+			<RLink to="/lbd"><div className="button">Guides</div></RLink>
+			<Dropdown button="Playground" ref={(ref)=>this.playgroundDD = ref as Dropdown} push="left">
+				<li onClick={()=>{FlashPlaygroundTypescript();this.playgroundDD.dismiss()}}>Typescript</li>
+				<RLink to="/2dplayground"><li onClick={()=>this.playgroundDD.dismiss()}>Canvas2D</li></RLink>
+				<RLink to="/starter"><li onClick={()=>this.playgroundDD.dismiss()}>Demo</li></RLink>
 			</Dropdown>
-			<Dropdown button="tasks" ref={(ref)=>this.dropdown2 = ref as Dropdown} push="left">
-				<RLink to="/task"><li onClick={()=>this.dropdown2.dismiss()}>My Tasks</li></RLink>
-				<RLink to="/task/manage"><li onClick={()=>this.dropdown2.dismiss()}>Manage Tasks</li></RLink>
+			<Dropdown button="tasks" ref={(ref)=>this.tasksDD = ref as Dropdown} push="left">
+				<RLink to="/task"><li onClick={()=>this.tasksDD.dismiss()}>My Tasks</li></RLink>
+				<RLink to="/task/manage"><li onClick={()=>this.tasksDD.dismiss()}>Manage Tasks</li></RLink>
 				<li>Dashboard (TODO)</li>
 			</Dropdown>
 			{/*}
