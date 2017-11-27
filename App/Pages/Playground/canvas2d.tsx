@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {PersistMonaco} from 'App/State/Utils/PersistentMonaco';
 import {runProgramInNewScope} from 'App/Monaco/Runtime/';
-import {CanvasView} from 'App/Canvas';
+import {CanvasView, canvasDefaultCode} from 'App/Canvas';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item} from 'classui/Components/Menu';
 import {Flash} from 'classui/Components/Flash';
@@ -11,15 +11,7 @@ import * as _ from 'lodash';
 interface IProps {};
 interface IState {};
 
-let defaultCode = `import {Canvas} from 'canvas2d';
-import {Rectangle, Circle, Shape, CustomShape} from 'canvas2d/Shapes';
-
-let canvasElem = document.getElementById("canvas") as HTMLCanvasElement;
-canvasElem.width = 500;
-canvasElem.height = 400;
-canvasElem.style.backgroundColor = "white";
-
-let canvas = new Canvas(canvasElem, true);
+let defaultCode = `${canvasDefaultCode}
 
 function move(o: any, speed: number)
 {
@@ -64,7 +56,7 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 	render() {
 		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
 			<Section width={750}>
-					<PersistMonaco id="PG2D" defaultContent={defaultCode} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref: any)=>this.editorRef=ref}/>:
+					<PersistMonaco id="PG2D" defaultContent={canvasDefaultCode} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref: any)=>this.editorRef=ref}/>:
 			</Section>
 			<Section remain>
 				<Menu header="Canvas Playground">
