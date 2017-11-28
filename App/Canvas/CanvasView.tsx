@@ -25,7 +25,8 @@ export class CanvasView extends React.Component<IProps, IState> {
 		this.runCode(this.props.code);
 	}
 	componentWillReceiveProps(nextProps: IProps) {
-		this.runCode(nextProps.code);
+		if (this.props.code!=nextProps.code)
+			this.runCode(nextProps.code);
 	}
 	runCode(code: string) {
 		let compiled_code = CompileCanvasCode(code, this.uid);
