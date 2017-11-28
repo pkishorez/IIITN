@@ -1,15 +1,21 @@
 import {INR_User} from 'Common/ActionSignature';
+import {IUserTask_Details} from 'Server/Database/Schema/Task';
 export interface IUserState {
 	userid: string | null
 	secretKey?: string | null
 	online: boolean
 	editorBuffers: {
-		[id: string]: string
+		[_id: string]: string
 	}
-	tasks: {
-		[id: string]: string
+	taskDetails: {
+		[_id: string]: IUserTask_Details | undefined
 	}
 }
+
+export type IUserSaveTaskDetails = {
+	type: "USER_SAVE_TASK"
+	taskDetails: IUserTask_Details
+};
 
 export type IUserAction = {
 	type: "USER_LOGOUT"
@@ -19,9 +25,8 @@ export type IUserAction = {
 	type: "USER_SAVE_BUFFER"
 	id: string
 	code: string
-} | (INR_User["USER_SAVE_TASK"] & {
-	type: "USER_SAVE_TASK"
-})| (INR_User["USER_LOGIN"] & {
+} | IUserSaveTaskDetails
+  | (INR_User["USER_LOGIN"] & {
 	type: "USER_LOGIN"
 })
 
@@ -32,7 +37,7 @@ let defaultState: IUserState = {
 	secretKey: null,
 	online: false,
 	editorBuffers: {},
-	tasks: {}
+	taskDetails: {}
 };
 
 export let UserReducer = (state: IUserState = defaultState, action: IUserAction) => {
@@ -42,7 +47,7 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 				...state,
 				userid: action.userid,
 				secretKey: action.secretKey,
-				tasks: action.tasks?action.tasks:{}
+				taskDetails: action.tasks?action.tasks:{}
 			}
 			break;
 		}
@@ -71,11 +76,13 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 			break;
 		}
 		case "USER_SAVE_TASK": {
-			state = {
-				...state,
-				tasks: {
-					...state.tasks,
-					[action.id]: action.code
+			if (action.taskDetails){
+				state = {
+					...state,
+					taskDetails: {
+						...state.taskDetails,
+						[action.taskDetails._id]: action.taskDetails
+					}
 				}
 			}
 		}

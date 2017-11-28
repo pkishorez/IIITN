@@ -1,8 +1,10 @@
 import {Collection} from 'Server/Database/index';
 import {v4} from 'uuid';
 import {Schema} from 'classui/Components/Form/Schema';
-import {S_User} from '../Schema/index';
+import {S_User, IUserTask_Details, ITask} from '../Schema/index';
 import {INR_User} from 'Common/ActionSignature';
+import { S_UserTask_Details } from 'Server/Database/Schema/Task';
+import { IUserAction, IUserSaveTaskDetails } from 'App/State/Reducers/UserReducer';
 
 export let UserDB: Collection = new Collection("user");
 
@@ -50,13 +52,23 @@ export class User {
 			return Promise.reject("Error getting profile details.");
 		});
 	}
-	saveTask(data: INR_User["USER_SAVE_TASK"]) {
+	saveTask(saveTaskAction: IUserSaveTaskDetails) {
+		// Default data.
+		saveTaskAction.taskDetails = {
+			result: "PENDING",
+			...saveTaskAction.taskDetails
+		};
+		let error = Schema.validate(S_UserTask_Details, saveTaskAction.taskDetails);
+		if (error) {
+			return Promise.reject(error);
+		}
+
 		return UserDB.raw.updateOne({_id: this.userid}, {
 			$set: {
-				[`tasks.${data.id}`]: data.code
+				[`tasks.${saveTaskAction.taskDetails._id}`]: saveTaskAction.taskDetails
 			}
 		}).then(()=>{
-			return Promise.resolve(data);
+			return Promise.resolve(saveTaskAction);
 		}).catch(()=>{
 			return Promise.reject("Couldn't save.")
 		});

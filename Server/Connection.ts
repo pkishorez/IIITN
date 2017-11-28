@@ -4,12 +4,14 @@ import {INR_User} from 'Common/ActionSignature';
 import {ITaskAction} from 'App/State/Reducers/TaskReducer';
 import { IGuideAction } from 'App/State/Reducers/GuideReducer';
 import * as _ from 'lodash';
+import { IUserSaveTaskDetails } from 'App/State/Reducers/UserReducer';
 
 export type IRequestType = 
 	"REGISTER" | "STUDENTS" | "PROFILE"
 	| keyof(INR_User)
 	| ITaskAction["type"]
 	| IGuideAction["type"]
+	| IUserSaveTaskDetails["type"]
 
 export interface IRequest {
 	id: number

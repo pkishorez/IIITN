@@ -7,8 +7,4 @@ export interface INR_User {
 		secretKey?: string
 		tasks?: any
 	}
-	USER_SAVE_TASK: {
-		id: string
-		code: string
-	}
 }

@@ -1,7 +1,7 @@
 import {Network} from 'App/Network/';
 import {__store, IRootState} from 'App/State';
 import {ITaskAction} from 'App/State/Reducers/TaskReducer';
-import {IUserAction} from 'App/State/Reducers/UserReducer';
+import {IUserAction, IUserSaveTaskDetails} from 'App/State/Reducers/UserReducer';
 import {INR_User} from 'Common/ActionSignature';
 import * as _ from 'lodash';
 import { IGuideAction } from 'App/State/Reducers/GuideReducer';
@@ -12,7 +12,7 @@ export let Me = {
 		return Network.requestAndDispatch("USER_LOGIN", data);
 	},
 
-	saveTask(data: INR_User["USER_SAVE_TASK"]) {
+	saveTask(data: IUserSaveTaskDetails) {
 		return Network.requestAndDispatch("USER_SAVE_TASK", data);
 	},
 

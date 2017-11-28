@@ -11,12 +11,13 @@ import {defaultCode} from './index';
 import * as _ from 'lodash';
 
 interface IProps {
-	savedTasks: IRootState["user"]["tasks"]
+	userTaskDetails: IRootState["user"]["taskDetails"]
 	tasks: IRootState["tasks"]
 };
 interface IState {
 	currentTaskID: string
 	userCode: string
+	userRunCode: string
 };
 
 class Task_ extends React.Component<IProps, IState>{
@@ -26,11 +27,12 @@ class Task_ extends React.Component<IProps, IState>{
 		super(props, context);
 		this.state = {
 			currentTaskID: "",
-			userCode: ""
+			userCode: "",
+			userRunCode: ""
 		};
 		this.loadTask = this.loadTask.bind(this);
 		this.save = this.save.bind(this);
-		this.runCode = this.runCode.bind(this);
+		this.runUserCode = this.runUserCode.bind(this);
 		this.runFullScreen = this.runFullScreen.bind(this);
 		this.setCodeState = _.debounce(this.setCodeState.bind(this), 100);
 	}
@@ -50,28 +52,32 @@ class Task_ extends React.Component<IProps, IState>{
 		let task = this.props.tasks.map[task_id];
 		// Load from buffer.
 		let buffer = GetState().user.editorBuffers[task_id];
-		// Load from User Saved task.
-		let code = buffer?buffer:this.props.savedTasks[task_id];
-		// Load from reset Code.
-		code = code?code:task.resetCode;
+		// Load from User Saved task or resetCode.
+		let userTask = this.props.userTaskDetails[task_id];
+		let code = buffer?buffer:(userTask?userTask.code:task.resetCode);
 
-		this.editorRef.getOriginalEditor().setValue(task.resetCode?task.resetCode:"\n");
+		this.editorRef.getOriginalEditor().setValue(task.resetCode);
 		this.setCodeState(code);
 		this.setState({
 			currentTaskID: task_id
 		});
-		this.runCode();
+		this.runUserCode();
 		this.dropdown.dismiss();
 	}
 	save() {
 		Me.saveTask({
-			id: this.state.currentTaskID,
-			code: this.editorRef.getModifiedEditor().getValue()
+			type: "USER_SAVE_TASK",
+			taskDetails: {
+				_id: this.state.currentTaskID,
+				code: this.editorRef.getModifiedEditor().getValue(),
+				type: this.props.tasks.map[this.state.currentTaskID].type,
+				result: "PENDING"
+			}
 		});
 	}
-	runCode() {
+	runUserCode() {
 		this.setState({
-			userCode: this.editorRef.getModifiedEditor().getValue()
+			userRunCode: this.editorRef.getModifiedEditor().getValue()
 		});
 	}
 	runFullScreen() {
@@ -80,14 +86,16 @@ class Task_ extends React.Component<IProps, IState>{
 		}, false, true);
 	}
 	render() {
-		let currentTask = {
-			savedCode: this.props.savedTasks[this.state.currentTaskID],
-			resetCode: this.props.tasks.map[this.state.currentTaskID]?this.props.tasks.map[this.state.currentTaskID].resetCode:null
-		}
-		let question_code = this.props.tasks.map[this.state.currentTaskID]?this.props.tasks.map[this.state.currentTaskID].question:"";
+		let userTaskDetails = this.props.userTaskDetails[this.state.currentTaskID];
+		let currentTask = this.props.tasks.map[this.state.currentTaskID];
+		let taskData = {
+			savedCode: userTaskDetails?userTaskDetails.code:null,
+			resetCode: currentTask?currentTask.resetCode:null,
+			questionCode: currentTask?currentTask.question:""
+		};
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
-				<PersistMonaco getOutput={(code)=>this.setCodeState(code, false)} id={this.state.currentTaskID} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
+				<PersistMonaco getOutput={(code)=>this.setCodeState(code, false)} id={this.state.currentTaskID} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runUserCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
 			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
@@ -103,30 +111,29 @@ class Task_ extends React.Component<IProps, IState>{
 						</Dropdown>
 					</Section>
 					<Section>
-						<div className={
-							"button "+(
-								(currentTask.savedCode && (currentTask.savedCode!=this.state.userCode))?
-								"":"disable")}
+						<div className={"button "+(((this.state.currentTaskID!="") && (taskData.savedCode!=this.state.userCode) && taskData.savedCode)?"":"disable")}
 							onClick={()=>{
-								this.setCodeState(currentTask.savedCode);
+								if (taskData.savedCode)
+									this.setCodeState(taskData.savedCode);
 						}}>Saved Code</div></Section>
 					<Section>
 						<div className={
-							"button "+((currentTask.resetCode &&(currentTask.resetCode!=this.state.userCode))?"":"disable")
+							"button "+((taskData.resetCode && (taskData.resetCode!=this.state.userCode))?"":"disable")
 						} onClick={()=>{
-							if (currentTask.resetCode)
-								this.setCodeState(currentTask.resetCode);
+							if (taskData.resetCode)
+								this.setCodeState(taskData.resetCode);
 						}}>Reset Code</div></Section>
 					<Section>
 						<div className={"button primary "+
-							((currentTask.savedCode && (currentTask.savedCode!=this.state.userCode))?"":"disable")
+							(((this.state.currentTaskID!="") && (taskData.savedCode!=this.state.userCode))?
+							"":"disable")
 						} onClick={this.save}>Save</div>
 					</Section>
 				</Layout>
-				<CanvasView code={question_code} width={400} height={250} style={{border: '1px solid black'}} />
+				<CanvasView code={taskData.questionCode} width={400} height={250} style={{border: '1px solid black'}} />
 				<div style={{position: "relative"}}>
 					<span className="button" onClick={this.runFullScreen} style={{position: "absolute",display: "inline-block", bottom: 0, right: 0}}>FullScreen</span>
-					<CanvasView code={this.state.userCode} width={400} height={250} style={{border: '1px solid black'}} />
+					<CanvasView code={this.state.userRunCode} width={400} height={250} style={{border: '1px solid black'}} />
 				</div>
 			</Section>
 		</Layout>;
@@ -135,7 +142,7 @@ class Task_ extends React.Component<IProps, IState>{
 
 let mapStateToProps = (state: IRootState): IProps=>{
 	return {
-		savedTasks: state.user.tasks,
+		userTaskDetails: state.user.taskDetails,
 		tasks: state.tasks
 	}
 };
