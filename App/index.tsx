@@ -11,13 +11,6 @@ import {ServiceWorker} from 'App/Network/ServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider, connect} from 'react-redux';
 
-if (GetState().user.userid) {
-	// Reestablish session if user is already logged in.
-	Me.login({
-		userid: GetState().user.userid as string,
-		secretKey: GetState().user.secretKey as string
-	});	
-}
 ServiceWorker.initialize();
 
 interface IProps {
