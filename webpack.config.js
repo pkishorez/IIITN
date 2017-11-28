@@ -39,8 +39,8 @@ module.exports = [
 		plugins: [
 			new copyWebpackPlugin([
 				{
-					from: 'node_modules/classui/bundle/classui.css',
-					to: 'production/bundle/classui.css'
+					from: 'node_modules/classui/bundle/',
+					to: 'production/bundle/'
 				}
 			]),
 			new copyWebpackPlugin([
