@@ -65,7 +65,7 @@ export let Task = {
 
 export let Guide = {
 	init() {
-		Network.requestAndDispatch("GUIDE_INIT", {});
+		return Network.requestAndDispatch("GUIDE_INIT", {});
 	},
 	perform(action: IGuideAction) {
 		return Network.requestAndDispatch("GUIDE_MODULE_ACTION", action);
