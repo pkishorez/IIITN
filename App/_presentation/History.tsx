@@ -2,10 +2,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Redirect, withRouter, RouteComponentProps} from 'react-router-dom';
 
-interface IProps {};
+interface IProps extends RouteComponentProps<any> {};
 interface IState {};
 
-export class History extends React.Component<IProps & RouteComponentProps<any>, IState> {
+export class History extends React.Component<IProps, IState> {
 	private static instance: History;
 
 	constructor(props: any, context: any) {
