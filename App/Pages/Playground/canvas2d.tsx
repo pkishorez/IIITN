@@ -56,7 +56,9 @@ export class PlaygroundCanvas2D extends React.Component<IProps, IState> {
 	render() {
 		return <Layout align="center" style={{height: `calc(100vh - 50px)`}} gutter={20}>
 			<Section width={750}>
-					<PersistMonaco id="PG2D" defaultContent={canvasDefaultCode} ctrlEnterAction={this.runCode} height={`calc(100vh - 100px)`} editorRef={(ref: any)=>this.editorRef=ref}/>:
+				<PersistMonaco id="PG2D" dimensions={{
+					height: `calc(100vh - 100px)`
+				}}  defaultContent={defaultCode} ctrlEnterAction={this.runCode} editorRef={(ref: any)=>this.editorRef=ref}/>:
 			</Section>
 			<Section remain>
 				<Menu header="Canvas Playground">

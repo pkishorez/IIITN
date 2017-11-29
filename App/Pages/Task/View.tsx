@@ -95,12 +95,14 @@ class Task_ extends React.Component<IProps, IState>{
 		};
 		return <Layout align="center" gutter={20} style={{height: `calc(100vh - 50px)`}}>
 			<Section remain>
-				<PersistMonaco getOutput={(code)=>this.setCodeState(code, false)} id={this.state.currentTaskID} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runUserCode} height={`calc(100vh - 100px)`} editorRef={(ref)=>(this.editorRef as any)=ref}/>
+				<PersistMonaco getOutput={(code)=>this.setCodeState(code, false)} id={this.state.currentTaskID} diffContent={{content: "/*\n\tSelect task from task Menu :)\n*/"}} content="/*\n\tSelect task from task Menu :)\n*/" ctrlEnterAction={this.runUserCode} dimensions={{
+					height: `calc(100vh - 100px)`
+				}} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
 			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
 					<Section remain>
-						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskID!="")?`${this.props.tasks.map[this.state.currentTaskID].title}`: "Tasks"}>
+						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskID!="")?currentTask.title: "Tasks"}>
 							{
 								this.props.tasks.order.map((task_id, i)=>{
 									return <li key={task_id} onClick={()=>{

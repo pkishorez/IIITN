@@ -6,8 +6,14 @@ import {MonacoLibs} from './Libs';
 declare let monacoAmdRequire: any;
 
 export interface IMonacoProps {
-	width?: string|number
-	height?: string|number
+	theme?: "vs"|"vs-dark"
+	fontWeight?: monaco.editor.IEditorConstructionOptions["fontWeight"]
+	dimensions?: {
+		width?: string|number
+		height?: string|number
+		minHeight?: string|number
+		maxHeight?: string|number	
+	}
 	shouldHaveMarginBottom?: boolean
 	shouldHaveMarginTop?: boolean
 	fontSize?: number
@@ -33,9 +39,15 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	private editor: monaco.editor.IStandaloneCodeEditor;
 	private diffEditor: monaco.editor.IStandaloneDiffEditor;
 	static defaultProps: IMonacoProps = {
-		width: "100%",
-		height: 150,
+		dimensions: {
+			height: 150,
+			minHeight: "auto",
+			maxHeight: "auto",
+			width: "100%"
+		},
+		theme: "vs",
 		fontSize: 15,
+		fontWeight: "inherit",
 		fontFamily: 'Inconsolata',
 		shouldHaveMarginBottom: false,
 		shouldHaveMarginTop: false,
@@ -94,8 +106,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		Monaco.INIT(()=>{
 			this.editor = monaco.editor.create(ref, {
 				value: this.props.content,
-				theme: "vs",
+				theme: this.props.theme,
 				language: 'typescript',
+				fontWeight: this.props.fontWeight,
 				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
 				folding: true,
@@ -147,7 +160,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			let original = monaco.editor.createModel(this.props.diffContent?this.props.diffContent.content:"", "typescript");
 			let modified = monaco.editor.createModel(this.props.content?this.props.content:"", "typescript");
 			this.diffEditor = monaco.editor.createDiffEditor(ref, {
-				theme: "vs",
+				theme: this.props.theme,
 				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
 				folding: true,
@@ -207,8 +220,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		let height = `calc(100% - ${(this.props.shouldHaveMarginBottom?25:0) + (this.props.shouldHaveMarginTop?25:0)}px)`
 		return <div style={{
 				position: "relative",
-				height: this.props.height,
-				width: this.props.width
+				...this.props.dimensions
 			}}>
 			<div style={{
 				position: "absolute",

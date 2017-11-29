@@ -105,7 +105,9 @@ class Lesson extends React.Component<IProps, IState> {
 						}
 					</Section>
 				</Layout>
-				<Monaco getOutput={this.run} height={300} lineNumbers="off" fontSize={18}/>
+				<Monaco getOutput={this.run} dimensions={{
+					height: 300
+				 }} lineNumbers="off" fontSize={18}/>
 			</Section>
 			<Section width={500}>
 				<canvas id="canvas" height={300} width={500} style={{backgroundColor: 'black'}}></canvas>

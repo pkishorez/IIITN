@@ -67,7 +67,9 @@ export class Practice extends React.Component<IPracticeProps, IPracticeState> {
 	}
 	render() {
 		return <div className="card-0" style={{margin: 15,padding: 10, backgroundColor: "white"}}>
-			<Monaco height={50} diffContent={{content: this.props.content}} getOutput={this.runProgram}/>
+			<Monaco dimensions={{
+				height: 50
+			 }} diffContent={{content: this.props.content}} getOutput={this.runProgram}/>
 			<pre className="card-0" style={{
 				padding: 10,
 				transition: "0.3s all",

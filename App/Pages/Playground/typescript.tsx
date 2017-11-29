@@ -36,7 +36,9 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 	render() {
 		return <Layout align="center" style={{height: this.props.mainHeight, width: this.props.width}} gutter={10}>
 			<Section remain>
-				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} height={this.props.playHeight} getOutput={this.runProgram}/>
+				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} dimensions={{
+					height: this.props.playHeight
+				}} getOutput={this.runProgram}/>
 			</Section>
 			<Section width={400}>
 				<SeqProgramOutput debounce={100} ref={(ref)=>{this.output=ref}} style={{

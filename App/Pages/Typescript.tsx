@@ -109,7 +109,7 @@ let Migrate = [
 		description: <div style={{padding: 10}}>
 			<MarsQuestion/>
 		</div>,
-		question: <FQuestion monaco={{height: `calc(100vh - 230px)`, content: marsprogramcontent}} funcDetails={{
+		question: <FQuestion monaco={{dimensions: {height: `calc(100vh - 230px)`}, content: marsprogramcontent}} funcDetails={{
 			name: "main",
 			inputs: [
 				{input: [{

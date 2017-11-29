@@ -107,10 +107,14 @@ let AddOrEditTask = (props: IAddEditProps, task_id?: string)=>{
 			</Layout>
 			<Layout gutter={20} equalWidth style={{width: 1024, maxWidth: "100%"}}>
 				<Section>
-					<PersistMonaco id="" shouldHaveMarginBottom height={500} editorRef={(ref: any)=>questionRef=ref} content={props.question}/>
+					<PersistMonaco id="" shouldHaveMarginBottom dimensions={{
+						height: 500
+					 }} editorRef={(ref: any)=>questionRef=ref} content={props.question}/>
 				</Section>
 				<Section>
-					<PersistMonaco id="" shouldHaveMarginBottom height={500} editorRef={(ref: any)=>resetCodeRef=ref} content={props.resetCode}/>
+					<PersistMonaco id="" shouldHaveMarginBottom dimensions={{
+						height: 500
+					}} editorRef={(ref: any)=>resetCodeRef=ref} content={props.resetCode}/>
 				</Section>
 			</Layout>
 		</div>;
