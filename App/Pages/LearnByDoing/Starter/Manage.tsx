@@ -84,11 +84,11 @@ export let AddOrEditModule = (id?: string, module?: IModule)=>{
 	}
 	Flash.flash((d)=>{
 		dismiss = d;
-		return <Layout style={{width: 700, margin: 'auto', backgroundColor: 'white', padding: 10}} gutter={15} justify="center" align="start">
+		return <Layout style={{width: 720, height: `100vh`, margin: 'auto', backgroundColor: 'white', padding: 20}} gutter={15} justify="center" align="start">
 			<Section remain>
 				<Layout>
 					<Section remain><h3 style={{padding: "0px 10px"}}>Add/Edit Module Here.</h3></Section>
-					<Section><div className="button" onClick={add}>Save</div></Section>
+					<Section><div className="button primary" onClick={add}>Save</div></Section>
 				</Layout>
 				<input autoFocus type="text" ref={(ref)=>input=ref} defaultValue={module?module.title:""} style={{padding: 10, width: "100%", boxSizing: "border-box"}} placeholder="Lesson Title"/>
 				<DraftEditor defaultState={module?module.editorState:undefined} onChange={(e)=>{editor=e}} style={{padding: 10}}/>

@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@iiitn/canvas2d": "^0.1.4",
+		"@types/diff": "^3.2.2",
 		"@types/draft-js": "^0.10.18",
 		"@types/es6-promise": "0.0.33",
 		"@types/express": "^4.0.39",
@@ -19,6 +20,7 @@
 		"@types/systemjs": "^0.20.6",
 		"@types/uuid": "^3.4.3",
 		"classui": "file:../Class-UI/classui.tgz",
+		"diff": "^3.4.0",
 		"draft-js": "^0.10.4",
 		"es6-promise": "^4.1.1",
 		"monaco-editor": "^0.10.1",

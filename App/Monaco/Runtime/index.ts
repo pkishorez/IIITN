@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import {compileCode} from './typescript';
 import * as ts from 'typescript';
+export {compileCode} from './typescript';
 
 // POST MESSAGE
 let BUFFER_SIZE = 5;
@@ -146,7 +147,6 @@ function runProgramInWorker(code: string, worker_timeout=2)
 			}
 		}, worker_timeout*1000);
 		worker.onerror = (ev)=>{
-			console.log(ev);
 			rejectRequest("Syntax error. Please check.");
 			clearTimeout(timeout);
 			worker.terminate();
