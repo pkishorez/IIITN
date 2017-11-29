@@ -11,9 +11,10 @@ export interface IMonacoProps {
 	dimensions?: {
 		width?: string|number
 		height?: string|number
-		minHeight?: string|number
-		maxHeight?: string|number	
+		minHeight?: number
+		maxHeight?: number	
 	}
+	noborder?: boolean
 	shouldHaveMarginBottom?: boolean
 	shouldHaveMarginTop?: boolean
 	fontSize?: number
@@ -24,7 +25,7 @@ export interface IMonacoProps {
 		content: string
 	}
 	content?: string
-	ctrlEnterAction?: ()=>void
+	ctrlEnterAction?: (output: string)=>void
 	quickSuggestions?: boolean
 	parameterHints?: boolean
 	readOnly?: boolean
@@ -36,15 +37,16 @@ export interface IMonacoState {
 };
 
 export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
+	dimRef: HTMLDivElement | null;
 	private editor: monaco.editor.IStandaloneCodeEditor;
 	private diffEditor: monaco.editor.IStandaloneDiffEditor;
 	static defaultProps: IMonacoProps = {
 		dimensions: {
-			height: 150,
-			minHeight: "auto",
-			maxHeight: "auto",
+			minHeight: 0,
+			height: "auto",
 			width: "100%"
 		},
+		noborder: false,
 		theme: "vs",
 		fontSize: 15,
 		fontWeight: "inherit",
@@ -72,6 +74,12 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor = this.destroyEditor.bind(this);
 		this.initMonaco = this.initMonaco.bind(this);
 		this.initDiffMonaco = this.initDiffMonaco.bind(this);
+		this.changeDimensions = this.changeDimensions.bind(this);
+	}
+	componentWillReceiveProps(nextProps: IMonacoProps) {
+		if (!_.isEqual(nextProps.dimensions, this.props.dimensions)) {
+			this.changeDimensions(nextProps.dimensions);
+		}
 	}
 	static INIT(func: Function) {
 		if(typeof monaco != "undefined") {
@@ -133,7 +141,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 					e.browserEvent.stopImmediatePropagation();
 
 					// Add action if ctrlEnter. This will become famous keybinding for Monaco in IIITN.
-					this.props.ctrlEnterAction && this.props.ctrlEnterAction();
+					this.props.ctrlEnterAction && this.props.ctrlEnterAction(this.editor.getValue());
 				}
 			});
 			this.editor.getModel().onDidChangeContent((e)=>{
@@ -141,6 +149,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
+				this.changeDimensions(this.props.dimensions);
 			})
 			this.editor.getModel().updateOptions({
 				insertSpaces: false
@@ -187,6 +196,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
+				this.changeDimensions(this.props.dimensions);
 			});
 			this.diffEditor.getModifiedEditor().onKeyDown(e=>{
 				if (e.ctrlKey && e.code=="Enter") {
@@ -195,7 +205,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 					e.browserEvent.stopImmediatePropagation();
 
 					// Add action if ctrlEnter. This will become famous keybinding for Monaco in IIITN.
-					this.props.ctrlEnterAction && this.props.ctrlEnterAction();
+					this.props.ctrlEnterAction && this.props.ctrlEnterAction(this.diffEditor.getValue());
 				}
 			});
 			if (this.props.editorRef) {
@@ -205,6 +215,26 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				this.editor.focus();
 		})
 	}
+
+	changeDimensions(dimensions: IMonacoProps["dimensions"]) {
+		let height = 100000;
+		if (this.diffEditor){
+			height = this.diffEditor.getModifiedEditor().getScrollHeight();			
+		}
+		if (this.editor) {
+			height = this.editor.getScrollHeight();
+		}
+		height += this.props.noborder?0:2;
+		const minHeight = dimensions?dimensions.minHeight: undefined;
+		const maxHeight = dimensions?dimensions.maxHeight: undefined;
+		if (maxHeight && height<=maxHeight) {
+			if (height>=(minHeight as number)) {
+				this.dimRef?
+				this.dimRef.style.height = `${height}px`:null;
+			}
+		}
+	}
+
 	destroyEditor()
 	{
 		if (this.editor)
@@ -218,7 +248,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 	}
 	render() {
 		let height = `calc(100% - ${(this.props.shouldHaveMarginBottom?25:0) + (this.props.shouldHaveMarginTop?25:0)}px)`
-		return <div style={{
+		return <div ref={(ref)=>this.dimRef=ref} style={{
 				position: "relative",
 				...this.props.dimensions
 			}}>
@@ -226,7 +256,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				position: "absolute",
 				top: "0px",
 				left: "0px",
-				border: '1px solid rgba(0, 0, 0, 0.2)',
+				border: this.props.noborder?undefined:'1px solid rgba(0, 0, 0, 0.2)',
 				height: height,
 				width: "100%",
 				marginBottom: this.props.shouldHaveMarginBottom?25:"auto",
