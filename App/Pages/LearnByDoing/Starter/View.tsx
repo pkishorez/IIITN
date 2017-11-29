@@ -13,7 +13,7 @@ interface IState {
 };
 
 class StarterView_ extends React.Component<IProps, IState> {
-	constructor(props: any, context: any) {
+	constructor(props: IProps, context: any) {
 		super(props, context);
 		this.state = {
 			lesson_id: ""
@@ -23,23 +23,26 @@ class StarterView_ extends React.Component<IProps, IState> {
 		Guide.init();
 	}
 	render() {
+		if (this.state.lesson_id=="" && this.props.order[0]) {
+			this.setState({
+				lesson_id: this.props.order[0]
+			})	
+		}
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section minWidth={225}>
-				<div className="hideOnHover">
-					<Menu header="Modules">
-						{
-							Object.keys(this.props.map).map((lesson_id)=>{
-								return <Item active={lesson_id==this.state.lesson_id} onClick={()=>{
-									this.setState({
-										lesson_id
-									})
-								}} key={lesson_id}>{this.props.map[lesson_id].title}</Item>
-							})
-						}
-					</Menu>
-				</div>
+				<Menu header="Modules">
+					{
+						this.props.order.map((lesson_id)=>{
+							return <Item active={lesson_id==this.state.lesson_id} onClick={()=>{
+								this.setState({
+									lesson_id
+								})
+							}} key={lesson_id}>{this.props.map[lesson_id].title}</Item>
+						})
+					}
+				</Menu>
 			</Section>
-			<Section remain clsName="card-1" style={{padding: 10, backgroundColor: 'white'}}>
+			<Section remain clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
 				<DraftEditorRender contentState={this.props.map[this.state.lesson_id]?this.props.map[this.state.lesson_id].editorState:undefined}/>
 			</Section>
 		</Layout>;
