@@ -3,6 +3,7 @@ var copyWebpackPlugin = require("copy-webpack-plugin");
 var CompressionPlugin = require('compression-webpack-plugin');
 var fs = require("fs");
 var serverConfig = require("./webpack.server.config");
+var path = require("path");
 
 module.exports = [
 	{
