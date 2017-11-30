@@ -8,6 +8,7 @@ declare let monacoAmdRequire: any;
 export interface IMonacoProps {
 	theme?: "vs"|"vs-dark"
 	fontWeight?: monaco.editor.IEditorConstructionOptions["fontWeight"]
+	autoResize?: boolean
 	dimensions?: {
 		width?: string|number
 		height?: string|number
@@ -46,6 +47,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			height: "auto",
 			width: "100%"
 		},
+		autoResize: true,
 		noborder: false,
 		theme: "vs",
 		fontSize: 15,
@@ -74,11 +76,12 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		this.destroyEditor = this.destroyEditor.bind(this);
 		this.initMonaco = this.initMonaco.bind(this);
 		this.initDiffMonaco = this.initDiffMonaco.bind(this);
-		this.changeDimensions = this.changeDimensions.bind(this);
+		this.autoResize = this.autoResize.bind(this);
 	}
+
 	componentWillReceiveProps(nextProps: IMonacoProps) {
 		if (!_.isEqual(nextProps.dimensions, this.props.dimensions)) {
-			this.changeDimensions(nextProps.dimensions);
+			this.autoResize(nextProps.dimensions);
 		}
 	}
 	static INIT(func: Function) {
@@ -149,7 +152,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
-				this.changeDimensions(this.props.dimensions);
+				this.autoResize(this.props.dimensions);
 			})
 			this.editor.getModel().updateOptions({
 				insertSpaces: false
@@ -196,7 +199,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				if (this.props.getOutput) {
 					this.props.getOutput(value);
 				}
-				this.changeDimensions(this.props.dimensions);
+				this.autoResize(this.props.dimensions);
 			});
 			this.diffEditor.getModifiedEditor().onKeyDown(e=>{
 				if (e.ctrlKey && e.code=="Enter") {
@@ -216,23 +219,24 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		})
 	}
 
-	changeDimensions(dimensions: IMonacoProps["dimensions"]) {
-		let height = 100000;
+	autoResize(dimensions: IMonacoProps["dimensions"]) {
+		if (!this.props.autoResize) {
+			return;
+		}
+		let config = this.editor.getConfiguration();
+		let lineHeight = config.lineHeight;
+		console.log(lineHeight);
+		let totalLineNumbers = 1;
+		let horizontalScrollbarHeight = config.layoutInfo.horizontalScrollbarHeight;
+
 		if (this.diffEditor){
-			height = this.diffEditor.getModifiedEditor().getScrollHeight();			
+			totalLineNumbers += this.diffEditor.getModifiedEditor().getModel().getLineCount();
 		}
 		if (this.editor) {
-			height = this.editor.getScrollHeight();
+			totalLineNumbers += this.editor.getModel().getLineCount();
 		}
-		height += this.props.noborder?0:2;
-		const minHeight = dimensions?dimensions.minHeight: undefined;
-		const maxHeight = dimensions?dimensions.maxHeight: undefined;
-		if (maxHeight && height<=maxHeight) {
-			if (height>=(minHeight as number)) {
-				this.dimRef?
-				this.dimRef.style.height = `${height}px`:null;
-			}
-		}
+		if (this.dimRef)
+			this.dimRef.style.height = lineHeight*totalLineNumbers + horizontalScrollbarHeight + 'px';
 	}
 
 	destroyEditor()
