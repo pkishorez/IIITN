@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Editor, Draft, EditorState,convertToRaw, convertFromRaw, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding} from 'draft-js';
+import {Editor, Draft, EditorState,convertToRaw, convertFromRaw, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding, Entity} from 'draft-js';
 import {Layout, Section} from 'classui/Components/Layout';
 import {blockStyleFn, blockRenderedFn} from './_utils';
 import * as Immutable from 'immutable';
@@ -31,7 +31,9 @@ export class DraftEditor extends React.Component<IProps, IState> {
 		this.state = {
 			editorState
 		};
-		this.onChange(editorState);
+	}
+	componentWillMount() {
+		this.onChange(this.state.editorState);
 	}
 	onChange(editorState: EditorState)
 	{
@@ -104,7 +106,7 @@ let Controls = (props: IControlProps)=>{
 			})
 		}
 		<Section>
-			<span className={"button inline-block "+(blockType=="atomic"?"active":"")} onClick={()=>
+		<span className={"button inline-block "+(blockType=="atomic"?"active":"")} onClick={()=>
 				props.onChange(AddAtomicBlock(props.editorState, {type: "MONACO_PRACTICE", value: "hey"}))
 			}>
 				Editor
