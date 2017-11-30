@@ -63,14 +63,18 @@ export class Connection {
 				return this.user.saveTask(request.data);
 			}
 			case "GUIDE_INIT":
-			case "GUIDE_MODULE_ACTION": {
 				return Guide.performAction(request.type, request.data);
-			}
 		}
 		// Admin actions goes here...
-		if (this.user.userid=="admin") {
-
+		if (this.user.userid!="admin") {
+			return Promise.reject("User should be an admin.");
 		}
+		switch(request.type) {
+			case "GUIDE_MODULE_ACTION": {
+				return Guide.performAction(request.type, request.data);
+			}	
+		}
+
 		return Promise.reject(`Request type ${request.type} not found.`);
 	}
 
