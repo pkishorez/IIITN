@@ -19,7 +19,6 @@ export class History extends React.Component<IProps, IState> {
 	static get props() {
 		if (!this.instance) {
 			console.error("History component should be mounted First to access props.");
-			return null;
 		}
 		return this.instance.props;
 	}

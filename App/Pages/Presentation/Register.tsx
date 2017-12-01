@@ -12,21 +12,11 @@ import {RouteComponentProps, Link, Redirect} from 'react-router-dom';
 
 interface IProps extends RouteComponentProps<any> {};
 interface IState {};
-export class Register extends React.Component<IProps, IState> {
-	private dismiss: any;
-	componentDidMount() {
-		Flash.flash((dismiss)=>{
-			this.dismiss = dismiss;
-			return <RegisterComponent />;
-		}, true);
-	}
-	componentWillUnmount() {
-		if (this.dismiss)
-			this.dismiss();
-	}
-	render() {
-		return null;
-	}
+
+export let Register = ()=> {
+	Flash.flash((dismiss)=>{
+		return <RegisterComponent />;
+	});
 }
 
 class RegisterComponent extends React.Component<any, {error: string, registered: boolean}>{
@@ -48,10 +38,13 @@ class RegisterComponent extends React.Component<any, {error: string, registered:
 	}
 	render() {
 		if (this.state.registered) {
-			return <RequireAuthentication message="User Successfully Registered." />;
+			RequireAuthentication({
+				message: "User Successfully Registered."
+			});
+			return null;
 		}
 		return <div style={{minWidth: 230}}>
-			<Link to="/login"><div className="button">Login here.</div></Link>
+			<div className="button" onClick={()=>RequireAuthentication()}>Login here.</div>
 			<Formlayout style={{width: 270}} schema={S_User} label="Register" onSubmit={this.register.bind(this)}>
 			{this.state.error?<h5 style={{color: "red"}}>{this.state.error}</h5>:null}
 				<TextField autoFocus name="_id" label="University ID">University ID</TextField>

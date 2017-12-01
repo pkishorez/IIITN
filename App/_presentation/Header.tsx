@@ -1,10 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {NavBar, NavbarRemain} from 'classui/Navbar';
-import {RLink} from 'classui/Helper/RLink';
+import {RouterButton} from './RouteComponent';
 import {Dropdown} from 'classui/Components/Dropdown';
 import {connect} from 'react-redux';
 import {IRootState} from 'App/State/RootReducer';
+import {RequireAuthentication} from 'App/Pages/Presentation/Login';
 import {Me} from 'App/MyActions';
 import { FlashPlaygroundTypescript } from 'App/Pages/Playground/typescript';
 
@@ -22,22 +23,27 @@ class _Header extends React.Component<IProps, IState> {
 	render() {
 		return <NavBar fixed logo="Programmer's Club">
 			<NavbarRemain/>
-			<RLink to="/lbd"><div className="button">Guides</div></RLink>
+			<RouterButton to="/lbd"><div className="button">Guides</div></RouterButton>
 			<Dropdown button="Playground" ref={(ref)=>this.playgroundDD = ref as Dropdown} push="left">
 				<li onClick={()=>{FlashPlaygroundTypescript();this.playgroundDD.dismiss()}}>Typescript</li>
-				<RLink to="/2dplayground"><li onClick={()=>this.playgroundDD.dismiss()}>Canvas2D</li></RLink>
-				<RLink to="/starter"><li onClick={()=>this.playgroundDD.dismiss()}>Demo</li></RLink>
+				<RouterButton to="/2dplayground"><li onClick={()=>this.playgroundDD.dismiss()}>Canvas2D</li></RouterButton>
+				<RouterButton to="/starter"><li onClick={()=>this.playgroundDD.dismiss()}>Demo</li></RouterButton>
 			</Dropdown>
 			<Dropdown button="tasks" ref={(ref)=>this.tasksDD = ref as Dropdown} push="left">
-				<RLink to="/task"><li onClick={()=>this.tasksDD.dismiss()}>My Tasks</li></RLink>
-				<RLink to="/task/manage"><li onClick={()=>this.tasksDD.dismiss()}>Manage Tasks</li></RLink>
+				<RouterButton to="/task"><li onClick={()=>this.tasksDD.dismiss()}>My Tasks</li></RouterButton>
+				<RouterButton to="/task/manage"><li onClick={()=>this.tasksDD.dismiss()}>Manage Tasks</li></RouterButton>
 				<li>Dashboard (TODO)</li>
 			</Dropdown>
 			{/*}
-			<RLink to="/typescript"><div className="button">Typescript</div></RLink>
-			<RLink to="/students"><div className="button">Students</div></RLink>
+			<RouterButton to="/typescript"><div className="button">Typescript</div></RouterButton>
+			<RouterButton to="/students"><div className="button">Students</div></RouterButton>
 			{*/}
-			<RLink to="/login"><div className="button" onClick={Me.logout}>{this.props.userid?"logout":"Login"}</div></RLink>
+			<div className="button" onClick={()=>{
+				Me.logout();
+				RequireAuthentication({
+					message: "Please login."
+				});
+			}}>{this.props.userid?"logout":"Login"}</div>
 		</NavBar>;
 	}
 }
