@@ -7,8 +7,10 @@ import {SAnim} from 'classui/Helper/Animation';
 import { runProgramInNewScope, Runtime } from 'App/Monaco/Runtime';
 import { Layout, Section } from 'classui/Components/Layout';
 import { Flash } from 'classui/Components/Flash';
+import { PersistMonaco } from 'App/State/Utils/PersistentMonaco';
 
 interface IProps {
+	eid: string
 	monaco?: IMonacoProps
 	code?: string
 	expectedOutput: string
@@ -81,11 +83,11 @@ export class ConsoleTask extends React.Component<IProps, IState> {
 	}
 	render() {
 		return <div style={{borderLeft: "3px solid "+(this.state.answered?"green":"red"), paddingLeft: 0, marginLeft: 0}}>
-			<div style={{backgroundColor: "rgba(0,0,0,0.05)", fontWeight: 900, padding: 20, margin: 0}}>
+			<div style={{backgroundColor: "black",color: 'white', fontWeight: 900, padding: 20, margin: 0}}>
 				(press ctrl + ⏎ to submit).
 			</div>
 			{(!this.state.answered)?<div>
-				<Monaco autoResize content={this.props.code} ctrlEnterAction={this.SubmitProgram} lineNumbers="on" theme="vs" noborder dimensions={{
+				<PersistMonaco theme="vs-dark" id={this.props.eid} autoResize ctrlEnterAction={this.SubmitProgram} lineNumbers="on" noborder dimensions={{
 					minHeight: 60,
 					maxHeight: 200
 				}} {...this.props.monaco} getOutput={this.runProgram}/>

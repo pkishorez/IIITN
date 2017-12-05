@@ -6,7 +6,7 @@ import { Formlayout } from "classui/Components/Formlayout";
 import { TextField } from "classui/Components/Formlayout/TextField";
 
 interface IAtomicBlock {
-	type: "MONACO_PRACTICE"
+	type: "MONACO_PRACTICE" | "SYNTAX_HIGHLIGHT"
 	value: any
 }
 
@@ -55,6 +55,9 @@ export let AtomicBlock = (props: IRenderAtomicBlockProps)=>{
 	switch(type) {
 		case "MONACO_PRACTICE": {
 			return <MonacoPractice {...data.data} />;
+		}
+		case "SYNTAX_HIGHLIGHT": {
+			return null;
 		}
 	}
 }

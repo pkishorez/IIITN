@@ -9,6 +9,7 @@ import { AddOrEditAtomicBlock } from 'App/DraftEditor/AtomicBlock';
 import { TextField } from 'classui/Components/Formlayout/TextField';
 import { Formlayout } from 'classui/Components/Formlayout';
 import { IMonacoPracticeProps } from 'App/DraftEditor/AtomicBlock/MonacoPractice';
+import {v4} from 'uuid';
 
 export {EditorState, convertToRaw} from 'draft-js';
 
@@ -28,7 +29,7 @@ export class DraftEditor extends React.Component<IProps, IState> {
 		this.onChange = this.onChange.bind(this);
 		this.handleKeyCommand = this.handleKeyCommand.bind(this);
 
-		let editorState = EditorState.createEmpty();		
+		let editorState = EditorState.createEmpty();
 		if (props.defaultState) {
 			editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(props.defaultState)));
 		}
@@ -118,6 +119,7 @@ class Controls extends React.Component<IControlProps>{
 				onClick={()=>{
 					Drawer.open((dismiss)=>{
 						return <Formlayout label="Atomic Block Details" onSubmit={(data: IMonacoPracticeProps)=>{
+							data.eid = v4();
 							let uEditorState = AddOrEditAtomicBlock(this.props.editorState, {
 								type:"MONACO_PRACTICE",
 								value: data

@@ -43,6 +43,12 @@ module.exports = [
 		plugins: [
 			new copyWebpackPlugin([
 				{
+					from: 'node_modules/highlight.js/styles/vs.css',
+					to: 'production/assets/vs.css'
+				}
+			]),
+			new copyWebpackPlugin([
+				{
 					from: 'node_modules/classui/bundle/',
 					to: 'production/bundle/'
 				}

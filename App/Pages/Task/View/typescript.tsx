@@ -59,7 +59,7 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 			</Section>
 			<Section width={700} clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
 				<DraftEditorRender contentState={task.question}/>
-				{this.state.task_id!=""?<ConsoleTask expectedOutput={task.expectedOutput}/>:null}
+				{this.state.task_id!=""?<ConsoleTask eid="" expectedOutput={task.expectedOutput}/>:null}
 			</Section>
 		</Layout>;
 	}

@@ -5,6 +5,7 @@ import { ConsoleTask } from 'App/Monaco/Tasks/Typescript/ConsoleTask';
 
 export interface IMonacoPracticeProps {
 	expectedOutput: string
+	eid: string
 };
 interface IState {};
 
