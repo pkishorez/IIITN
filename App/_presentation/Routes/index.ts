@@ -2,7 +2,7 @@ import {Register, Profile, Students, LearnByDoing, StarterView, StarterManagemen
 import {Home} from 'App/Pages/Presentation/Home';
 import {RequireAuthentication} from 'App/Pages/Presentation/Login';
 import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from 'App/Pages/Playground/';
-import {TasksCanvasView, TaskManager} from 'App/Pages/Task/';
+import {TasksCanvasView, TaskManager, TasksTypescriptView, TasksView} from 'App/Pages/Task/';
 import {GetState} from 'App/State';
 import {AddQuestion} from 'App/Pages/Questions';
 
@@ -24,13 +24,19 @@ let RouteConfig: {
 		},{
 			route: "/playground",
 			component: PlaygroundTypescript
+		},{
+			route: "/task",
+			component: TasksView
 		}
 	],
 
 	"USER": [
 		{
-			route: "/task",
+			route: "/task/canvas",
 			component: TasksCanvasView
+		},{
+			route: "/task/basics",
+			component: TasksTypescriptView
 		},{
 			route: "/lbd",
 			component: LearnByDoing
