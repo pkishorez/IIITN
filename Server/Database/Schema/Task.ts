@@ -23,7 +23,7 @@ export let S_Task: IJSONSchema = {
 			type: "object",
 			properties: {
 				type: {
-					const: "TYPESCRIPT"
+					const: "TYPESCRIPT_EXPOUTPUT"
 				},
 				title: {
 					type: "string"
@@ -48,9 +48,10 @@ export type ICanvasTask = {
 	resetCode: string
 }
 export type ITypescriptTask = {
-	type: "TYPESCRIPT"
+	type: "TYPESCRIPT_EXPOUTPUT"
 	title: string
 	question: string
+	expectedOutput: string
 	resetCode?: string
 }
 
@@ -86,7 +87,7 @@ export let S_UserTask_Details: IJSONSchema = {
 			properties: {
 				_id: validIDSchema,
 				type: {
-					const: "TYPESCRIPT"
+					const: "TYPESCRIPT_EXPOUTPUT"
 				},
 				code: {
 					type: "string"
@@ -109,7 +110,7 @@ export type IUserTask_Details = {
 	comments?: string
 } | {
 	_id: string
-	type: "TYPESCRIPT"
+	type: "TYPESCRIPT_EXPOUTPUT"
 	code: string
 	result: "PENDING" | "WRONG" | "RIGHT"
 }

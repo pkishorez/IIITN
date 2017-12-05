@@ -10,6 +10,7 @@ import {Task as TaskAction, Me} from 'App/MyActions';
 import {ITask} from 'Server/Database/Schema/Task';
 import {AddOrEditCanvasTask} from './canvas';
 import { OrderedMapList } from 'classui/Components/OrderedMapList';
+import { AddOrEditTypescriptTask } from 'App/Pages/Task/Manage/typescript';
 
 interface IProps {
 	tasks: IRootState["tasks"]
@@ -70,7 +71,9 @@ let Manager = {
 	addTask() {
 		Flash.flash(()=>{
 			return <div style={{maxWidth: 300}}>
-				<div className="button primary" style={{padding: 20, margin: 20}}>Typescript Task</div>
+				<div className="button primary" style={{padding: 20, margin: 20}} onClick={()=>{
+					AddOrEditTypescriptTask({});
+				}}>Typescript Task</div>
 				<div className="button primary" style={{padding: 20, margin: 20}} onClick={()=>{
 					AddOrEditCanvasTask({});
 				}}>Canvas Task</div>
@@ -80,6 +83,9 @@ let Manager = {
 	editTask(task_id: string, task: ITask) {
 		if (task.type=="CANVAS2D") {
 			AddOrEditCanvasTask(task, task_id);
+		}
+		if (task.type=="TYPESCRIPT_EXPOUTPUT") {
+			AddOrEditTypescriptTask(task, task_id);
 		}
 		// For other types goes here...
 	}
