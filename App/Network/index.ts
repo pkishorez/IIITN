@@ -11,7 +11,7 @@ let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected: boolean = false;
+	private connected: boolean = true;
 	public get onlineStatus(): boolean {
 		return this.connected;
 	}

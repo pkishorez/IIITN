@@ -7,67 +7,30 @@ import {Dropdown} from 'classui/Components/Dropdown';
 import {Flash} from 'classui/Components/Flash';
 import {IRootState, connect} from 'App/State';
 import {Task as TaskAction, Me} from 'App/MyActions';
-import {ITask} from 'Server/Database/Schema/Task';
-import {defaultCode} from './index';
+import {ICanvasTask} from 'Server/Database/Schema/Task';
 import { OrderedMapList } from 'classui/Components/OrderedMapList';
 
-interface IProps {
-	tasks: IRootState["tasks"]
-};
-class TaskManager_ extends React.Component<IProps> {
-	constructor(props: any, context: any) {
-		super(props, context);
-	}
-	componentDidMount() {
-		TaskAction.init();
-	}
-	render() {
-		return <div>
-				<div style={{width: 500, margin: "auto", paddingTop: 20}}>
-					<div className="button" onClick={()=>{
-						AddOrEditTask({
-							title: "",
-							type: "CANVAS2D",
-							question: defaultCode,
-							resetCode: defaultCode
-						});
-					}}>Add Task.</div>
+let defaultCode = `import {Canvas} from 'canvas2d';
+import {Rectangle, Circle, Shape, CustomShape} from 'canvas2d/Shapes';
 
-					<OrderedMapList onClick={(task_id)=>{
-						AddOrEditTask({
-							...this.props.tasks.map[task_id]
-						}, task_id);
-					}} orderedMap={this.props.tasks}
-					onOrderChange={(order)=>{
-						TaskAction.perform({
-							type: "TASK_ACTION",
-							orderedMapAction: {
-								type: "REORDER",
-								order
-							}
-						})
-					}}
-					onDelete={(task_id)=>{
-						confirm("Do you want to delete task?")?
-						TaskAction.perform({
-							type: "TASK_ACTION",
-							orderedMapAction: {
-								type: "DELETE",
-								_id: task_id
-							}
-						}):null
-					}}
-					/>
-				</div>
-		</div>;
-	}
-}
+let canvasElem = document.getElementById("${canvasElemId}") as HTMLCanvasElement;
+canvasElem.style.backgroundColor = "black";
 
-interface IAddEditProps extends ITask{}
-let AddOrEditTask = (props: IAddEditProps, task_id?: string)=>{
+let canvas = new Canvas(canvasElem, true);
+`;
+
+export let AddOrEditCanvasTask = (props: Partial<ICanvasTask>, task_id?: string)=>{
 	let resetCodeRef: monaco.editor.IStandaloneCodeEditor|null;
 	let questionRef: monaco.editor.IStandaloneCodeEditor|null;
 	let input: HTMLInputElement|null;
+
+	props = {
+		type: "CANVAS2D",
+		question: defaultCode,
+		resetCode: defaultCode,
+		title: "",
+		...props
+	};
 
 	Flash.flash((dismiss)=>{
 		return <div style={{backgroundColor: "white"}}>
@@ -77,7 +40,7 @@ let AddOrEditTask = (props: IAddEditProps, task_id?: string)=>{
 				</Section>
 				<Section>
 					<div className="button" onClick={()=>{
-						let task: ITask = {
+						let task: ICanvasTask = {
 							title: input?input.value:"",
 							type: "CANVAS2D",
 							question: questionRef?questionRef.getValue():"",
@@ -106,24 +69,25 @@ let AddOrEditTask = (props: IAddEditProps, task_id?: string)=>{
 				</Section>
 			</Layout>
 			<Layout gutter={20} equalWidth style={{width: 1024, maxWidth: "100%"}}>
-				<Section>
-					<PersistMonaco id="" shouldHaveMarginBottom dimensions={{
+				<Section style={{position: 'relative'}}>
+					<PersistMonaco autoResize={false} id={task_id?"":"task_canvas_question_buffer"} shouldHaveMarginBottom dimensions={{
 						height: 500
-					 }} editorRef={(ref: any)=>questionRef=ref} content={props.question}/>
+					 }} editorRef={(ref: any)=>questionRef=ref} defaultContent={props.question}/>
+					<div className="button" style={{position: "absolute", top: 0, right: 0}} onClick={()=>{
+						questionRef?questionRef.setValue(defaultCode):null
+					}}>Reset</div>
 				</Section>
-				<Section>
-					<PersistMonaco id="" shouldHaveMarginBottom dimensions={{
+				<Section style={{position: 'relative'}}>
+					<PersistMonaco autoResize={false} id={task_id?"":"task_canvas_resetQuestion_buffer"} shouldHaveMarginBottom dimensions={{
 						height: 500
-					}} editorRef={(ref: any)=>resetCodeRef=ref} content={props.resetCode}/>
+					}} editorRef={(ref: any)=>resetCodeRef=ref} defaultContent={props.resetCode}/>
+					<div className="button" style={{position: "absolute", top: 0, right: 0}} onClick={()=>{
+						resetCodeRef?resetCodeRef.setValue(defaultCode):null;
+					}}>
+						Reset
+					</div>
 				</Section>
 			</Layout>
 		</div>;
 	}, false, true);
 }
-
-let ManageTaskmapStateToProps = (state: IRootState): IProps=>{
-	return {
-		tasks: state.tasks
-	}
-};
-export let TaskManager = connect(ManageTaskmapStateToProps)(TaskManager_);

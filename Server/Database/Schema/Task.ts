@@ -19,17 +19,42 @@ export let S_Task: IJSONSchema = {
 				}
 			},
 			required: ["type", "title", "question", "resetCode"]
+		}, {
+			type: "object",
+			properties: {
+				type: {
+					const: "TYPESCRIPT"
+				},
+				title: {
+					type: "string"
+				},
+				question: {
+					type: "string"
+				},
+				resetCode: {
+					type: "string"
+				}
+			},
+			required: ["type", "title", "question"]
 		}
 		// Other type of tasks not implemented yet.
 	]
 };
 
-export type ITask = {
+export type ICanvasTask = {
 	type: "CANVAS2D"
 	title: string
 	question: string
 	resetCode: string
 }
+export type ITypescriptTask = {
+	type: "TYPESCRIPT"
+	title: string
+	question: string
+	resetCode?: string
+}
+
+export type ITask = ICanvasTask | ITypescriptTask;
 
 let validIDSchema: IJSONSchema = {
 	type: "string",

@@ -47,7 +47,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			height: "auto",
 			width: "100%"
 		},
-		autoResize: true,
+		autoResize: false,
 		noborder: false,
 		theme: "vs",
 		fontSize: 15,

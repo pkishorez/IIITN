@@ -84,7 +84,7 @@ export let AddOrEditModule = (id?: string, module?: IModule)=>{
 	}
 	Flash.flash((d)=>{
 		dismiss = d;
-		return <Layout style={{width: 720, height: `100vh`, margin: 'auto', backgroundColor: 'white', padding: 20}} gutter={15} justify="center" align="start">
+		return <Layout style={{width: 720, height: `100vh`, overflow: 'auto', margin: 'auto', backgroundColor: 'white', padding: 20}} gutter={15} justify="center" align="start">
 			<Section remain>
 				<Layout>
 					<Section remain><h3 style={{padding: "0px 10px"}}>Add/Edit Module Here.</h3></Section>

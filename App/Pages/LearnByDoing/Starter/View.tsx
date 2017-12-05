@@ -29,7 +29,7 @@ class StarterView_ extends React.Component<IProps, IState> {
 			})	
 		}
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
-			<Section minWidth={225}>
+			<Section remain>
 				<Menu header="Modules">
 					{
 						this.props.order.map((lesson_id)=>{
@@ -42,7 +42,7 @@ class StarterView_ extends React.Component<IProps, IState> {
 					}
 				</Menu>
 			</Section>
-			<Section remain clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
+			<Section width={700} clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
 				<DraftEditorRender contentState={this.props.map[this.state.lesson_id]?this.props.map[this.state.lesson_id].editorState:undefined}/>
 			</Section>
 		</Layout>;

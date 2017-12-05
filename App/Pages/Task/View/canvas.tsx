@@ -7,8 +7,8 @@ import {Dropdown} from 'classui/Components/Dropdown';
 import {Flash} from 'classui/Components/Flash';
 import {IRootState, GetState, connect} from 'App/State';
 import {Task as TaskAction, Me} from 'App/MyActions';
-import {defaultCode} from './index';
 import * as _ from 'lodash';
+import { ICanvasTask } from 'Server/Database/Schema/Task';
 
 interface IProps {
 	userTaskDetails: IRootState["user"]["taskDetails"]
@@ -49,7 +49,7 @@ class Task_ extends React.Component<IProps, IState>{
 			this.editorRef.getModifiedEditor().setValue(code);
 	}
 	loadTask(task_id: string) {
-		let task = this.props.tasks.map[task_id];
+		let task = this.props.tasks.map[task_id] as ICanvasTask;
 		// Load from buffer.
 		let buffer = GetState().user.editorBuffers[task_id];
 		// Load from User Saved task or resetCode.
@@ -70,7 +70,7 @@ class Task_ extends React.Component<IProps, IState>{
 			taskDetails: {
 				_id: this.state.currentTaskID,
 				code: this.editorRef.getModifiedEditor().getValue(),
-				type: this.props.tasks.map[this.state.currentTaskID].type,
+				type: this.props.tasks.map[this.state.currentTaskID].type as "CANVAS2D",
 				result: "PENDING"
 			}
 		});
@@ -102,7 +102,7 @@ class Task_ extends React.Component<IProps, IState>{
 			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
 					<Section remain>
-						<Dropdown ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskID!="")?currentTask.title: "Tasks"}>
+						<Dropdown buttonMaxWidth={100} ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskID!="")?currentTask.title: "Tasks"}>
 							{
 								this.props.tasks.order.map((task_id, i)=>{
 									return <li key={task_id} onClick={()=>{
@@ -117,14 +117,14 @@ class Task_ extends React.Component<IProps, IState>{
 							onClick={()=>{
 								if (taskData.savedCode)
 									this.setCodeState(taskData.savedCode);
-						}}>Saved Code</div></Section>
+						}}>Saved</div></Section>
 					<Section>
 						<div className={
 							"button "+((taskData.resetCode && (taskData.resetCode!=this.state.userCode))?"":"disable")
 						} onClick={()=>{
 							if (taskData.resetCode)
 								this.setCodeState(taskData.resetCode);
-						}}>Reset Code</div></Section>
+						}}>Reset</div></Section>
 					<Section>
 						<div className={"button primary "+
 							(((this.state.currentTaskID!="") && (taskData.savedCode!=this.state.userCode))?
@@ -148,4 +148,4 @@ let mapStateToProps = (state: IRootState): IProps=>{
 		tasks: state.tasks
 	}
 };
-export let Task = connect(mapStateToProps)(Task_);
+export let TasksCanvasView = connect(mapStateToProps)(Task_);
