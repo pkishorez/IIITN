@@ -2,9 +2,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Editor, Draft, EditorState,convertToRaw, convertFromRaw, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding, Entity} from 'draft-js';
 import {Layout, Section} from 'classui/Components/Layout';
+import {Drawer} from 'classui/Components/Drawer';
 import {blockStyleFn, blockRenderedFn} from './_utils';
 import * as Immutable from 'immutable';
-import { AddAtomicBlock } from 'App/DraftEditor/AtomicBlock';
+import { AddOrEditAtomicBlock } from 'App/DraftEditor/AtomicBlock';
+import { TextField } from 'classui/Components/Formlayout/TextField';
+import { Formlayout } from 'classui/Components/Formlayout';
+import { IMonacoPracticeProps } from 'App/DraftEditor/AtomicBlock/MonacoPractice';
 
 export {EditorState, convertToRaw} from 'draft-js';
 
@@ -87,30 +91,47 @@ const BLOCK_TYPES = [
 	{label: 'Code Block', style: 'code-block'},
 ];
 
-let Controls = (props: IControlProps)=>{
-	const blockType = props.editorState.getCurrentContent()
-	.getBlockForKey(props.editorState.getSelection().getStartKey())
-	.getType();
-	return <Layout gutter={7} justify="start">
-		{/*BLOCK CONTROLS GOES HERE...*/}
-		{
-			BLOCK_TYPES.map((block)=>{
-				return <Section key={block.label}>
-					<span className={"button inline-block "+(blockType==block.style?"active":"")} onClick={()=>{
-						props.onChange(RichUtils.toggleBlockType(
-							props.editorState,
-							block.style
-						))
-					}}>{block.label}</span>
-				</Section>
-			})
-		}
-		<Section>
-		<span className={"button inline-block "+(blockType=="atomic"?"active":"")} onClick={()=>
-				props.onChange(AddAtomicBlock(props.editorState, {type: "MONACO_PRACTICE", value: "hey"}))
-			}>
-				Editor
-			</span>
-		</Section>
-	</Layout>;
+class Controls extends React.Component<IControlProps>{
+	constructor(props: any, context: any) {
+		super(props, context);
+	}
+	render() {
+		const blockType = this.props.editorState.getCurrentContent()
+		.getBlockForKey(this.props.editorState.getSelection().getStartKey())
+		.getType();
+		return <Layout gutter={7} justify="start">
+			{/*BLOCK CONTROLS GOES HERE...*/}
+			{
+				BLOCK_TYPES.map((block)=>{
+					return <Section key={block.label}>
+						<span className={"button inline-block "+(blockType==block.style?"active":"")} onClick={()=>{
+							this.props.onChange(RichUtils.toggleBlockType(
+								this.props.editorState,
+								block.style
+							))
+						}}>{block.label}</span>
+					</Section>
+				})
+			}
+			<Section style={{position: 'relative'}}>
+				<span className={"button inline-block primary "+(blockType=="atomic"?"active":"")}
+				onClick={()=>{
+					Drawer.open((dismiss)=>{
+						return <Formlayout label="Atomic Block Details" onSubmit={(data: IMonacoPracticeProps)=>{
+							let uEditorState = AddOrEditAtomicBlock(this.props.editorState, {
+								type:"MONACO_PRACTICE",
+								value: data
+							});
+							uEditorState = EditorState.forceSelection(uEditorState, uEditorState.getSelection());
+							this.props.onChange(uEditorState);
+							dismiss();
+						}}>
+							<TextField autoFocus name="expectedOutput">Expected Output.</TextField>
+							<input type="submit" value="Add/Edit Task."/>
+						</Formlayout>;
+					})
+				}}>Editor</span>
+			</Section>
+		</Layout>;	
+	}
 }
