@@ -3,13 +3,16 @@ import * as ReactDOM from 'react-dom';
 import {Monaco} from 'App/Monaco';
 import { ConsoleTask } from 'App/Monaco/Tasks/Typescript/ConsoleTask';
 
-interface IProps {
-	
+export interface IMonacoPracticeProps {
+	expectedOutput: string
 };
 interface IState {};
 
-export class MonacoPractice extends React.Component<IProps, IState> {
+export class MonacoPractice extends React.Component<IMonacoPracticeProps, IState> {
+	constructor(props: IMonacoPracticeProps, context: any) {
+		super(props, context);
+	}
 	render() {
-		return <ConsoleTask expectedOutput="*\n**\n***\n****\n*****  Hello :)"/>;
+		return <ConsoleTask {...this.props}/>;
 	}
 };

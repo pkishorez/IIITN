@@ -10,75 +10,88 @@ import { Flash } from 'classui/Components/Flash';
 
 interface IProps {
 	monaco?: IMonacoProps
+	code?: string
 	expectedOutput: string
 };
 interface IState {
-	view: any
 	output?: string
 	answered: boolean
+};
+
+let consoleStyle: React.CSSProperties = {
+	position: 'relative',
+	whiteSpace: "pre",
+	overflowX: "hidden",
+	fontSize: 14,
+	fontWeight: 900,
+	fontFamily: "monospace",
+	padding: 20,
+	margin:0,
+	backgroundColor: 'black',
+	color: 'cyan'
 };
 
 export class ConsoleTask extends React.Component<IProps, IState> {
 	constructor(props: IProps, context: any) {
 		super(props, context);
 		this.state = {
-			view: null,
-			answered: false
+			answered: false,
+			output: ""
 		};
 		this.runProgram = _.debounce(this.runProgram.bind(this), 100);
-		this.evaluateProgram = this.evaluateProgram.bind(this);
 		this.SubmitProgram = this.SubmitProgram.bind(this);
 	}
 	componentWillMount() {
-		this.evaluateProgram("");
+		this.runProgram(this.state.output);
 	}
-	runProgram(code: string) {
+	runProgram(code: string="") {
 		Runtime.run(code).then((output)=>{
-			this.evaluateProgram(output);
+			this.setState({
+				output
+			});
 		});
 	}
-	evaluateProgram(output: string) {
-		const expectedOutput = this.props.expectedOutput;
-		const actualOutput = output;
-		var diff = jsdiff.diffChars(this.props.expectedOutput, output, {
+	diffProgram(expectedOutput: string, actualOutput: string="") {
+		var diff = jsdiff.diffChars(expectedOutput, actualOutput, {
 			ignoreCase: false
 		});
-		let view = diff.map((part)=>{
-			let style: React.CSSProperties = {};
-			style.color = part.added?'black':part.removed?'black':'darkgreen';
-			style.backgroundColor = part.added?'rgba(255, 0, 0, 0.1)': part.removed?'rgba(255, 0, 0, 0.1)':undefined;
+		return diff.map((part)=>{
+			let style: React.CSSProperties = {
+				letterSpacing: 1.4
+			};
+			style.color = part.added?'red':part.removed?'white':'cyan';
+			style.fontWeight = (part.added || part.removed)?900:900;
+			style.textShadow = (part.added || part.removed)?"":"0px 0px 5px white";
+			style.backgroundColor = part.added?'rgba(255, 0, 0, 0.2)': part.removed?'rgba(255,255,255,0.2)':undefined;
 			if (part.added || part.removed){
 				part.value = part.value.replace(/\n/g, "⏎\n");
 			}
 			return <span style={style}>{part.value}</span>;
-		})
-		this.setState({
-			view,
-			output
 		});
 	}
 	SubmitProgram() {
 		Flash.flash((dismiss)=>{
-			return <div style={{position: 'relative', whiteSpace: "pre-line", fontSize: 15, fontFamily: "monospace", padding: 20, margin:0, backgroundColor: 'white', color: 'black'}} className="card-0">
-				{this.state.view}
+			return <div style={{...consoleStyle, maxWidth: 500}}>
+				{this.diffProgram(this.props.expectedOutput, this.state.output)}
 			</div>;
-		}, false, true, true);
+		}, false, true, true, "card-5");
 		this.setState({
 			answered: (this.state.output==this.props.expectedOutput)
 		});
 	}
 	render() {
-		return <div style={{borderLeft: "3px solid red", paddingLeft: 20, marginLeft: 20}}>
-			<div style={{backgroundColor: "rgba(0,0,0,0.05)", color: 'black', fontWeight: 900, padding: 20, margin: 0}}>
-				Write a program to print 'Hello World.\n'.
+		return <div style={{borderLeft: "3px solid "+(this.state.answered?"green":"red"), paddingLeft: 0, marginLeft: 0}}>
+			<div style={{backgroundColor: "rgba(0,0,0,0.05)", fontWeight: 900, padding: 20, margin: 0}}>
+				(press ctrl + ⏎ to submit).
 			</div>
 			{(!this.state.answered)?<div>
-				<Monaco ctrlEnterAction={this.SubmitProgram} lineNumbers="on" theme="vs" noborder dimensions={{
-					minHeight: 100,
+				<Monaco autoResize content={this.props.code} ctrlEnterAction={this.SubmitProgram} lineNumbers="on" theme="vs" noborder dimensions={{
+					minHeight: 60,
 					maxHeight: 200
 				}} {...this.props.monaco} getOutput={this.runProgram}/>
-				<div className="card-0" style={{position: 'relative', whiteSpace: "pre-line", fontSize: 15, fontFamily: "monospace", padding: 20, margin:0, backgroundColor: 'white', color: 'black'}}>
-					{this.state.output}
+				<div style={consoleStyle} >
+					<h4 style={{marginTop: 0, color: 'white'}}>Expected Output: </h4>
+					{this.props.expectedOutput}
 				</div>
 			</div>:null}
 		</div>;
