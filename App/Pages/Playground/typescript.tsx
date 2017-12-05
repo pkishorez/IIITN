@@ -23,7 +23,7 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 		width: "100%",
 		playHeight: "calc(100vh - 150px)",
 		outputHeight: "calc(100vh - 150px)",
-		mainHeight: "calc(100vh - 50px)"
+		mainHeight: "calc(100vh - 50px)",
 	}
 	constructor(props: any, context: any) {
 		super(props, context);
@@ -40,9 +40,10 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 					height: this.props.playHeight
 				}} getOutput={this.runProgram}/>
 			</Section>
-			<Section width={400}>
+			<Section width={400} style={{}}>
 				<SeqProgramOutput debounce={100} ref={(ref)=>{this.output=ref}} style={{
-					height: this.props.outputHeight
+					maxHeight: this.props.outputHeight,
+					minHeight: 200
 				}}/>
 			</Section>
 		</Layout>;
@@ -51,6 +52,6 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 
 export let FlashPlaygroundTypescript = ()=>{
 	Flash.flash(()=>{
-		return <PlaygroundTypescript monaco={{shouldHaveMarginBottom: true, shouldHaveMarginTop: true}} width={1024} playHeight="calc(100vh - 150px)" mainHeight="auto" outputHeight="calc(100vh - 150px)"/>;
-	}, false, true);
+		return <PlaygroundTypescript monaco={{shouldHaveMarginBottom: true, shouldHaveMarginTop: true}} width={1024} playHeight="calc(100vh - 150px)" mainHeight="auto" outputHeight="calc(100vh - 200px)"/>;
+	}, false, true, true);
 }

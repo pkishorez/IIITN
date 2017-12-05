@@ -54,18 +54,23 @@ export class SeqProgramOutput extends React.Component<IProps, IState> {
 	}
 	render() {
 		return <div className="card-1" style={{
-			padding: 10,
 			transition: "0.3s all",
-			backgroundColor: "white",
+			backgroundColor: "black",
 			overflow: "auto",
 			width: "100%",
 			...this.props.style
 		}}>
-			<h4 style={{textAlign: "center", marginBottom: 20}}>Playground</h4>
 			<pre style={{
-				fontFamily: "monospace",
-				color: "black",
-				textAlign: "left"
+				whiteSpace: "pre",
+				overflowX: "hidden",
+				fontSize: 14,
+				fontWeight: 900,
+				fontFamily: "Inconsolata, monospace",
+				padding: 20,
+				margin:0,
+				lineHeight: 1.6,
+				backgroundColor: 'black',
+				color: 'cyan'
 			}}>{this.state.output}</pre>
 		</div>
 	}
