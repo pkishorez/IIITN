@@ -27,12 +27,12 @@ class _Header extends React.Component<IProps, IState> {
 			<Dropdown button="Playground" ref={(ref)=>this.playgroundDD = ref as Dropdown} push="left">
 				<li onClick={()=>{FlashPlaygroundTypescript();this.playgroundDD.dismiss()}}>Typescript</li>
 				<RouterButton to="/2dplayground"><li onClick={()=>this.playgroundDD.dismiss()}>Canvas2D</li></RouterButton>
-				<RouterButton to="/starter"><li onClick={()=>this.playgroundDD.dismiss()}>Demo</li></RouterButton>
+				<li className="disable">Typescript CheatSheet</li>
 			</Dropdown>
 			<Dropdown button="tasks" ref={(ref)=>this.tasksDD = ref as Dropdown} push="left">
-				<RouterButton to="/task"><li onClick={()=>this.tasksDD.dismiss()}>My Tasks</li></RouterButton>
+				<RouterButton to="/task/basics"><li onClick={()=>this.tasksDD.dismiss()}>My Tasks</li></RouterButton>
 				<RouterButton to="/task/manage"><li onClick={()=>this.tasksDD.dismiss()}>Manage Tasks</li></RouterButton>
-				<li>Dashboard (TODO)</li>
+				<li className="disable">Dashboard</li>
 			</Dropdown>
 			{/*}
 			<RouterButton to="/typescript"><div className="button">Typescript</div></RouterButton>
