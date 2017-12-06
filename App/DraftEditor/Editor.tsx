@@ -128,7 +128,7 @@ class Controls extends React.Component<IControlProps>{
 							this.props.onChange(uEditorState);
 							dismiss();
 						}}>
-							<TextField autoFocus name="expectedOutput">Expected Output.</TextField>
+							<TextField type="area" autoFocus name="expectedOutput">Expected Output.</TextField>
 							<input type="submit" value="Add/Edit Task."/>
 						</Formlayout>;
 					})
