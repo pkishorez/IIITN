@@ -154,6 +154,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				}
 				this.autoResize(this.props.dimensions);
 			})
+			if (this.props.content && this.props.getOutput) {
+				this.props.getOutput(this.props.content);
+			}
 			this.editor.getModel().updateOptions({
 				insertSpaces: false
 			});
@@ -201,6 +204,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				}
 				this.autoResize(this.props.dimensions);
 			});
+			if (this.props.content && this.props.getOutput) {
+				this.props.getOutput(this.props.content);
+			}
 			this.diffEditor.getModifiedEditor().onKeyDown(e=>{
 				if (e.ctrlKey && e.code=="Enter") {
 					e.stopPropagation();
