@@ -4,7 +4,6 @@ import {RequireAuthentication} from 'App/Pages/Presentation/Login';
 import {PlaygroundTypescript, PlaygroundCanvas2D, PlaygroundCanvas2dStarter} from 'App/Pages/Playground/';
 import {TasksCanvasView, TaskManager, TasksTypescriptView, TasksView} from 'App/Pages/Task/';
 import {GetState} from 'App/State';
-import {AddQuestion} from 'App/Pages/Questions';
 
 export const DEFAULT_REDIRECT_URL: string = "/playground";
 

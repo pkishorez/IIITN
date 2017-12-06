@@ -8,9 +8,8 @@ interface ISyntaxHighlight {
 export let SyntaxHighlight = (props: ISyntaxHighlight)=>{
 	return <code className="typescript" style={{
 		fontFamily: "Inconsolata",
-		backgroundColor: 'rgba(0,0,0,0.01)',
+		backgroundColor: 'rgba(0,0,0,0.03)',
 		whiteSpace: "pre",
-		lineHeight: 1,
 		padding: 10
 	}} ref={(ref)=>{
 		ref?highlightBlock(ref):null;
