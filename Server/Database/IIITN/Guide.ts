@@ -31,14 +31,21 @@ class _Guide{
 						return reject("Guide id should be provided.");
 					}
 					let guide = new OrderedMap(this.guideState[action.guide_id]);
-					action.orderedMapAction = guide.performAction(action.orderedMapAction);
+					let modifiedAction = guide.performAction(action.orderedMapAction);
+					if (typeof modifiedAction=="string") {
+						return reject(modifiedAction);
+					}
+					action.orderedMapAction = modifiedAction;
 					this.guideState[action.guide_id] = guide.getState();
 					KeyValue.set("GUIDE_DB", this.guideState);
 					break;
 				}
 			}
 			resolve(action);
-		}).catch(console.error);
+		}).catch((err)=>{
+			console.error(err);
+			return Promise.reject(err);
+		});
 	}
 }
 

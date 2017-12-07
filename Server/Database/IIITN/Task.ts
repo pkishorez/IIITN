@@ -18,10 +18,17 @@ export class _Task{
 			if (!this.orderedMap) {
 				this.orderedMap = await this.__init()
 			}
-			action.orderedMapAction = this.orderedMap.performAction(action.orderedMapAction);
+			let modifiedAction = this.orderedMap.performAction(action.orderedMapAction);
+			if (typeof modifiedAction=="string") {
+				return reject(modifiedAction);
+			}
+			action.orderedMapAction = modifiedAction;
 			KeyValue.set("TASKS_DB", this.orderedMap.getState());
 			resolve(action);
-		}).catch(console.error);
+		}).catch((err)=>{
+			console.error(err);
+			return Promise.reject(err);
+		});
 	}
 }
 
