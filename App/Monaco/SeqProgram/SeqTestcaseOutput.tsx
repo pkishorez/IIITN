@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Runtime, IFunction} from '../Runtime/Tasks/';
+import {Runtime, IFunctionDetails} from '../Runtime/Tasks/';
 import * as _ from 'lodash';
 
 interface IProps {
 	debounce?: number
-	funcDetails: IFunction
+	funcDetails: IFunctionDetails
 	onOutput?: (output: {
 		output: string
 		testcasesPassed: number
@@ -27,7 +27,7 @@ export class SeqTestcaseOutput{
 	runProgram(code: string)
 	{
 		let program_seq_no = this.output_seq+1;
-		Runtime.runFunction(code, this.props.funcDetails).then((data)=>{
+		Runtime.runFunctionTestCases(code, this.props.funcDetails).then((data)=>{
 			this.output_seq++;
 			if (program_seq_no<this.output_seq) {
 				// Output outdated.
