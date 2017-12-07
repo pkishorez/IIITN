@@ -12,8 +12,8 @@ export interface IMonacoProps {
 	dimensions?: {
 		width?: string|number
 		height?: string|number
-		minHeight?: number
-		maxHeight?: number	
+		minHeight?: number | string
+		maxHeight?: number | string
 	}
 	noborder?: boolean
 	shouldHaveMarginBottom?: boolean
@@ -156,6 +156,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			})
 			if (this.props.content && this.props.getOutput) {
 				this.props.getOutput(this.props.content);
+				this.autoResize(this.props.dimensions);
 			}
 			this.editor.getModel().updateOptions({
 				insertSpaces: false
@@ -206,6 +207,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			});
 			if (this.props.content && this.props.getOutput) {
 				this.props.getOutput(this.props.content);
+				this.autoResize(this.props.dimensions);
 			}
 			this.diffEditor.getModifiedEditor().onKeyDown(e=>{
 				if (e.ctrlKey && e.code=="Enter") {
@@ -231,7 +233,6 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		}
 		let config = this.editor.getConfiguration();
 		let lineHeight = config.lineHeight;
-		console.log(lineHeight);
 		let totalLineNumbers = 1;
 		let horizontalScrollbarHeight = config.layoutInfo.horizontalScrollbarHeight;
 
@@ -260,6 +261,7 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		let height = `calc(100% - ${(this.props.shouldHaveMarginBottom?25:0) + (this.props.shouldHaveMarginTop?25:0)}px)`
 		return <div ref={(ref)=>this.dimRef=ref} style={{
 				position: "relative",
+				maxWidth: "100%",
 				...this.props.dimensions
 			}}>
 			<div style={{
