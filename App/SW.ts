@@ -1,20 +1,19 @@
 let CACHE_NAME = "iiitncache";
+import {getRouteDetails} from 'App/_presentation/Routes/';
 
 let urlsToCache: string[] = [
 	// Cache web pages.
-	"/",
-	"/playground",
-	"/typescript",
-	"/login",
-	"/2dplayground",
+	...Object.keys(getRouteDetails()),
 
 	// Cache webpage resources.
 	"/assets/vs/loader.js",
 	"/assets/Inconsolata.css",
 	"/assets/Draft.css",
 	"/assets/canvas2d/global.js",
+	"/assets/canvas2d/Canvas_bundled.d.ts",
 	
-	"/bundle/classui.css",
+	"/bundle/themes/classui.css",
+	"/bundle/Draft.css",
 	"/bundle/bundle.js"
 ];
 
