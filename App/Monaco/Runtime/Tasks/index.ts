@@ -1,4 +1,5 @@
 import {compileCode, runProgramInWorker} from '../';
+import { IJSONSchema } from 'classui/Components/Form/Schema/JSONSchema';
 // POST MESSAGE
 let BUFFER_SIZE = 5;
 
@@ -67,7 +68,28 @@ interface IFunctionInputOutput {
 	input: any[],
 	output: any
 }
-export interface IFunction {
+
+export let S_FunctionDetails: IJSONSchema = {
+	type: "object",
+	properties: {
+		name: {
+			type: "string"
+		},
+		tests: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					input: {
+						type: "array"
+					},
+					output: {}
+				}
+			}
+		}
+	}
+}
+export interface IFunctionDetails {
 	name: string
 	tests: IFunctionInputOutput[]
 	timeout?: number
@@ -80,11 +102,11 @@ export let Runtime = {
 		`);
 		return runProgramInWorker<string>(genCode);
 	},
-	runFunction(code: string, func: IFunction) {
+	runFunctionTestCases(code: string, func: IFunctionDetails) {
 		let genCode = Code.generate(`
 			${code};
 			let func = ${JSON.stringify(func)};
-			let inputs = func.inputs;
+			let inputs = func.tests;
 			if (typeof ${func.name}=="function") {
 				console = {
 					log(msg){}

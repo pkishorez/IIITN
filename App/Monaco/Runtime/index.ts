@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {compileCode} from './typescript';
 import * as ts from 'typescript';
 export {compileCode} from './typescript';
-export {Runtime} from './Tasks';
+export {Runtime, IFunctionDetails} from './Tasks';
 
 interface IRuntimeResponse {
 	type: "error" | "OUTPUT",
