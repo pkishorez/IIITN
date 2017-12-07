@@ -100,40 +100,40 @@ class Controls extends React.Component<IControlProps>{
 		const blockType = this.props.editorState.getCurrentContent()
 		.getBlockForKey(this.props.editorState.getSelection().getStartKey())
 		.getType();
-		return <Layout gutter={7} justify="start">
+		return <div>
 			{/*BLOCK CONTROLS GOES HERE...*/}
 			{
 				BLOCK_TYPES.map((block)=>{
-					return <Section key={block.label}>
-						<span className={"button inline-block "+(blockType==block.style?"active":"")} onClick={()=>{
-							this.props.onChange(RichUtils.toggleBlockType(
-								this.props.editorState,
-								block.style
-							))
-						}}>{block.label}</span>
-					</Section>
+					return <span key={block.label} style={{marginRight: 7, marginBottom: 7}} className={
+						"button noTextWrap inline-block "+(blockType==block.style?"active":"")
+					} onClick={()=>{
+						this.props.onChange(RichUtils.toggleBlockType(
+							this.props.editorState,
+							block.style
+						))
+					}}>{block.label}</span>
 				})
 			}
-			<Section style={{position: 'relative'}}>
-				<span className={"button inline-block primary "+(blockType=="atomic"?"active":"")}
-				onClick={()=>{
-					Drawer.open((dismiss)=>{
-						return <Formlayout label="Atomic Block Details" onSubmit={(data: IMonacoPracticeProps)=>{
-							data.eid = v4();
-							let uEditorState = AddOrEditAtomicBlock(this.props.editorState, {
-								type:"MONACO_PRACTICE",
-								value: data
-							});
-							uEditorState = EditorState.forceSelection(uEditorState, uEditorState.getSelection());
-							this.props.onChange(uEditorState);
-							dismiss();
-						}}>
-							<TextField type="area" autoFocus name="expectedOutput">Expected Output.</TextField>
-							<input type="submit" value="Add/Edit Task."/>
-						</Formlayout>;
-					})
-				}}>Editor</span>
-			</Section>
-		</Layout>;	
+			<span className={
+				"button noTextWrap inline-block primary "+(blockType=="atomic"?"active":"")
+			} style={{marginRight: 7, marginBottom: 7}}
+			onClick={()=>{
+				Drawer.open((dismiss)=>{
+					return <Formlayout label="Atomic Block Details" onSubmit={(data: IMonacoPracticeProps)=>{
+						data.eid = v4();
+						let uEditorState = AddOrEditAtomicBlock(this.props.editorState, {
+							type:"MONACO_PRACTICE",
+							value: data
+						});
+						uEditorState = EditorState.forceSelection(uEditorState, uEditorState.getSelection());
+						this.props.onChange(uEditorState);
+						dismiss();
+					}}>
+						<TextField type="area" autoFocus name="expectedOutput">Expected Output.</TextField>
+						<input type="submit" value="Add/Edit Task."/>
+					</Formlayout>;
+				})
+			}}>Editor</span>
+		</div>;	
 	}
 }
