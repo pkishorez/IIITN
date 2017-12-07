@@ -1,4 +1,5 @@
 import {IJSONSchema} from 'classui/Components/Form/Schema';
+import { IFunctionDetails, S_FunctionDetails } from 'App/Monaco/Runtime/Tasks';
 
 export let S_Task: IJSONSchema = {
 	oneOf: [
@@ -36,8 +37,25 @@ export let S_Task: IJSONSchema = {
 				}
 			},
 			required: ["type", "title", "question"]
+		}, {
+			type: "object",
+			properties: {
+				type: {
+					const: "TYPESCRIPT_TESTCASE_TASK"
+				},
+				title: {
+					type: "string"
+				},
+				question: {
+					type: "string"
+				},
+				resetCode: {
+					type: "string"
+				},
+				funcDetails: S_FunctionDetails
+			},
+			required: ["type", "title", "question", "resetCode", "funcDetails"]
 		}
-		// Other type of tasks not implemented yet.
 	]
 };
 
@@ -54,8 +72,15 @@ export type ITypescriptTask = {
 	expectedOutput: string
 	resetCode?: string
 }
+export type ITypescriptTestCaseTask = {
+	type: "TYPESCRIPT_TESTCASE_TASK"
+	title: string
+	question: string
+	funcDetails: IFunctionDetails
+	resetCode: string
+}
 
-export type ITask = ICanvasTask | ITypescriptTask;
+export type ITask = ICanvasTask | ITypescriptTask | ITypescriptTestCaseTask;
 
 let validIDSchema: IJSONSchema = {
 	type: "string",

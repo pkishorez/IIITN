@@ -19,7 +19,7 @@ export let AddOrEditTypescriptTask = (props: Partial<ITypescriptTask>, task_id?:
 
 	Flash.flash((dismiss)=>{
 		return <div style={{backgroundColor: "white"}}>
-			<Layout justify="center" style={{margin: "auto", padding: "20px 0px", width: 500}}>
+			<Layout align="start" style={{margin: "auto", padding: "20px 0px", width: 500}}>
 				<Section>
 					<input defaultValue={props.title} ref={(ref)=>titleInput=ref} type="text" style={{border: "1px solid black", width: 400, padding: 10}} placeholder="Title"/>
 				</Section>
@@ -59,5 +59,5 @@ export let AddOrEditTypescriptTask = (props: Partial<ITypescriptTask>, task_id?:
 				<textarea defaultValue={props.expectedOutput} style={{border: "1px solid grey", height: 300}} ref={(ref)=>expOutputInput=ref} placeholder="Expected Output."></textarea>
 			</Layout>
 		</div>;
-	}, false, true);
+	}, true, true);
 }

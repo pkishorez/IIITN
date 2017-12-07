@@ -89,5 +89,5 @@ export let AddOrEditCanvasTask = (props: Partial<ICanvasTask>, task_id?: string)
 				</Section>
 			</Layout>
 		</div>;
-	}, false, true);
+	}, true, true);
 }

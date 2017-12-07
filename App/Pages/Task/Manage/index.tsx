@@ -11,6 +11,7 @@ import {ITask} from 'Server/Database/Schema/Task';
 import {AddOrEditCanvasTask} from './canvas';
 import { OrderedMapList } from 'classui/Components/OrderedMapList';
 import { AddOrEditTypescriptTask } from 'App/Pages/Task/Manage/typescript';
+import { AddOrEditTypescriptTestcaseTask } from 'App/Pages/Task/Manage/testcase';
 
 interface IProps {
 	tasks: IRootState["tasks"]
@@ -72,8 +73,11 @@ let Manager = {
 		Flash.flash(()=>{
 			return <div style={{maxWidth: 300}}>
 				<div className="button primary" style={{padding: 20, margin: 20}} onClick={()=>{
+					AddOrEditTypescriptTestcaseTask({});
+				}}>Typescript TestCase Task</div>
+				<div className="button primary" style={{padding: 20, margin: 20}} onClick={()=>{
 					AddOrEditTypescriptTask({});
-				}}>Typescript Task</div>
+				}}>Typescript ExpectedOutput Task</div>
 				<div className="button primary" style={{padding: 20, margin: 20}} onClick={()=>{
 					AddOrEditCanvasTask({});
 				}}>Canvas Task</div>
@@ -81,11 +85,18 @@ let Manager = {
 		}, false, false, true);
 	},
 	editTask(task_id: string, task: ITask) {
-		if (task.type=="CANVAS2D") {
-			AddOrEditCanvasTask(task, task_id);
-		}
-		if (task.type=="TYPESCRIPT_EXPOUTPUT") {
-			AddOrEditTypescriptTask(task, task_id);
+		switch(task.type) {
+			case "CANVAS2D": {
+				AddOrEditCanvasTask(task, task_id);
+				break;
+			}
+			case "TYPESCRIPT_EXPOUTPUT":
+				AddOrEditTypescriptTask(task, task_id);	
+				break;
+			case "TYPESCRIPT_TESTCASE_TASK": {
+				AddOrEditTypescriptTestcaseTask(task, task_id);
+				break;
+			}
 		}
 		// For other types goes here...
 	}
