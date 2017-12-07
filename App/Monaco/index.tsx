@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import {MonacoLibs} from './Libs';
+import { IJSONSchema } from 'classui/Components/Form/Schema';
 
 declare let monacoAmdRequire: any;
 
@@ -15,6 +16,7 @@ export interface IMonacoProps {
 		minHeight?: number | string
 		maxHeight?: number | string
 	}
+	noOverflow?: boolean
 	noborder?: boolean
 	shouldHaveMarginBottom?: boolean
 	shouldHaveMarginTop?: boolean
@@ -25,6 +27,9 @@ export interface IMonacoProps {
 	diffContent?: {
 		content: string
 	}
+	style?: React.CSSProperties
+	language?: "json" | "typescript"
+	schema?: IJSONSchema
 	content?: string
 	ctrlEnterAction?: (output: string)=>void
 	quickSuggestions?: boolean
@@ -47,6 +52,8 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			height: "auto",
 			width: "100%"
 		},
+		noOverflow: false,
+		language: "typescript",
 		autoResize: false,
 		noborder: false,
 		theme: "vs",
@@ -115,10 +122,18 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 			return;
 		}
 		Monaco.INIT(()=>{
+			if (this.props.language=="json") {
+				monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+					schemas: [{
+						uri: "http://cseclub/functionDetails",
+						schema: this.props.schema
+					}]
+				});
+			}
 			this.editor = monaco.editor.create(ref, {
 				value: this.props.content,
 				theme: this.props.theme,
-				language: 'typescript',
+				language: this.props.language,
 				fontWeight: this.props.fontWeight,
 				fontFamily: this.props.fontFamily,
 				fontSize: this.props.fontSize,
@@ -262,7 +277,9 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 		return <div ref={(ref)=>this.dimRef=ref} style={{
 				position: "relative",
 				maxWidth: "100%",
-				...this.props.dimensions
+				overflow: this.props.noOverflow?"auto":"hidden",
+				...this.props.dimensions,
+				...this.props.style
 			}}>
 			<div style={{
 				position: "absolute",
