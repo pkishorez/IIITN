@@ -19,12 +19,12 @@ export class RouteComponent extends React.Component<IProps, IState> {
 			switch(route.role) {
 				case "USER": {
 					if  (GetState().user.userid)
-						return <Route exact path={path} component={route.component}/>
+						return <Route key={path} exact path={path} component={route.component}/>
 				}
 				case "ADMIN": {
 					if (GetState().user.userid=="admin")
-						return <Route exact path={path} component={route.component}/>;
-					return <Route exact path={path} render={()=>{
+						return <Route key={path} exact path={path} component={route.component}/>;
+					return <Route key={path} exact path={path} render={()=>{
 						return <Redirect to={DEFAULT_REDIRECT_URL}/>
 					}}/>
 				}
