@@ -9,11 +9,14 @@ import { Guide } from 'App/MyActions';
 import { ITask } from 'Server/Database/Schema';
 import * as _ from 'lodash';
 import { IOrderedMap } from 'classui/DataStructures/OrderedMap';
-import { ITypescriptTask } from 'Server/Database/Schema/Task';
+import { ITypescriptTask, ITypescriptTestCaseTask } from 'Server/Database/Schema/Task';
 import { ConsoleTask } from 'App/Monaco/Tasks/Typescript/ConsoleTask';
+import { Flash } from 'classui/Components/Flash';
+import { ExpectedOutputChallenge } from 'App/Monaco/Tasks/Typescript/ExpectedOutputChallenge';
+import { TestCaseChallenge } from 'App/Monaco/Tasks/Typescript/TestCaseChallenge';
 
 interface IProps {
-	tasks: IOrderedMap<ITypescriptTask>
+	tasks: IOrderedMap<ITypescriptTestCaseTask>
 }
 interface IState {
 	task_id: string
@@ -22,44 +25,48 @@ interface IState {
 class TasksTypescriptView_ extends React.Component<IProps, IState> {
 	constructor(props: IProps, context: any) {
 		super(props, context);
-		this.state = {
-			task_id: ""
-		};
 	}
 	componentDidMount() {
+		Flash.flash((dismiss)=>{
+			return <div>
+				<div className="button" style={{
+					position: 'fixed',
+					top:50,
+					right: 50
+				}} onClick={dismiss}>Close</div>
+				<Tasks tasks={this.props.tasks}/>
+			</div>;
+		}, true, true, true);
 		Guide.init();
 	}
 	render() {
-		if (this.state.task_id=="" && this.props.tasks.order[0]) {
-			this.setState({
-				task_id: this.props.tasks.order[0]
-			})	
-		}
-		let task = this.props.tasks.map[this.state.task_id];
-		task = task?task:{
-			expectedOutput: "",
-			question: "",
-			resetCode: "",
-			title: "",
-			type: "TYPESCRIPT_EXPOUTPUT"
-		};
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section remain>
 				<Menu header="Tasks">
 					{
 						this.props.tasks.order.map((task_id)=>{
-							return <Item active={task_id==this.state.task_id} onClick={()=>{
-								this.setState({
-									task_id
-								})
+							return <Item onClick={()=>{
 							}} key={task_id}>{this.props.tasks.map[task_id].title}</Item>
 						})
 					}
 				</Menu>
 			</Section>
-			<Section width={700} clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
-				<DraftEditorRender contentState={task.question}/>
-				{this.state.task_id!=""?<ConsoleTask eid="" expectedOutput={task.expectedOutput}/>:null}
+		</Layout>;
+	}
+}
+
+class Tasks extends React.Component<IProps, {task_id: string}> {
+	constructor(props: IProps, context: any) {
+		super(props, context);
+		this.state = {
+			task_id: props.tasks.order[0]
+		};
+	}
+	render() {
+		let task = this.props.tasks.map[this.state.task_id];
+		return <Layout style={{maxWidth: "100%", width: 1024}} gutter={20}>
+			<Section remain>
+				<TestCaseChallenge height="calc(100vh - 100px)" task={task} task_id={this.state.task_id} />
 			</Section>
 		</Layout>;
 	}
@@ -67,7 +74,7 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 
 let mapStateToProps = (state: IRootState): IProps=>{
 	let typescript_tasks_keys = Object.keys(state.tasks.map).filter((task_id)=>{
-		return state.tasks.map[task_id].type=="TYPESCRIPT_EXPOUTPUT";
+		return state.tasks.map[task_id].type=="TYPESCRIPT_TESTCASE_TASK";
 	});
 	let map = {};
 	for (let key of typescript_tasks_keys) {
