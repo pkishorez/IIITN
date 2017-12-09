@@ -54,35 +54,43 @@ export let AddOrEditTypescriptTestcaseTask = (props: Partial<ITypescriptTestCase
 				}).then(dismiss);
 			}
 		};
-		return <div style={{backgroundColor: "white"}}>
-			<Layout justify="center" style={{margin: "auto", padding: "20px 0px", width: 500}}>
-				<Section>
-					<input name="title" defaultValue={props.title} ref={(ref)=>titleInput=ref} type="text" style={{border: "1px solid black", width: 400, padding: 10}} placeholder="Title"/>
-				</Section>
-				<Section>
-					<input type="button" value="Save" onClick={saveDetails} />
-				</Section>
-			</Layout>
-			<Layout gutter={20} align="start" equallySpaced style={{width: 1024, maxWidth: "100%"}}>
-				<Section>
-					<DraftEditor style={{padding: 20}} defaultState={props.question} onChange={(state)=>questionState=JSON.stringify(convertToRaw(state.getCurrentContent()))}/>
-				</Section>
-				<Section>
-					<Monaco style={{
-						overflowX: "hidden"
-					}} autoResize dimensions={{
-						minHeight: 100
-					}} content={props.funcDetails?JSON.stringify(props.funcDetails, undefined, "\t"):`{
-	"$schema": "http://cseclub/functionDetails"
-}`} language="json" editorRef={(ref: any)=>funcDetailsRef=ref} schema={S_FunctionDetails}/>
-					<Monaco content={props.resetCode?props.resetCode:`function func_name(params) {\n}`} editorRef={(ref: any)=>resetCodeRef=ref}
-					autoResize
-					dimensions={{
-						minHeight: 100
-					}}>
-					</Monaco>
-				</Section>
-			</Layout>
-		</div>;
+		return <Layout direction="column" basis="100vh" style={{backgroundColor: "white"}}>
+			<Section>
+				<Layout justify="center" style={{margin: "auto", padding: "20px 0px", width: 500}}>
+					<Section>
+						<input name="title" defaultValue={props.title} ref={(ref)=>titleInput=ref} type="text" style={{border: "1px solid black", width: 400, padding: 10}} placeholder="Title"/>
+					</Section>
+					<Section>
+						<input type="button" value="Save" onClick={saveDetails} />
+					</Section>
+				</Layout>
+			</Section>
+			<Section remain>
+				<Layout basis="100%" margin={20} gutter={10} align="start" equallySpaced style={{width: 1024, maxWidth: "100%", height: "100%"}}>
+					<Section style={{height: "100%"}}>
+						<DraftEditor height="100%" defaultState={props.question} onChange={(state)=>questionState=JSON.stringify(convertToRaw(state.getCurrentContent()))}/>
+					</Section>
+					<Section style={{height: "100%"}}>
+						<Layout direction="column" basis="100%" style={{overflow:"auto"}}>
+							<Section remain>
+								<Monaco style={{
+									overflowX: "hidden",
+									height: "100%",
+									minHeight: 200
+								}} content={props.funcDetails?JSON.stringify(props.funcDetails, undefined, "\t"):`{\t"$schema": "http://cseclub/functionDetails"\n}`} language="json" editorRef={(ref: any)=>funcDetailsRef=ref} schema={S_FunctionDetails}/>
+							</Section>
+							<Section style={{maxHeight: "100%"}}>
+								<Monaco content={props.resetCode?props.resetCode:`function func_name(params) {\n}`} editorRef={(ref: any)=>resetCodeRef=ref}
+								autoResize
+								dimensions={{
+									minHeight: 100,
+									maxHeight: 300
+								}} />
+							</Section>
+						</Layout>
+					</Section>
+				</Layout>
+			</Section>
+		</Layout>;
 	}, true, true);
 }

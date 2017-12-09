@@ -14,6 +14,7 @@ import {v4} from 'uuid';
 export {EditorState, convertToRaw} from 'draft-js';
 
 interface IProps {
+	height?: string | number
 	defaultState?: string
 	deditor?: Draft.Component.Base.DraftEditorProps
 	onChange?: (editorState: EditorState)=>void
@@ -58,19 +59,23 @@ export class DraftEditor extends React.Component<IProps, IState> {
 		return 'not-handled';
 	}
 	render() {
-		return <div className="draftEditor" style={this.props.style}>
-			<Controls editorState={this.state.editorState} onChange={this.onChange}/>
-			<Editor
-				placeholder="Type Here..."
-				{...this.props.deditor}
-				editorState={this.state.editorState}
-				handleKeyCommand={this.handleKeyCommand}
-				onChange={this.onChange}
-				spellCheck={true}
-				blockStyleFn={blockStyleFn}
-				blockRendererFn={blockRenderedFn}
-			/>
-		</div>;
+		return <Layout cls="draftEditor" direction="column" basis={this.props.height} style={this.props.style}>
+			<Section>
+				<Controls editorState={this.state.editorState} onChange={this.onChange}/>
+			</Section>
+			<Section remain style={{minHeight: 100}}>
+				<Editor
+					placeholder="Type Here..."
+					{...this.props.deditor}
+					editorState={this.state.editorState}
+					handleKeyCommand={this.handleKeyCommand}
+					onChange={this.onChange}
+					spellCheck={true}
+					blockStyleFn={blockStyleFn}
+					blockRendererFn={blockRenderedFn}
+				/>
+			</Section>
+		</Layout>;
 	}
 }
 
