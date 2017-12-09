@@ -1,4 +1,5 @@
 import {NavBar} from 'classui/Navbar';
+import {Feedback} from 'classui/Components/Feedback';
 import {Promise} from 'es6-promise';
 import {getResponseID} from 'Common/Utils';
 import {IRequestType, IRequest, IResponse} from 'Server/Connection';
@@ -86,6 +87,9 @@ class _SocketIO {
 				});
 			}
 			return response;
+		}).catch((error)=>{
+			Feedback.show(error, "error");
+			return Promise.reject(error);
 		})
 	}
 }
