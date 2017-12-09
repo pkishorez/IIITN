@@ -84,10 +84,12 @@ export let S_FunctionDetails: IJSONSchema = {
 						type: "array"
 					},
 					output: {}
-				}
+				},
+				required: ["input", "output"]
 			}
 		}
-	}
+	},
+	required: ["name", "tests"]
 }
 export interface IFunctionDetails {
 	name: string
