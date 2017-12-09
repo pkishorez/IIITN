@@ -26,7 +26,7 @@ export class Students extends React.Component<IProps, IState> {
 	}
 	render() {
 		return <Layout>
-			<Section width={300}>
+			<Section basis={300}>
 			{
 				this.state.students.map((student: any)=>{
 					return <div className="card-1" style={{backgroundColor: "white", padding: 10, margin: 15}} key={student._id}>

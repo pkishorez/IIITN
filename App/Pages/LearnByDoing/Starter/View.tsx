@@ -42,7 +42,7 @@ class StarterView_ extends React.Component<IProps, IState> {
 					}
 				</Menu>
 			</Section>
-			<Section width={700} clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
+			<Section basis={700} clsName="card-1" style={{padding: "10px 25px", backgroundColor: 'white'}}>
 				<DraftEditorRender contentState={this.props.map[this.state.lesson_id]?this.props.map[this.state.lesson_id].editorState:undefined}/>
 			</Section>
 		</Layout>;

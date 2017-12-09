@@ -68,7 +68,7 @@ export let AddOrEditCanvasTask = (props: Partial<ICanvasTask>, task_id?: string)
 					}}>Save</div>
 				</Section>
 			</Layout>
-			<Layout gutter={20} equalWidth style={{width: 1024, maxWidth: "100%"}}>
+			<Layout gutter={20} equallySpaced style={{width: 1024, maxWidth: "100%"}}>
 				<Section style={{position: 'relative'}}>
 					<PersistMonaco autoResize={false} id={task_id?"":"task_canvas_question_buffer"} shouldHaveMarginBottom dimensions={{
 						height: 500

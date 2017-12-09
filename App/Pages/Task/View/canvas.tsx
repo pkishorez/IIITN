@@ -99,7 +99,7 @@ class Task_ extends React.Component<IProps, IState>{
 					height: `calc(100vh - 100px)`
 				}} editorRef={(ref)=>(this.editorRef as any)=ref}/>
 			</Section>
-			<Section minWidth={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
+			<Section basis={402} style={{maxHeight: `calc(100vh - 50px)`, overflow: 'auto'}}>
 				<Layout gutter={10}>
 					<Section remain>
 						<Dropdown buttonMaxWidth={100} ref={(ref)=>{this.dropdown=ref as Dropdown}} button={(this.state.currentTaskID!="")?currentTask.title: "Tasks"}>

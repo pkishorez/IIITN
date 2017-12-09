@@ -63,7 +63,7 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 					height: this.props.playHeight
 				}} getOutput={this.runProgram}/>
 			</Section>
-			<Section width={400} style={{}}>
+			<Section basis={400} style={{}}>
 				<div className="card-1" style={{
 					transition: "0.3s all",
 					backgroundColor: "black",

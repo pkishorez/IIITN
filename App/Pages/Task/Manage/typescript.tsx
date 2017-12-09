@@ -54,7 +54,7 @@ export let AddOrEditTypescriptTask = (props: Partial<ITypescriptTask>, task_id?:
 					}}>Save</div>
 				</Section>
 			</Layout>
-			<Layout gutter={20} equalWidth style={{width: 1024, maxWidth: "100%"}}>
+			<Layout gutter={20} equallySpaced style={{width: 1024, maxWidth: "100%"}}>
 				<DraftEditor style={{padding: 20}} defaultState={props.question} onChange={(state)=>questionState=JSON.stringify(convertToRaw(state.getCurrentContent()))}/>
 				<textarea defaultValue={props.expectedOutput} style={{border: "1px solid grey", height: 300}} ref={(ref)=>expOutputInput=ref} placeholder="Expected Output."></textarea>
 			</Layout>

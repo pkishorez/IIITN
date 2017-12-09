@@ -63,7 +63,7 @@ export let AddOrEditTypescriptTestcaseTask = (props: Partial<ITypescriptTestCase
 					<input type="button" value="Save" onClick={saveDetails} />
 				</Section>
 			</Layout>
-			<Layout gutter={20} align="start" equalWidth style={{width: 1024, maxWidth: "100%"}}>
+			<Layout gutter={20} align="start" equallySpaced style={{width: 1024, maxWidth: "100%"}}>
 				<Section>
 					<DraftEditor style={{padding: 20}} defaultState={props.question} onChange={(state)=>questionState=JSON.stringify(convertToRaw(state.getCurrentContent()))}/>
 				</Section>

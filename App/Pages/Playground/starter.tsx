@@ -93,7 +93,7 @@ class Lesson extends React.Component<IProps, IState> {
 
 	render() {
 		return <Layout gutter={20}>
-			<Section width={600} style={{overflow: "hidden"}}>
+			<Section basis={600} style={{overflow: "hidden"}}>
 				<Layout>
 					<Section remain>
 						<h4 style={{margin: 15}}>Canvas2D Demo</h4>
@@ -109,7 +109,7 @@ class Lesson extends React.Component<IProps, IState> {
 					height: 300
 				 }} lineNumbers="off" fontSize={18}/>
 			</Section>
-			<Section width={500}>
+			<Section basis={500}>
 				<canvas id="canvas" height={300} width={500} style={{backgroundColor: 'black'}}></canvas>
 				<div style={{backgroundColor: 'white', minHeight: 200, padding: 10, marginTop: 10}}>
 					<h4>

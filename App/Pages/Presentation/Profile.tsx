@@ -34,7 +34,7 @@ export class Profile extends React.Component<IProps, IState> {
 			return null;
 		}
 		return <Layout gutter={20} justify="center">
-			<Section width={600}>
+			<Section basis={600}>
 				<h4>{profile.name}</h4>
 				<h5>Class : {profile.batch}-{profile.branch}</h5>
 				<h5>Learning Progress : 50%</h5>
