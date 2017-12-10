@@ -14,7 +14,8 @@ interface IProps {
 };
 
 export class SeqTestcaseOutput{
-	private output_seq = 0;
+	private program_seq_no = 0;
+	private last_output_seq_no = -1;
 	private props: IProps;
 
 	constructor(props: IProps) {
@@ -26,13 +27,13 @@ export class SeqTestcaseOutput{
 	}
 	runProgram(code: string)
 	{
-		let program_seq_no = this.output_seq+1;
+		let program_seq_no = this.program_seq_no++;
 		Runtime.runFunctionTestCases(code, this.props.funcDetails).then((data)=>{
-			this.output_seq++;
-			if (program_seq_no<this.output_seq) {
+			if (this.last_output_seq_no>program_seq_no) {
 				// Output outdated.
 				return;
 			}
+			this.last_output_seq_no = program_seq_no;
 			let correct = 0;
 			let correctAnswers = _.map(this.props.funcDetails.tests, (answer)=>(answer.output));
 			for (let i=0; i<correctAnswers.length; i++) {
@@ -45,6 +46,11 @@ export class SeqTestcaseOutput{
 				testcasesPassed: correct
 			}):null;
 		}).catch((error: string)=>{
+			if (this.last_output_seq_no>program_seq_no) {
+				// Error too outdated.
+				return;
+			}
+			this.last_output_seq_no = program_seq_no;
 			this.props.onError?this.props.onError(error):null;
 		});
 	}
