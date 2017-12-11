@@ -48,7 +48,9 @@ export class Collection{
 	private __map(res: mongodb.Cursor) {
 		return {
 			toArray() {
-				return res.toArray();
+				return res.toArray().catch(()=>{
+					return Promise.reject("Couldn't get records.");
+				});
 			},
 			toObject() {
 				let json: any = {};
@@ -57,11 +59,13 @@ export class Collection{
 						json[elem._id] = elem;
 					});
 					return json;
+				}).catch(()=>{
+					return Promise.reject("Couldn't get records");
 				})
 			}
 		}
 	}
-	async update(data: any, schema?: IJSONSchema) {
+	async update(_id: string, data: any, schema?: IJSONSchema, upsert?: boolean) {
 		if (schema) {
 			let error = Schema.validate(schema, data);
 			if (error) {
@@ -69,7 +73,11 @@ export class Collection{
 			}
 		}
 		try {
-			return await this._collection.updateOne({_id: data._id}, data);				
+			return await this._collection.updateOne({_id}, data, {
+				upsert
+			}).catch(()=>{
+				return Promise.reject("Coudln't update record.");
+			});
 		}
 		catch(e) {
 			throw e;
@@ -83,11 +91,18 @@ export class Collection{
 			}
 		}
 		try {
-			return await this._collection.insertOne(data);				
+			return await this._collection.insertOne(data).catch(()=>{
+				return Promise.reject("Couldn't insert record");
+			});
 		}
 		catch(e) {
 			throw e;
 		}
+	}
+	async deleteById(_id: string) {
+		return await this._collection.deleteOne({_id}).catch(()=>{
+			return Promise.reject("Couldn't delete record.");
+		});
 	}
 	async findOne(criteria: any, fields?: Object) {
 		return await this._collection.findOne(criteria, {fields}).catch(()=>{
