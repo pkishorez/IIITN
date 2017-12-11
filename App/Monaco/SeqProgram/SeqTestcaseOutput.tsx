@@ -23,17 +23,15 @@ export class SeqTestcaseOutput{
 		this.runProgram = _.debounce(this.runProgram.bind(this), this.props.debounce, {
 			trailing: true,
 			leading: true
-		});
+		})
 	}
-	runProgram(code: string)
+	runProgram(code: string):  Promise<{
+		output: string
+		testcasesPassed: number
+	}>
 	{
 		let program_seq_no = this.program_seq_no++;
-		Runtime.runFunctionTestCases(code, this.props.funcDetails).then((data)=>{
-			if (this.last_output_seq_no>program_seq_no) {
-				// Output outdated.
-				return;
-			}
-			this.last_output_seq_no = program_seq_no;
+		return Runtime.runFunctionTestCases(code, this.props.funcDetails).then((data)=>{
 			let correct = 0;
 			let correctAnswers = _.map(this.props.funcDetails.tests, (answer)=>(answer.output));
 			for (let i=0; i<correctAnswers.length; i++) {
@@ -41,17 +39,26 @@ export class SeqTestcaseOutput{
 					correct++;
 				}
 			}
-			this.props.onOutput?this.props.onOutput({
+
+			let output = {
 				output: data.data,
 				testcasesPassed: correct
-			}):null;
+			};
+			if (this.last_output_seq_no>program_seq_no) {
+				// Output outdated.
+				return output;
+			}
+			this.last_output_seq_no = program_seq_no;
+			this.props.onOutput?this.props.onOutput(output):null;
+			return output;
 		}).catch((error: string)=>{
 			if (this.last_output_seq_no>program_seq_no) {
 				// Error too outdated.
-				return;
+				return Promise.reject(error);
 			}
 			this.last_output_seq_no = program_seq_no;
 			this.props.onError?this.props.onError(error):null;
-		});
+			return Promise.reject(error);
+		}) as any;
 	}
 }
