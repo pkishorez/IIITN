@@ -53,9 +53,8 @@ export class User {
 		});
 	}
 	saveTask(saveTaskAction: IUserSaveTaskDetails) {
-		// Default data.
+		// Default data if any.
 		saveTaskAction.taskDetails = {
-			result: "PENDING",
 			...saveTaskAction.taskDetails
 		};
 		let error = Schema.validate(S_UserTask_Details, saveTaskAction.taskDetails);

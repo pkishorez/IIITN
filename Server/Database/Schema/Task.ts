@@ -122,10 +122,33 @@ export let S_UserTask_Details: IJSONSchema = {
 				}
 			},
 			required: ["type", "code", "result"]
+		},
+		{
+			type: "object",
+			properties: {
+				_id: validIDSchema,
+				type: {
+					const: "TYPESCRIPT_TESTCASE_TASK"
+				},
+				code: {
+					type: "string"
+				},
+				test_cases_passed: {
+					type: "number"
+				}
+			},
+			required: ["type", "code", "test_cases_passed"]
 		}
 		// Other type of tasks can be implemented here.
 	]
 }
+
+export type ITypescriptTestCaseTask_Submission = {
+	_id: string
+	type: "TYPESCRIPT_TESTCASE_TASK"
+	code: string
+	test_cases_passed: number
+};
 
 export type IUserTask_Details = {
 	_id: string
@@ -138,4 +161,4 @@ export type IUserTask_Details = {
 	type: "TYPESCRIPT_EXPOUTPUT"
 	code: string
 	result: "PENDING" | "WRONG" | "RIGHT"
-}
+} | ITypescriptTestCaseTask_Submission;
