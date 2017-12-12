@@ -12,7 +12,7 @@ export let Me = {
 		return Network.requestAndDispatch("USER_LOGIN", data);
 	},
 
-	saveTask(data: IUserSaveTaskDetails) {
+	submitTask(data: IUserSaveTaskDetails) {
 		return Network.requestAndDispatch("USER_SAVE_TASK", data);
 	},
 

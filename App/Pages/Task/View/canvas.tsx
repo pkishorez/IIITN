@@ -65,7 +65,7 @@ class Task_ extends React.Component<IProps, IState>{
 		this.dropdown.dismiss();
 	}
 	save() {
-		Me.saveTask({
+		Me.submitTask({
 			type: "USER_SAVE_TASK",
 			taskDetails: {
 				_id: this.state.currentTaskID,
