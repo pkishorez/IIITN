@@ -2,21 +2,18 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Menu, Item, Divider} from 'classui/Components/Menu';
-import {DraftEditorRender, convertToRaw} from 'App/DraftEditor';
 import {connect, IRootState} from 'App/State';
-import {IGuide, IModule} from 'App/State/Reducers/GuideReducer';
-import { Guide } from 'App/MyActions';
-import { ITask } from 'Server/Database/Schema';
+import { Task } from 'App/MyActions';
 import * as _ from 'lodash';
 import { IOrderedMap } from 'classui/DataStructures/OrderedMap';
-import { ITypescriptTask, ITypescriptTestCaseTask } from 'Server/Database/Schema/Task';
-import { ConsoleTask } from 'App/Monaco/Tasks/Typescript/ConsoleTask';
+import { ITypescriptTestCaseTask } from 'Server/Database/Schema/Task';
 import { Flash } from 'classui/Components/Flash';
-import { ExpectedOutputChallenge } from 'App/Monaco/Tasks/Typescript/ExpectedOutputChallenge';
 import { TestCaseChallenge } from 'App/Monaco/Tasks/Typescript/TestCaseChallenge';
+import {Table, THead, TBody} from 'classui/Components/Table';
 
 interface IProps {
 	tasks: IOrderedMap<ITypescriptTestCaseTask>
+	userTasks: IRootState["user"]["taskDetails"]
 }
 interface IState {
 	task_id: string
@@ -25,8 +22,12 @@ interface IState {
 class TasksTypescriptView_ extends React.Component<IProps, IState> {
 	constructor(props: IProps, context: any) {
 		super(props, context);
+		this.attemptTask = this.attemptTask.bind(this);
 	}
 	componentDidMount() {
+		Task.init();
+	}
+	attemptTask(task_id: string) {
 		Flash.flash((dismiss)=>{
 			return <div>
 				<div className="button" style={{
@@ -34,39 +35,49 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 					top:50,
 					right: 50
 				}} onClick={dismiss}>Close</div>
-				<Tasks tasks={this.props.tasks}/>
+				<Tasks task_id={task_id} tasks={this.props.tasks} userTasks={this.props.userTasks}/>
 			</div>;
 		}, true, true, true);
-		Guide.init();
 	}
 	render() {
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
-			<Section remain>
-				<Menu header="Tasks">
-					{
-						this.props.tasks.order.map((task_id)=>{
-							return <Item onClick={()=>{
-							}} key={task_id}>{this.props.tasks.map[task_id].title}</Item>
-						})
-					}
-				</Menu>
+			<Section style={{marginTop: 20}} remain>
+				<Table>
+					<THead>
+						<th>Task No</th>
+						<th>Title</th>
+						<th>Status</th>
+					</THead>
+					<TBody>
+						{
+							this.props.tasks.order.map((task_id, i)=>{
+								let task = this.props.tasks.map[task_id];
+								let userTask = this.props.userTasks[task_id]?"cleared":"todo";
+								return <tr onClick={()=>{this.attemptTask(task_id)}}>
+									<td>{i+1}.</td>
+									<td>{task.title}</td>
+									<td><div className={("badge inline-block "+(userTask=="cleared"?"success": "grey"))}>{
+										userTask
+									}</div></td>
+								</tr>;
+							})
+						}
+					</TBody>
+				</Table>
 			</Section>
 		</Layout>;
 	}
 }
 
-class Tasks extends React.Component<IProps, {task_id: string}> {
-	constructor(props: IProps, context: any) {
+class Tasks extends React.Component<IProps & {task_id: string}, {task_id: string}> {
+	constructor(props: IProps & {task_id: string}, context: any) {
 		super(props, context);
-		this.state = {
-			task_id: props.tasks.order[0]
-		};
 	}
 	render() {
-		let task = this.props.tasks.map[this.state.task_id];
+		let task = this.props.tasks.map[this.props.task_id];
 		return <Layout style={{maxWidth: "100%", width: 1024}} gutter={20}>
 			<Section remain>
-				<TestCaseChallenge height="calc(100vh - 100px)" task={task} task_id={this.state.task_id} />
+				<TestCaseChallenge height="calc(100vh - 100px)" task={task} task_id={this.props.task_id} />
 			</Section>
 		</Layout>;
 	}
@@ -89,7 +100,8 @@ let mapStateToProps = (state: IRootState): IProps=>{
 		order
 	}
 	return {
-		tasks: typescriptTasks
+		tasks: typescriptTasks,
+		userTasks: state.user.taskDetails
 	}
 }
 export let TasksTypescriptView = connect(mapStateToProps)(TasksTypescriptView_);
