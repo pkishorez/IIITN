@@ -44,7 +44,7 @@ class _SocketIO {
 	request(req_type: IRequestType, data?: any) {
 		return new Promise<any>((resolve, reject)=>{
 			if (!this.connected) {
-				reject("Failed connecting to server.");
+				return reject("Failed connecting to server.");
 			}
 			let reqid = g_reqid++;
 			let request: IRequest = {
@@ -55,13 +55,13 @@ class _SocketIO {
 			this.socket.emit("request", request);
 			let responseID = getResponseID(reqid);
 			this.socket.on(responseID, (json: IResponse)=>{
+				this.socket.off(responseID);
 				if (json.error) {
-					reject(json.error);
+					return reject(json.error);
 				}
 				else {
-					resolve(json.data);
+					return resolve(json.data);
 				}
-				this.socket.off(responseID);
 			});
 		}).catch((error)=>{
 			console.error(error);
