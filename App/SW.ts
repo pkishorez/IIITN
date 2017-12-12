@@ -1,9 +1,8 @@
 let CACHE_NAME = "iiitncache";
-import {getRouteDetails} from 'App/_presentation/Routes/';
 
 let urlsToCache: string[] = [
 	// Cache web pages.
-	...Object.keys(getRouteDetails()),
+	"/",
 
 	// Cache webpage resources.
 	"/assets/vs/loader.js",
