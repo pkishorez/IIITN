@@ -13,13 +13,10 @@ class _Guide{
 		if (!this.orderedMapDatabase) {
 			this.orderedMapDatabase = new OrderedMapDatabase<IModule>(Database.collection("guides"));
 		}
-		let status = this.orderedMapDatabase.performAction(action.orderedMapAction);
-		return status.then((omAction)=>{
-			console.log(action);
+		return this.orderedMapDatabase.performAction(action.orderedMapAction).then((omAction)=>{
 			action.orderedMapAction = omAction;
-			return Promise.resolve(action);
+			return action;
 		}).catch((error)=>{
-			console.log(error);
 			return Promise.reject("Couldn't perform action.");
 		});
 	}

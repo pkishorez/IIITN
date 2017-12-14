@@ -8,7 +8,7 @@ type IValidCollections = "guides" | "tasks" | "user" | "keyvalue";
 let DBConnection: mongodb.Db;
 
 class Database_ {
-	private _collections: any = {};
+	private _collections: {[id: string]: Collection} = {};
 	constructor() {
 		new Promise<mongodb.Db>((resolve, reject)=>{
 			mongodb.connect("mongodb://127.0.0.1:27017", (err, res)=>{
