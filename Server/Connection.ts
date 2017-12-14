@@ -62,16 +62,14 @@ export class Connection {
 			case "USER_SAVE_TASK": {
 				return this.user.saveTask(request.data);
 			}
-			case "GUIDE_INIT":
-				return Guide.performAction(request.type, request.data);
 		}
 		// Admin actions goes here...
 		if (this.user.userid!="admin") {
 			return Promise.reject("User should be an admin.");
 		}
 		switch(request.type) {
-			case "GUIDE_MODULE_ACTION": {
-				return Guide.performAction(request.type, request.data);
+			case "GUIDE_ACTION": {
+				return Guide.performAction(request.data);
 			}	
 		}
 

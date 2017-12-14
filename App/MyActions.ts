@@ -51,7 +51,7 @@ export let Me = {
 
 export let Task = {
 	init() {
-		Task.perform({
+		return Task.perform({
 			type: "TASK_ACTION",
 			orderedMapAction: {
 				type: "INIT"
@@ -65,9 +65,14 @@ export let Task = {
 
 export let Guide = {
 	init() {
-		return Network.requestAndDispatch("GUIDE_INIT", {});
+		return Network.requestAndDispatch("GUIDE_ACTION", {
+			type: "GUIDE_ACTION",
+			orderedMapAction: {
+				type: "INIT"
+			}
+		} as IGuideAction);
 	},
 	perform(action: IGuideAction) {
-		return Network.requestAndDispatch("GUIDE_MODULE_ACTION", action);
+		return Network.requestAndDispatch("GUIDE_ACTION", action);
 	}
 }

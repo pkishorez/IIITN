@@ -26,8 +26,7 @@ class StarterManage_ extends React.Component<IProps> {
 			onOrderChange={(order)=>{
 				console.log("REOREDERED : ", order);
 				Guide.perform({
-					type:"GUIDE_MODULE_ACTION",
-					guide_id: "STARTER",
+					type:"GUIDE_ACTION",
 					orderedMapAction: {
 						type: "REORDER",
 						order
@@ -40,7 +39,7 @@ class StarterManage_ extends React.Component<IProps> {
 }
 let mapStateToProps = (state: IRootState): IProps=>{
 	return {
-		...state.guides["STARTER"],
+		...state.guides
 	}
 }
 export let StarterManagement = connect(mapStateToProps)(StarterManage_);
@@ -56,8 +55,7 @@ export let AddOrEditModule = (id?: string, module?: IModule)=>{
 		let editorState = JSON.stringify(convertToRaw(editor.getCurrentContent()));
 		if (id) {
 			Guide.perform({
-				type: "GUIDE_MODULE_ACTION",
-				guide_id: "STARTER",
+				type: "GUIDE_ACTION",
 				orderedMapAction: {
 					type: "MODIFY",
 					_id: id,
@@ -70,8 +68,7 @@ export let AddOrEditModule = (id?: string, module?: IModule)=>{
 		}
 		else {
 			Guide.perform({
-				type: "GUIDE_MODULE_ACTION",
-				guide_id: "STARTER",
+				type: "GUIDE_ACTION",
 				orderedMapAction: {
 					type: "ADD",
 					value: {

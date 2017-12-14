@@ -51,7 +51,7 @@ class StarterView_ extends React.Component<IProps, IState> {
 
 let mapStateToProps = (state: IRootState): IProps=>{
 	return {
-		...state.guides["STARTER"],
+		...state.guides,
 	}
 }
 export let StarterView = connect(mapStateToProps)(StarterView_);
