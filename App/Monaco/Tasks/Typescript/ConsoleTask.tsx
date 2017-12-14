@@ -4,10 +4,12 @@ import {Monaco, IMonacoProps} from 'App/Monaco';
 import * as _ from 'lodash';
 import * as jsdiff from 'diff';
 import {SAnim} from 'classui/Helper/Animation';
-import { runProgramInNewScope, Runtime } from 'App/Monaco/Runtime';
+import { runProgramInNewScope } from 'App/Monaco/Runtime/index';
+import {Runtime} from 'App/Monaco/Runtime/Tasks/index';
 import { Layout, Section } from 'classui/Components/Layout';
 import { Flash } from 'classui/Components/Flash';
 import { PersistMonaco } from 'App/State/Utils/PersistentMonaco';
+import { Feedback } from 'classui/Components/Feedback';
 
 interface IProps {
 	eid: string
@@ -34,20 +36,21 @@ let consoleStyle: React.CSSProperties = {
 };
 
 export class ConsoleTask extends React.Component<IProps, IState> {
+	private editorRef: monaco.editor.IStandaloneCodeEditor;
 	constructor(props: IProps, context: any) {
 		super(props, context);
 		this.state = {
 			answered: false,
 			output: undefined
 		};
-		this.runProgram = _.debounce(this.runProgram.bind(this), 100);
+		this.runProgram = this.runProgram.bind(this);
 		this.SubmitProgram = this.SubmitProgram.bind(this);
 	}
-	componentWillMount() {
-		this.runProgram(this.state.output);
+	componentDidMount() {
+		this.runProgram(this.editorRef?this.editorRef.getValue():undefined);
 	}
 	runProgram(code: string="") {
-		Runtime.run(code).then((output)=>{
+		return Runtime.run(code).then((output)=>{
 			if (!this.state.output) {
 				if (output==this.props.expectedOutput) {
 					this.setState({
@@ -55,9 +58,7 @@ export class ConsoleTask extends React.Component<IProps, IState> {
 					});
 				}
 			}
-			this.setState({
-				output
-			});	
+			return output;
 		});
 	}
 	diffProgram(expectedOutput: string, actualOutput: string="") {
@@ -79,16 +80,22 @@ export class ConsoleTask extends React.Component<IProps, IState> {
 		});
 	}
 	SubmitProgram() {
-		if (this.state.output!=this.props.expectedOutput){
-			Flash.flash((dismiss)=>{
-				return <div style={{...consoleStyle, maxWidth: 500}}>
-					{this.diffProgram(this.props.expectedOutput, this.state.output)}
-				</div>;
-			}, false, true, true, "card-5");
-		}
-		this.setState({
-			answered: (this.state.output==this.props.expectedOutput)
-		});
+		this.runProgram(this.editorRef.getValue()).then((output)=>{
+			if (output!=this.props.expectedOutput){
+				Flash.flash((dismiss)=>{
+					return <div style={{...consoleStyle, maxWidth: 500}}>
+						{this.diffProgram(this.props.expectedOutput, output)}
+					</div>;
+				}, false, true, true, "card-5");
+			}
+			else {
+				this.setState({
+					answered: (output==this.props.expectedOutput)
+				});
+			}
+		}).catch((error)=>{
+			Feedback.show(error, "error");
+		})
 	}
 	render() {
 		return <div style={{borderLeft: "3px solid "+(this.state.answered?"green":"red"), paddingLeft: 0, marginLeft: 0}}>
@@ -104,7 +111,7 @@ export class ConsoleTask extends React.Component<IProps, IState> {
 				<PersistMonaco theme="vs-dark" fontWeight="900" id={this.props.eid} autoResize ctrlEnterAction={this.SubmitProgram} lineNumbers="on" noborder dimensions={{
 					minHeight: 60,
 					maxHeight: 200
-				}} {...this.props.monaco} getOutput={this.runProgram}/>
+				}} {...this.props.monaco} editorRef={(ref: any)=>this.editorRef=ref}/>
 				<div style={consoleStyle} >
 					{/*<h4 style={{marginTop: 0, color: 'white'}}>Expected Output: </h4>*/}
 					{this.props.expectedOutput}
