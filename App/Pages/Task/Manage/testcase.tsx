@@ -36,21 +36,15 @@ export let AddOrEditTypescriptTestcaseTask = (props: Partial<ITypescriptTestCase
 			}
 			if (task_id) {
 				TaskAction.perform({
-					type: "TASK_ACTION",
-					orderedMapAction: {
-						type: "MODIFY",
-						_id: task_id,
-						value: task
-					}
+					type: "MODIFY",
+					_id: task_id,
+					value: task
 				}).then(dismiss);
 			}
 			else {
 				TaskAction.perform({
-					type: "TASK_ACTION",
-					orderedMapAction: {
-						type: "ADD",
-						value: task
-					}
+					type: "ADD",
+					value: task
 				}).then(dismiss);
 			}
 		};

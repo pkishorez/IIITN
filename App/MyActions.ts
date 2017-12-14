@@ -58,8 +58,11 @@ export let Task = {
 			}
 		} as any);
 	},
-	perform(action: ITaskAction) {
-		return Network.requestAndDispatch("TASK_ACTION", action);
+	perform(action: ITaskAction["orderedMapAction"]) {
+		return Network.requestAndDispatch("TASK_ACTION", {
+			type: "TASK_ACTION",
+			orderedMapAction: action
+		} as ITaskAction);
 	}
 };
 
@@ -72,7 +75,10 @@ export let Guide = {
 			}
 		} as IGuideAction);
 	},
-	perform(action: IGuideAction) {
-		return Network.requestAndDispatch("GUIDE_ACTION", action);
+	perform(action: IGuideAction["orderedMapAction"]) {
+		return Network.requestAndDispatch("GUIDE_ACTION", {
+			type: "GUIDE_ACTION",
+			orderedMapAction: action
+		} as IGuideAction);
 	}
 }

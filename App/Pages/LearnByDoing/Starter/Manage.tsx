@@ -20,17 +20,20 @@ class StarterManage_ extends React.Component<IProps> {
 		return <div style={{width: 500, margin: "auto"}}>
 			<div className="button" style={{marginTop: 10}} onClick={()=>AddOrEditModule()}>Add Lesson.</div>
 
-			<OrderedMapList onClick={(id)=>{
+			<OrderedMapList onDelete={(id)=>{
+				if (confirm("Do you really want to delete?"))
+					Guide.perform({
+						type: "DELETE",
+						_id: id
+					});
+			}} onClick={(id)=>{
 				AddOrEditModule(id, this.props.map[id])
 			}} orderedMap={{map: this.props.map, order: this.props.order}}
 			onOrderChange={(order)=>{
 				console.log("REOREDERED : ", order);
 				Guide.perform({
-					type:"GUIDE_ACTION",
-					orderedMapAction: {
-						type: "REORDER",
-						order
-					}
+					type: "REORDER",
+					order
 				})
 			}}
 			/>
@@ -55,26 +58,20 @@ export let AddOrEditModule = (id?: string, module?: IModule)=>{
 		let editorState = JSON.stringify(convertToRaw(editor.getCurrentContent()));
 		if (id) {
 			Guide.perform({
-				type: "GUIDE_ACTION",
-				orderedMapAction: {
-					type: "MODIFY",
-					_id: id,
-					value: {
-						title,
-						editorState
-					}
+				type: "MODIFY",
+				_id: id,
+				value: {
+					title,
+					editorState
 				}
 			}).then(dismiss);
 		}
 		else {
 			Guide.perform({
-				type: "GUIDE_ACTION",
-				orderedMapAction: {
-					type: "ADD",
-					value: {
-						editorState,
-						title
-					}
+				type: "ADD",
+				value: {
+					editorState,
+					title
 				}
 			}).then(dismiss);
 		}

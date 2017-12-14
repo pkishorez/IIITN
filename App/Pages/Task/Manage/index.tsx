@@ -37,21 +37,15 @@ class TaskManager_ extends React.Component<IProps> {
 					}} orderedMap={this.props.tasks}
 					onOrderChange={(order)=>{
 						TaskAction.perform({
-							type: "TASK_ACTION",
-							orderedMapAction: {
-								type: "REORDER",
-								order
-							}
+							type: "REORDER",
+							order
 						})
 					}}
 					onDelete={(task_id)=>{
 						confirm("Do you want to delete task?")?
 						TaskAction.perform({
-							type: "TASK_ACTION",
-							orderedMapAction: {
-								type: "DELETE",
-								_id: task_id
-							}
+							type: "DELETE",
+							_id: task_id
 						}):null
 					}}
 					/>
