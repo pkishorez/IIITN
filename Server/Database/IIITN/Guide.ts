@@ -1,50 +1,26 @@
-import {IGuideState, IGuide, IGuideAction} from 'App/State/Reducers/GuideReducer';
+import {IGuideState, IGuide, IGuideAction, IModule} from 'App/State/Reducers/GuideReducer';
 import {OrderedMap} from 'classui/DataStructures/OrderedMap';
 import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
+import { OrderedMapDatabase } from 'Server/Database/Utils/OrderedMapDatabase';
+import { Database } from 'Server/Database';
 
 class _Guide{
-	private guideState: IGuideState
+	private orderedMapDatabase: OrderedMapDatabase<IModule>;
 
 	// Update task. One action should be there.
-	__init() {
-		return KeyValue.get("GUIDE_DB").then((data)=>{
-			if (!data) {
-				data = {};
-			}
-			return data;
-		});
-	}
-	performAction(type: IGuideAction["type"], action: IGuideAction) {
-		action.type = type;
-		return new Promise<IGuideAction>(async (resolve, reject)=>{
-			if (!this.guideState) {
-				this.guideState = await this.__init()
-			}
-			switch(action.type) {
-				case "GUIDE_INIT": {
-					action.state = this.guideState;
-					break;
-				}
-				case "GUIDE_MODULE_ACTION": {
-					if (!action.guide_id) {
-						return reject("Guide id should be provided.");
-					}
-					let guide = new OrderedMap(this.guideState[action.guide_id]);
-					let modifiedAction = guide.performAction(action.orderedMapAction);
-					if (typeof modifiedAction=="string") {
-						return reject(modifiedAction);
-					}
-					action.orderedMapAction = modifiedAction;
-					this.guideState[action.guide_id] = guide.getState();
-					KeyValue.set("GUIDE_DB", this.guideState);
-					break;
-				}
-			}
-			resolve(action);
-		}).catch((err)=>{
-			console.error(err);
-			return Promise.reject(err);
+	performAction(action: IGuideAction) {
+		if (!this.orderedMapDatabase) {
+			this.orderedMapDatabase = new OrderedMapDatabase<IModule>(Database.collection("guides"));
+		}
+		let status = this.orderedMapDatabase.performAction(action.orderedMapAction);
+		return status.then((omAction)=>{
+			console.log(action);
+			action.orderedMapAction = omAction;
+			return Promise.resolve(action);
+		}).catch((error)=>{
+			console.log(error);
+			return Promise.reject("Couldn't perform action.");
 		});
 	}
 }

@@ -3,42 +3,59 @@ import { IJSONSchema } from 'classui/Components/Form/Schema/JSONSchema';
 import { Schema } from 'classui/Components/Form/Schema';
 import * as _ from 'lodash';
 
-class Database {
-	static get DB() {
-		return new Promise<mongodb.Db>((resolve, reject)=>{
+type IValidCollections = "guides" | "tasks" | "user" | "keyvalue";
+
+let DBConnection: mongodb.Db;
+
+class Database_ {
+	private _collections: any = {};
+	constructor() {
+		new Promise<mongodb.Db>((resolve, reject)=>{
 			mongodb.connect("mongodb://127.0.0.1:27017", (err, res)=>{
 				if (!err && res) {
-					resolve(res.db("iiitn"));					
+					DBConnection = res.db("iiitn");
+					Database._collections = {
+						"guides": new Collection("guides"),
+						"tasks": new Collection("tasks"),
+						"user": new Collection("user"),
+						"keyvalue": new Collection("keyvalue")
+					};
+					return resolve(DBConnection);
 				}
-				reject("Couldn't connect to database.");
+				return reject("Couldn't connect to database.");
 			})
 			setTimeout(()=>{
 				reject("Connection to database timedout.");
 			}, 5000);
 		})
 	}
+	collection(collection: IValidCollections): Collection {
+		if (!Database._collections[collection]) {
+			console.error("Couldn't Access Database. For collection ", collection);
+			process.exit();
+		}
+		return Database._collections[collection];
+	}
 }
+export let Database = new Database_();
 
 export class Collection{
 	private _collection: mongodb.Collection;
-	constructor(collection: string) {
+	constructor(collection: IValidCollections) {
 		this.findOne = this.findOne.bind(this);
 		this.getMany = this.getMany.bind(this);
 		this.update = this.update.bind(this);
 		this.insert = this.insert.bind(this);
-		this.init = this.init.bind(this);
 
-		this.init(collection);
-	}
-	async init(collection: string) {
-		try {
-			let db = await Database.DB;
-			this._collection = db.collection(collection);
-		}
-		catch (e) {
-			console.error("Couldn't connect to database.");
+		if (!DBConnection) {
+			console.error("Couldn't establish database connection : ", collection);
 			process.exit();
 		}
+		this._collection = DBConnection.collection(collection);
+	}
+
+	Get(collection: IValidCollections) {
+		return Database.collection(collection);
 	}
 
 	get raw() {
@@ -65,25 +82,26 @@ export class Collection{
 			}
 		}
 	}
-	async update(_id: string, data: any, schema?: IJSONSchema, upsert?: boolean) {
+	update(_id: string, data: any, schema?: IJSONSchema, upsert?: boolean) {
+		if (!this._collection) {
+			return Promise.reject("Couldn't get handle to collection.");
+		}
 		if (schema) {
 			let error = Schema.validate(schema, data);
 			if (error) {
 				return Promise.reject(error);
 			}
 		}
-		try {
-			return await this._collection.updateOne({_id}, data, {
-				upsert
-			}).catch(()=>{
-				return Promise.reject("Coudln't update record.");
-			});
-		}
-		catch(e) {
-			throw e;
-		}
+		return this._collection.updateOne({_id}, data, {
+			upsert
+		}).catch(()=>{
+			return Promise.reject("Coudln't update record.");
+		});
 	}
-	async insert(data: any, schema?: IJSONSchema) {
+	insert(data: any, schema?: IJSONSchema) {
+		if (!this._collection) {
+			return Promise.reject("Couldn't get handle to collection.");
+		}
 		if (schema) {
 			let error = Schema.validate(schema, data);
 			if (error) {
@@ -91,7 +109,7 @@ export class Collection{
 			}
 		}
 		try {
-			return await this._collection.insertOne(data).catch(()=>{
+			return this._collection.insertOne(data).catch(()=>{
 				return Promise.reject("Couldn't insert record");
 			});
 		}
@@ -99,13 +117,19 @@ export class Collection{
 			throw e;
 		}
 	}
-	async deleteById(_id: string) {
-		return await this._collection.deleteOne({_id}).catch(()=>{
+	deleteById(_id: string) {
+		if (!this._collection) {
+			return Promise.reject("Couldn't get handle to collection.");
+		}
+		return this._collection.deleteOne({_id}).catch(()=>{
 			return Promise.reject("Couldn't delete record.");
 		});
 	}
-	async findOne(criteria: any, fields?: Object) {
-		return await this._collection.findOne(criteria, {fields}).catch(()=>{
+	findOne(criteria: any, fields?: Object) {
+		if (!this._collection) {
+			return Promise.reject("Couldn't get handle to collection.");
+		}
+		return this._collection.findOne(criteria, {fields}).catch(()=>{
 			return Promise.reject("Couldn't find Record.");
 		});
 	}

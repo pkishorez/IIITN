@@ -1,21 +1,19 @@
-import {Collection} from 'Server/Database';
+import {Database} from 'Server/Database';
 import {S_Task} from '../Schema/index';
 
-let KeyValueDB: Collection = new Collection("keyvalue");
-
-type IKeyValueDBS = "TASKS_DB" | "GUIDE_DB"
+type IKeyValueDBS = "TASKS_DB" | "GUIDE_DB" | "POLL_DB"
 
 export class KeyValue{
 	// Update task. One action should be there.
 	static set(key: IKeyValueDBS, data: any) {
-		return KeyValueDB.raw.update({_id: key}, {
+		return Database.collection("keyvalue").raw.update({_id: key}, {
 			data
 		}, {
 			upsert: true
 		});
 	}
 	static get(key: IKeyValueDBS) {
-		return KeyValueDB.findOne({_id: key}).then((data)=>{
+		return Database.collection("keyvalue").findOne({_id: key}).then((data)=>{
 			if (data) {
 				return data.data;
 			}
