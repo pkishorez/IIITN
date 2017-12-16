@@ -9,6 +9,7 @@ module.exports = [
 	{
 		entry: {
 			SW: './App/SW.ts',
+			GLOBALS: './App/Globals.ts',
 			"bundle/bundle": './index.tsx'
 		},
 		output: {

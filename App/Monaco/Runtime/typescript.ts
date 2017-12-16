@@ -1,5 +1,6 @@
-import * as ts from 'typescript';
 import * as _ from 'lodash';
+
+let ts = (window as any)._g_unique_typescript_identifier;
 
 function transpileModule(input: string, options: any) {
 	var inputFileName = options.jsx ? "module.tsx" : "module.ts";
