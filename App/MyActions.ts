@@ -52,10 +52,7 @@ export let Me = {
 export let Task = {
 	init() {
 		return Task.perform({
-			type: "TASK_ACTION",
-			orderedMapAction: {
-				type: "INIT"
-			}
+			type: "INIT"
 		} as any);
 	},
 	perform(action: ITaskAction["orderedMapAction"]) {
