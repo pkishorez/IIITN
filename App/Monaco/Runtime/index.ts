@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import {compileCode} from './typescript';
 import * as ts from 'typescript';
 export {compileCode} from './typescript';
 export {Runtime, IFunctionDetails} from './Tasks';

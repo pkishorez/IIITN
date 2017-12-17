@@ -11,7 +11,7 @@ import {ITask, ITypescriptTestCaseTask} from 'Server/Database/Schema/Task';
 import { OrderedMapList } from 'classui/Components/OrderedMapList';
 import { EditorState, DraftEditor, convertToRaw } from 'App/DraftEditor';
 import { Monaco } from 'App/Monaco';
-import { S_FunctionDetails } from 'App/Monaco/Runtime/Tasks';
+import { S_FunctionDetails } from 'Server/Database/Schema/Task';
 import { IFunctionDetails } from 'App/Monaco/Runtime';
 
 export let AddOrEditTypescriptTestcaseTask = (props: Partial<ITypescriptTestCaseTask>, task_id?: string)=>{

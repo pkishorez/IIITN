@@ -1,8 +1,8 @@
-import {S_Task} from '../Schema/index';
+import {S_Task} from 'Server/Database/Schema/index';
 import {ITaskAction, ITask} from 'App/State/Reducers/TaskReducer';
 import {KeyValue} from './_KeyValue';
 import * as mongodb from 'mongodb';
-import {OrderedMapDatabase} from '../Utils/OrderedMapDatabase';
+import {OrderedMapDatabase} from 'Server/Database/Utils/OrderedMapDatabase';
 import { Database } from 'Server/Database';
 
 export class _Task{

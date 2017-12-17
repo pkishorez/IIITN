@@ -69,28 +69,6 @@ interface IFunctionInputOutput {
 	output: any
 }
 
-export let S_FunctionDetails: IJSONSchema = {
-	type: "object",
-	properties: {
-		name: {
-			type: "string"
-		},
-		tests: {
-			type: "array",
-			items: {
-				type: "object",
-				properties: {
-					input: {
-						type: "array"
-					},
-					output: {}
-				},
-				required: ["input", "output"]
-			}
-		}
-	},
-	required: ["name", "tests"]
-}
 export interface IFunctionDetails {
 	name: string
 	tests: IFunctionInputOutput[]

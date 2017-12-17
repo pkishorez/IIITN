@@ -1,5 +1,29 @@
 import {IJSONSchema} from 'classui/Components/Form/Schema';
-import { IFunctionDetails, S_FunctionDetails } from 'App/Monaco/Runtime/Tasks';
+import { IFunctionDetails } from 'App/Monaco/Runtime/Tasks';
+
+export let S_FunctionDetails: IJSONSchema = {
+	type: "object",
+	properties: {
+		name: {
+			type: "string"
+		},
+		tests: {
+			type: "array",
+			items: {
+				type: "object",
+				properties: {
+					input: {
+						type: "array"
+					},
+					output: {}
+				},
+				required: ["input", "output"]
+			}
+		}
+	},
+	required: ["name", "tests"]
+};
+
 
 export let S_Task: IJSONSchema = {
 	oneOf: [
