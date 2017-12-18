@@ -9,7 +9,7 @@ import { IOrderedMap } from 'classui/DataStructures/OrderedMap';
 import { ITypescriptTestCaseTask } from 'Server/Database/Schema/Task';
 import { Flash } from 'classui/Components/Flash';
 import { TestCaseChallenge } from 'App/Monaco/Tasks/Typescript/TestCaseChallenge';
-import {Table, THead, TBody} from 'classui/Components/Table';
+import {Table} from 'classui/Components/Table';
 
 interface IProps {
 	tasks: IOrderedMap<ITypescriptTestCaseTask>
@@ -40,29 +40,22 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		}, true, true, true);
 	}
 	render() {
+		let data = Object.keys(this.props.tasks.map).map((task_id)=>{
+			return {
+				...this.props.tasks.map[task_id],
+				status: this.props.userTasks[task_id]?"cleared":"todo"
+			}
+		});
+		console.log(data);
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section style={{marginTop: 20}} remain>
-				<Table>
-					<THead>
-						<th>Task No</th>
-						<th>Title</th>
-						<th>Status</th>
-					</THead>
-					<TBody>
-						{
-							this.props.tasks.order.map((task_id, i)=>{
-								let task = this.props.tasks.map[task_id];
-								let userTask = this.props.userTasks[task_id]?"cleared":"todo";
-								return <tr onClick={()=>{this.attemptTask(task_id)}}>
-									<td>{i+1}.</td>
-									<td>{task.title}</td>
-									<td><div className={("badge inline-block "+(userTask=="cleared"?"success": "grey"))}>{
-										userTask
-									}</div></td>
-								</tr>;
-							})
-						}
-					</TBody>
+				<Table headerItems={["title", "status"]} sortableItems={["status"]} data={data} columnUI={{
+					"status": (value)=>{
+						return <div className={("badge inline-block "+(value=="cleared"?"success": "grey"))}>{
+							value
+						}</div>
+					}
+				}}>
 				</Table>
 			</Section>
 		</Layout>;
