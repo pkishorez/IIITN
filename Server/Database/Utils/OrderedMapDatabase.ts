@@ -22,11 +22,9 @@ export class OrderedMapDatabase<T> {
 			case "INIT": {
 				let data: IOrderedMap<T>;
 				return this.collection.getMany({}).toObject().then((list)=>{
-					let config = _.clone(list.config);
-					delete list.config;
 					action.state = {
-						map: list,
-						order: config?config.order:Object.keys(list)
+						map: _.omit(list, "config"),
+						order: list.config?list.config.order:Object.keys(list)
 					};
 					return action;
 				});
@@ -68,6 +66,7 @@ export class OrderedMapDatabase<T> {
 				});
 			}
 		}
+		console.error("UNKNOWN OPERATION : ", action);
 		return Promise.reject("Unknown Operation ERROR.");
 	}
 

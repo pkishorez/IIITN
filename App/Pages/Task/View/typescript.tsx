@@ -43,16 +43,18 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		let data = Object.keys(this.props.tasks.map).map((task_id)=>{
 			return {
 				...this.props.tasks.map[task_id],
+				task_id,
 				status: this.props.userTasks[task_id]?"cleared":"todo"
 			}
 		});
-		console.log(data);
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section style={{marginTop: 20}} remain>
-				<Table headerItems={["title", "status"]} sortableItems={["status"]} data={data} columnUI={{
-					"status": (value)=>{
-						return <div className={("badge inline-block "+(value=="cleared"?"success": "grey"))}>{
-							value
+				<Table hoverable rowOnClick={(data)=>{
+					this.attemptTask(data.task_id);
+				}} headerItems={["title", "status"]} sortableItems={["status"]} data={data} columnUI={{
+					"status": (data)=>{
+						return <div className={("badge inline-block "+(data.status=="cleared"?"success": "grey"))}>{
+							data.status
 						}</div>
 					}
 				}}>

@@ -57,7 +57,7 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 		this.seqProgram?this.seqProgram.runProgram(value):null;
 	}
 	render() {
-		return <Layout align="center" style={{height: this.props.mainHeight, width: this.props.width}} gutter={10}>
+		return <Layout align="center" style={{height: this.props.mainHeight, width: this.props.width, backgroundColor: 'white'}}>
 			<Section remain>
 				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} dimensions={{
 					height: this.props.playHeight
@@ -92,6 +92,6 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 
 export let FlashPlaygroundTypescript = ()=>{
 	Flash.flash(()=>{
-		return <PlaygroundTypescript monaco={{shouldHaveMarginBottom: true, shouldHaveMarginTop: true}} width={1024} playHeight="calc(100vh - 150px)" mainHeight="auto" outputHeight="calc(100vh - 200px)"/>;
-	}, false, true, true);
+		return <PlaygroundTypescript width={1024} playHeight="calc(100vh - 150px)" mainHeight="auto" outputHeight="calc(100vh - 200px)"/>;
+	}, false, true, false);
 }

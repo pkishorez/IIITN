@@ -17,12 +17,9 @@ export type IGuideState = IOrderedMap<IModule>;
 export let GuideReducer = (state: IGuideState = {map: {}, order: []}, action: IGuideAction)=>{
 	switch(action.type) {
 		case "GUIDE_ACTION": {
-			console.log("BEFORE STATE", state);
 			let orderedMapState = new OrderedMap(state);
-			console.log("ACTION : ", action);
 			orderedMapState.performAction(action.orderedMapAction);
 			state = orderedMapState.getState();
-			console.log("AFTER STATE", state);
 			break;
 		}
 	}

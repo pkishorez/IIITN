@@ -14,7 +14,6 @@ export class _Task{
 		}
 		let status = this.orderedMapDatabase.performAction(action.orderedMapAction);
 		return status.then((omAction)=>{
-			console.log(action);
 			action.orderedMapAction = omAction;
 			return Promise.resolve(action);
 		}).catch((error)=>{

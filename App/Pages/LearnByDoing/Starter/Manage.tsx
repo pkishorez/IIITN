@@ -30,7 +30,6 @@ class StarterManage_ extends React.Component<IProps> {
 				AddOrEditModule(id, this.props.map[id])
 			}} orderedMap={{map: this.props.map, order: this.props.order}}
 			onOrderChange={(order)=>{
-				console.log("REOREDERED : ", order);
 				Guide.perform({
 					type: "REORDER",
 					order

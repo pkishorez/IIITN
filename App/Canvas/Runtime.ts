@@ -8,6 +8,5 @@ export let CompileCanvasCode = (code: string, canvasId?: string)=>{
 		code = code.replace(/__document_canvas_element__/g, `${canvasId}`);
 	}
 
-	console.log("COMPILED", code);
 	return compileCode(code);
 };

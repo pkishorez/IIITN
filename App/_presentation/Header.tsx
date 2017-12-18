@@ -23,7 +23,7 @@ class _Header extends React.Component<IProps, IState> {
 	render() {
 		return <NavBar fixed logo="Programmer's Club">
 			<NavbarRemain/>
-			<RouterButton to="/lbd"><div className="button">Guides</div></RouterButton>
+			<RouterButton to="/lbd/starter"><div className="button">Guides</div></RouterButton>
 			<Dropdown button="Playground" ref={(ref)=>this.playgroundDD = ref as Dropdown} push="left">
 				<li onClick={()=>{FlashPlaygroundTypescript();this.playgroundDD.dismiss()}}>Typescript</li>
 				<RouterButton to="/2dplayground"><li onClick={()=>this.playgroundDD.dismiss()}>Canvas2D</li></RouterButton>

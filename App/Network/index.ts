@@ -69,9 +69,7 @@ class _SocketIO {
 		});
 	}
 	requestAndDispatch(req_type: IRequestType, data: any) {
-		console.log("REQUEST : ", req_type, data);
 		return this.request(req_type, data).then((response: any)=>{
-			console.log("RESPONSE :): ", response);
 
 			if (typeof response == "object") {
 				__store.dispatch({
