@@ -140,11 +140,7 @@ export class TestCaseChallenge_ extends React.Component<IProps, IState> {
 							}}>
 								{this.state.taskEditable?<span>
 									{this.state.testCasesPassed} / {this.props.task.funcDetails.tests.length} Test Cases passed.
-								</span>:<span>Successfully Submitted the code. <span className="button" onClick={()=>{
-									this.setState({
-										taskEditable: true
-									});
-								}}>Retry</span></span>}
+								</span>:<span>Successfully Submitted the code.</span>}
 							</Section>
 							<Section remain></Section>
 							<Section>
@@ -154,7 +150,11 @@ export class TestCaseChallenge_ extends React.Component<IProps, IState> {
 								}}>{
 									userTaskDetails?"Resubmit Code":"Submit Code"
 								}</div>
-								:null}
+								:<span className="button" onClick={()=>{
+									this.setState({
+										taskEditable: true
+									});
+								}}>Rewrite Code.</span>}
 							</Section>
 						</Layout>
 					</Section>
