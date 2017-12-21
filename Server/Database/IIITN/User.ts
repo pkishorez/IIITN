@@ -5,6 +5,7 @@ import {INR_User} from 'Common/ActionSignature';
 import { S_UserTask_Details } from 'Server/Database/Schema/Task';
 import { IUserAction, IUserSaveTaskDetails } from 'App/State/Reducers/UserReducer';
 import { Database } from 'Server/Database';
+import * as _ from 'lodash';
 
 export class User {
 	userid: string;
@@ -37,7 +38,9 @@ export class User {
 		});
 	}
 	static getStudents() {
-		return Database.collection("user").getMany({}).toArray()
+		return Database.collection("user").getMany({}).toArray().then((data)=>{
+			return data.map((obj: any)=>_.omit(obj, ["password", "secretKey"]));
+		})
 		.catch(()=>{throw "Couldn't get students."});
 	}
 	static getProfile(userid: string) {
