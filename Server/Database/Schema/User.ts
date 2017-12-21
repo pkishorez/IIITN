@@ -23,8 +23,12 @@ export let S_User: IJSONSchema = {
 		},
 		branch: {
 			enum: ["CSE", "MME", "ECE", "MECH", "CHEMICAL"]
+		},
+		role: {
+			enum: ["admin", "student"]
 		}
-	}
+	},
+	required: ["_id", "email", "password", "batch", "branch"]
 };
 
 export let S_UserLogin: IJSONSchema = {
@@ -32,5 +36,6 @@ export let S_UserLogin: IJSONSchema = {
 	properties: {
 		userid: (S_User.properties as any)._id,
 		password: (S_User.properties as any).password	
-	}
+	},
+	required: ["userid", "password"]
 };
