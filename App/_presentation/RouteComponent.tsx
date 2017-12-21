@@ -29,7 +29,7 @@ export class RouteComponent extends React.Component<IProps, IState> {
 					}}/>
 				}
 			}
-			return <Route exact path={path} component={route.component}/>;
+			return <Route exact key={path} path={path} component={route.component}/>;
 		});
 
 		return <Switch>
