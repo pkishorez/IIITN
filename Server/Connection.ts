@@ -44,9 +44,6 @@ export class Connection {
 			case "REGISTER": {
 				return User.register(request.data);
 			}
-			case "STUDENTS": {
-				return User.getStudents();
-			}
 			case "PROFILE": {
 				return User.getProfile(request.data.userid);
 			}
@@ -62,6 +59,10 @@ export class Connection {
 			case "USER_SAVE_TASK": {
 				return this.user.saveTask(request.data);
 			}
+			case "GUIDE_ACTION": {
+				if (_.get(request.data, "orderedMapAction.type")=="INIT")
+					return Guide.performAction(request.data);
+			}
 		}
 		// Admin actions goes here...
 		if (this.user.userid!="admin") {
@@ -70,7 +71,11 @@ export class Connection {
 		switch(request.type) {
 			case "GUIDE_ACTION": {
 				return Guide.performAction(request.data);
-			}	
+			}
+			case "STUDENTS": {
+				return User.getStudents();
+			}
+
 		}
 
 		return Promise.reject(`Request type ${request.type} not found.`);
