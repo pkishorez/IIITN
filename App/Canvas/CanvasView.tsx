@@ -30,7 +30,7 @@ export class CanvasView extends React.Component<IProps, IState> {
 	}
 	runCode(code: string) {
 		let compiled_code = CompileCanvasCode(code, this.uid);
-		runProgramInNewScope(compiled_code);
+		runProgramInNewScope(compiled_code.code);
 	}
 	render()
 	{

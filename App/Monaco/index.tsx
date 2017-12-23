@@ -102,8 +102,8 @@ export class Monaco extends React.Component<IMonacoProps, IMonacoState> {
 				this._typescriptDefaults = {
 					compilerOptions: {
 						target: monaco.languages.typescript.ScriptTarget.ES2016,
-						noImplicitAny: true,
-						noUnusedParameters: true,
+						noImplicitAny: false,
+						noUnusedParameters: false,
 						noImplicitReturns: true,
 						alwaysStrict: true,
 						noUnusedLocals: false,

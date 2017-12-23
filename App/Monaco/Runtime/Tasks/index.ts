@@ -50,17 +50,29 @@ let Code = {
 	_after: ``,
 	generate(code: string) {
 		// Transpile Typescript to Javascript.
-		code = `
-		${this._before}
-		try {
-			${code}
+		let mainCode = compileCode(code);
+		if (mainCode.error) {
+			code = `
+				self.postMessage({type: 'error', data: \`${mainCode.error}\`});
+			`;
 		}
-		catch(e) {
-			self.postMessage({type: "error", data: e});
+		else {
+			code = `
+			${this._before}
+			try {
+				${code}
+			}
+			catch(e) {
+				self.postMessage({type: "error", data: \`\${e}\`});
+			}
+			${this._after}
+			`;
 		}
-		${this._after}
-		`;
-		return compileCode(code);
+		let finalCode = compileCode(code);
+		if (finalCode.error){
+			console.error("SERIOUS ERROR IN COMPILING FINAL EXEC CODE : ", finalCode.error);
+		}
+		return finalCode.code;
 	}
 }
 
@@ -76,8 +88,7 @@ export interface IFunctionDetails {
 };
 export let Runtime = {
 	run(code: string) {
-		let genCode = Code.generate(`
-			${code};
+		let genCode = Code.generate(`${code}
 			self.postMessage({type: "OUTPUT", data: __kishore_bdata});
 		`);
 		return runProgramInWorker<string>(genCode);
