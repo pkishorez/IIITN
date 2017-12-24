@@ -16,6 +16,7 @@ interface IProps {
 	outputHeight?: string | number
 };
 interface IState {
+	running: boolean
 	output: string
 	error?: string
 };
@@ -32,17 +33,20 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 		super(props, context);
 		this.runProgram = this.runProgram.bind(this);
 		this.state = {
+			running: false,
 			output: ""
 		};
 		this.seqProgram = new SeqProgramOutput({
 			onOutput: (output)=>{
 				this.setState({
 					output,
+					running: false,
 					error: undefined
 				})
 			},
 			onError: (error)=>{
 				this.setState({
+					running: false,
 					error
 				})
 			}
@@ -51,19 +55,26 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 	runProgram(value: string)
 	{
 		this.setState({
-			output: "Running...",
-			error: undefined
+			running: true
 		});
 		this.seqProgram?this.seqProgram.runProgram(value):null;
 	}
 	render() {
-		return <Layout align="center" style={{height: this.props.mainHeight, width: this.props.width, backgroundColor: 'white'}}>
+		let output_lines = this.state.output.split("\n");
+		let output = output_lines.map((text, i)=>{
+			return <span key={i}>
+				{text}
+				{((output_lines.length-1)!=i)?
+				<span style={{opacity: 0.3, whiteSpace: "pre"}}>⏎{"\n"}</span>:null}
+			</span>
+		});
+		return <Layout gutter={20} align="center" style={{height: this.props.mainHeight, width: this.props.width}}>
 			<Section remain>
 				<PersistMonaco id="PLAYGROUND" {...this.props.monaco} fontSize={15} dimensions={{
 					height: this.props.playHeight
 				}} getOutput={this.runProgram}/>
 			</Section>
-			<Section basis={400} style={{}}>
+			<Section basis={400} style={{maxWidth: 400, overflow: "auto"}}>
 				<div className="card-1" style={{
 					transition: "0.3s all",
 					backgroundColor: "black",
@@ -74,16 +85,16 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 				}}>
 					<pre style={{
 						whiteSpace: "pre",
-						overflowX: "hidden",
-						fontSize: 14,
+						fontSize: 15,
 						fontWeight: 900,
 						fontFamily: "Inconsolata, monospace",
 						padding: 20,
 						margin:0,
 						lineHeight: 1.6,
+						opacity: this.state.running?0.5:1,
 						backgroundColor: 'black',
 						color: this.state.error?'red':'cyan'
-					}}>{this.state.error?this.state.error:this.state.output}</pre>
+					}}>{this.state.error?this.state.error:output}</pre>
 				</div>
 			</Section>
 		</Layout>;
@@ -93,5 +104,5 @@ export class PlaygroundTypescript extends React.Component<IProps, IState> {
 export let FlashPlaygroundTypescript = ()=>{
 	Flash.flash(()=>{
 		return <PlaygroundTypescript width={1024} playHeight="calc(100vh - 150px)" mainHeight="auto" outputHeight="calc(100vh - 200px)"/>;
-	}, false, true, false);
+	}, true, true, false);
 }
