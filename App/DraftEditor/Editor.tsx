@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Editor, Draft, EditorState,convertToRaw, convertFromRaw, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding, Entity} from 'draft-js';
+import {Editor, EditorState,convertToRaw, convertFromRaw, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding, Entity} from 'draft-js';
 import {Layout, Section} from 'classui/Components/Layout';
 import {Drawer} from 'classui/Components/Drawer';
 import {blockStyleFn, blockRenderedFn} from './_utils';
@@ -16,7 +16,7 @@ export {EditorState, convertToRaw} from 'draft-js';
 interface IProps {
 	height?: string | number
 	defaultState?: string
-	deditor?: Draft.Component.Base.DraftEditorProps
+	deditor?: any //Draft.Component.Base.DraftEditorProps
 	onChange?: (editorState: EditorState)=>void
 	style?: React.CSSProperties
 };

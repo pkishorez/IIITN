@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {Editor, Draft, EditorState,convertToRaw, convertFromRaw, ContentBlock, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding} from 'draft-js';
+import {Editor, EditorState,convertToRaw, convertFromRaw, ContentBlock, RichUtils, CompositeDecorator, KeyBindingUtil, getDefaultKeyBinding} from 'draft-js';
 import {Layout, Section} from 'classui/Components/Layout';
 import {blockStyleFn, RenderBlockRenderedFn} from './_utils';
 import * as Immutable from 'immutable';
