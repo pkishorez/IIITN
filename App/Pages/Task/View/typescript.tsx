@@ -49,9 +49,9 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		});
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section style={{marginTop: 20}} remain>
-				<Table hoverable rowOnClick={(data)=>{
+				<Table hoverable defaultGroup="status" rowOnClick={(data)=>{
 					this.attemptTask(data.task_id);
-				}} headerItems={["title", "status"]} sortableItems={["status"]} data={data} columnUI={{
+				}} headerItems={["title", "status"]} data={data} columnUI={{
 					"status": (data)=>{
 						return <div className={("badge inline-block "+(data.status=="cleared"?"success": "grey"))}>{
 							data.status
