@@ -35,7 +35,7 @@ export class Connection {
 	processRequest(request: IRequest) {
 		switch(request.type) {
 			case "USER_LOGIN": {
-				return User.login(request.data).then((data)=>{
+				return User.login(request.data, this.socket).then((data)=>{
 					let {ref, ...loggedInData} = data;
 					this.user = ref;
 					return loggedInData;

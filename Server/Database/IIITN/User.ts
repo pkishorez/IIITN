@@ -8,10 +8,55 @@ import { Database } from 'Server/Database';
 import * as _ from 'lodash';
 
 export class User {
-	userid: string;
+	private static userList: {
+		[id: string]: {
+			socket: SocketIO.Socket
+		}[]
+	} = {};
+	readonly userid: string;
+	readonly socket: SocketIO.Socket;
 
-	private constructor(userid: string) {
+	private constructor(userid: string, socket: SocketIO.Socket) {
 		this.userid = userid;
+		this.socket = socket;
+
+		if (!User.userList[userid]) {
+			User.userList[userid] = [];
+		}
+		User.userList = {
+			...User.userList,
+			[userid]: [
+				...User.userList[userid],
+				{
+					socket
+				}
+			]
+		};
+		this.socket.on("disconnect", ()=>{
+			if (User.userList[this.userid].length>1) {
+				User.userList = {
+					...User.userList,
+					[this.userid]: User.userList[this.userid].filter((instance)=>{
+						if (instance.socket==this.socket)
+							return false;
+						return true;
+					})
+				};
+				return;
+			}
+			User.userList = _.omit(User.userList, this.userid);
+		})
+	}
+
+	static broadCast(list: string[], data: any) {
+		list.map((user)=>{
+			User.userList[user].forEach((stats)=>{
+				stats.socket.send(data);
+			})
+		});
+	}
+	static getOnlineUserList() {
+		return Object.keys(this.userList);
 	}
 
 	static register(user: any) {
@@ -22,14 +67,11 @@ export class User {
 			return Promise.resolve(`User ${user._id} successfully registered.`);
 		}).catch((e)=>Promise.reject("User already exists."));
 	}
-	static login(data: INR_User["USER_LOGIN"]): Promise<{ref: User} & INR_User["USER_LOGIN"]> {
-		return Database.collection("user").findOne({_id: data.userid}).then((user: any)=>{
-			if (!user) {
-				return Promise.reject("User Not Found.");
-			}
+	static login(data: INR_User["USER_LOGIN"], socket: SocketIO.Socket): Promise<{ref: User} & INR_User["USER_LOGIN"]> {
+		return Database.collection("user").get({_id: data.userid}).then((user)=>{
 			if ((user.password==data.password) || (user.secretKey==data.secretKey)) {
 				return Promise.resolve({
-					ref: new User(data.userid),
+					ref: new User(data.userid, socket),
 					secretKey: user.secretKey,
 					tasks: user.tasks
 				});
@@ -38,20 +80,15 @@ export class User {
 		});
 	}
 	static getStudents() {
-		return Database.collection("user").getMany({}).toArray().then((data)=>{
+		return Database.collection("user").getMany({role: "student"}).toArray().then((data)=>{
 			return data.map((obj: any)=>_.omit(obj, ["password", "secretKey"]));
 		})
-		.catch(()=>{throw "Couldn't get students."});
+		.catch(()=>Promise.reject("Couldn't get students."));
 	}
 	static getProfile(userid: string) {
-		return Database.collection("user").findOne({_id: userid}).then((res)=>{
-			if (!res) {
-				return Promise.reject("User Details not found.");
-			}
-			return Promise.resolve(res);
-		}).catch(()=>{
-			return Promise.reject("Error getting profile details.");
-		});
+		return Database.collection("user").get({
+			_id: userid
+		}).catch(()=>Promise.reject("Error getting profile details."));
 	}
 	saveTask(saveTaskAction: IUserSaveTaskDetails) {
 		// Default data if any.
@@ -63,14 +100,8 @@ export class User {
 			return Promise.reject(error);
 		}
 
-		return Database.collection("user").raw.updateOne({_id: this.userid}, {
-			$set: {
-				[`tasks.${saveTaskAction.taskDetails._id}`]: saveTaskAction.taskDetails
-			}
-		}).then(()=>{
-			return Promise.resolve(saveTaskAction);
-		}).catch(()=>{
-			return Promise.reject("Couldn't save.")
-		});
+		return Database.collection("user").deep(this.userid, `tasks.${saveTaskAction.taskDetails._id}`).update(
+			saveTaskAction.taskDetails
+		).then(()=>saveTaskAction)
 	}
 }

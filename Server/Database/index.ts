@@ -40,9 +40,9 @@ class Database_ {
 export let Database = new Database_();
 
 export class Collection{
-	private _collection: mongodb.Collection;
+	private _collection: mongodb.Collection | undefined;
 	constructor(collection: IValidCollections) {
-		this.findOne = this.findOne.bind(this);
+		this.get = this.get.bind(this);
 		this.getMany = this.getMany.bind(this);
 		this.update = this.update.bind(this);
 		this.insert = this.insert.bind(this);
@@ -58,18 +58,59 @@ export class Collection{
 		return Database.collection(collection);
 	}
 
+	/*
 	get raw() {
 		return this._collection;
+	}*/
+
+	deep(_id: string, key: string) {
+		let operation = (op: any)=>{
+			if (!this._collection) return Promise.reject("Couldn't get handle to collection");
+			return this._collection.updateOne({_id}, operation);
+		}
+		return {
+			update: (value: any)=> {
+				return operation({
+					$set: {
+						[key]: value
+					}
+				}).catch(()=>Promise.reject("Couldn't update record."));
+			},
+			appendSet: (values: any[])=>{
+				return operation({
+					$addToSet: {
+						[key]: {
+							$each: values
+						}
+					}
+				}).catch(()=>Promise.reject("Couldn't append elements to array"));
+			},
+			removeFromSet: (values: any[])=>{
+				return operation({
+					$pull: {
+						[key]: {
+							$in: values
+						}
+					}
+				});
+			}
+		}
 	}
 
-	private __map(res: mongodb.Cursor) {
+	private __map(criteria: any, fields?: any) {
 		return {
-			toArray() {
+			toArray: () => {
+				if (!this._collection) return Promise.reject("Couldn't get handle to collection");
+
+				let res = this._collection.find(criteria, fields);		
 				return res.toArray().catch(()=>{
 					return Promise.reject("Couldn't get records.");
 				});
 			},
-			toObject() {
+			toObject: ()=> {
+				if (!this._collection) return Promise.reject("Couldn't get handle to collection");
+
+				let res = this._collection.find(criteria, fields);
 				let json: any = {};
 				return res.toArray().then(arr=>{
 					arr.map((elem)=>{
@@ -125,15 +166,20 @@ export class Collection{
 			return Promise.reject("Couldn't delete record.");
 		});
 	}
-	findOne(criteria: any, fields?: Object) {
+	get(criteria: any, fields?: Object) {
 		if (!this._collection) {
 			return Promise.reject("Couldn't get handle to collection.");
 		}
-		return this._collection.findOne(criteria, {fields}).catch(()=>{
-			return Promise.reject("Couldn't find Record.");
-		});
+		return this._collection.findOne(criteria, {
+			fields
+		}).then((data)=>{
+			if (!data) {
+				return Promise.reject("Couldn't find Record.");
+			}
+			return data;
+		}).catch(()=>Promise.reject("Error finding Record."));
 	}
 	getMany(criteria: any, fields?: Object) {
-		return this.__map(this._collection.find(criteria, fields))
+		return this.__map(criteria, fields);
 	}
 }

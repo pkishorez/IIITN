@@ -18,6 +18,9 @@ export let S_User: IJSONSchema = {
 			type: "string",
 			minLength: 5
 		},
+		gender: {
+			enum: ["male", "female"]
+		},
 		batch: {
 			enum: ["E1", "E2", "E3", "E4"]
 		},
@@ -25,10 +28,16 @@ export let S_User: IJSONSchema = {
 			enum: ["CSE", "MME", "ECE", "MECH", "CHEMICAL"]
 		},
 		role: {
-			enum: ["admin", "student"]
+			enum: ["admin", "student"],
+			default: "student"
 		}
 	},
-	required: ["_id", "email", "password", "batch", "branch"]
+	required: ["_id", "email", "password", "gender", "batch", "branch"]
+};
+
+export let S_User_Profile: IJSONSchema = {
+	...S_User,
+	required: undefined
 };
 
 export let S_UserLogin: IJSONSchema = {

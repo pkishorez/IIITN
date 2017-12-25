@@ -11,7 +11,7 @@ export class OrderedMapDatabase<T> {
 	private Tschema: IJSONSchema;
 	constructor(collection: Collection, schema: IJSONSchema = {}) {
 		this.collection = collection;
-		this.collection.findOne({_id: "config"}).then((config)=>{
+		this.collection.get({_id: "config"}).then((config)=>{
 			this.order = config.order;
 		}).catch(console.error);
 		this.Tschema = schema;
