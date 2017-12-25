@@ -16,7 +16,7 @@ interface IState {};
 export let Register = ()=> {
 	Flash.flash((dismiss)=>{
 		return <RegisterComponent />;
-	});
+	}, false, false, true);
 }
 
 class RegisterComponent extends React.Component<any, {error: string, registered: boolean}>{

@@ -65,5 +65,5 @@ export let RequireAuthentication = (props?: Partial<IProps>, loggedIn?: ()=>void
 		return <Login {...props} loggedIn={()=>{
 			dismiss();
 		}}/>
-	})
+	}, false, false, true);
 }
