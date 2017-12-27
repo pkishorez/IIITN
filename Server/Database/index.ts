@@ -3,7 +3,7 @@ import { IJSONSchema } from 'classui/Components/Form/Schema/JSONSchema';
 import { Schema } from 'classui/Components/Form/Schema';
 import * as _ from 'lodash';
 
-type IValidCollections = "guides" | "tasks" | "user" | "keyvalue";
+type IValidCollections = "guides" | "tasks" | "user" | "keyvalue" | "session";
 
 let DBConnection: mongodb.Db;
 
@@ -18,7 +18,8 @@ class Database_ {
 						"guides": new Collection("guides"),
 						"tasks": new Collection("tasks"),
 						"user": new Collection("user"),
-						"keyvalue": new Collection("keyvalue")
+						"keyvalue": new Collection("keyvalue"),
+						"session": new Collection("session")
 					};
 					return resolve(DBConnection);
 				}
@@ -66,7 +67,9 @@ export class Collection{
 	deep(_id: string, key: string) {
 		let operation = (op: any)=>{
 			if (!this._collection) return Promise.reject("Couldn't get handle to collection");
-			return this._collection.updateOne({_id}, operation);
+			return this._collection.updateOne({_id}, op, {
+				upsert: true
+			});
 		}
 		return {
 			update: (value: any)=> {
@@ -83,7 +86,11 @@ export class Collection{
 							$each: values
 						}
 					}
-				}).catch(()=>Promise.reject("Couldn't append elements to array"));
+				}).catch((e)=>{
+					console.log(e);
+					console.log(_id, key);
+					return Promise.reject("Couldn't append elements to array")
+				});
 			},
 			removeFromSet: (values: any[])=>{
 				return operation({
