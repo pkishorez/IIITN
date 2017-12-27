@@ -6,5 +6,6 @@ export interface INR_User {
 		password?: string
 		secretKey?: string
 		tasks?: any
+		onlineList?: any
 	}
 }

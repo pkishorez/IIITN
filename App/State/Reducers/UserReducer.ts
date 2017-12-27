@@ -10,6 +10,8 @@ export interface IUserState {
 	taskDetails: {
 		[_id: string]: IUserTask_Details | undefined
 	}
+	list: any[]
+	onlineUserList: string[]
 }
 
 export type IUserSaveTaskDetails = {
@@ -28,7 +30,13 @@ export type IUserAction = {
 } | IUserSaveTaskDetails
   | (INR_User["USER_LOGIN"] & {
 	type: "USER_LOGIN"
-})
+})| {
+	type: "USER_LIST"
+	list: any[]
+} | {
+	type: "USER_ONLINE_LIST"
+	list: string[]
+}
 
 export type IUserActionType = IUserAction["type"] | keyof(INR_User)
 
@@ -37,7 +45,9 @@ let defaultState: IUserState = {
 	secretKey: null,
 	online: false,
 	editorBuffers: {},
-	taskDetails: {}
+	taskDetails: {},
+	list: [],
+	onlineUserList: []
 };
 
 export let UserReducer = (state: IUserState = defaultState, action: IUserAction) => {
@@ -47,7 +57,8 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 				...state,
 				userid: action.userid,
 				secretKey: action.secretKey,
-				taskDetails: action.tasks?action.tasks:{}
+				taskDetails: action.tasks?action.tasks:{},
+				onlineUserList: action.onlineList
 			}
 			break;
 		}
@@ -63,6 +74,13 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 				...state,
 				online: true
 			}
+			break;
+		}
+		case "USER_ONLINE_LIST": {
+			state = {
+				...state,
+				onlineUserList: action.list
+			};
 			break;
 		}
 		case "USER_SAVE_BUFFER": {
@@ -85,6 +103,14 @@ export let UserReducer = (state: IUserState = defaultState, action: IUserAction)
 					}
 				}
 			}
+			break;
+		}
+		case "USER_LIST": {
+			state = {
+				...state,
+				list: action.list
+			};
+			break;
 		}
 	}
 	return state;

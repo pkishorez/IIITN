@@ -21,7 +21,7 @@ let _App = (props: IProps)=>{
 		<ClassUI contentWidth={1200} offline={props.isOffline}>
 			<History_ />
 			<Header />
-			<Content fullHeight>
+			<Content>
 			<RouteComponent />
 			</Content>
 		</ClassUI>

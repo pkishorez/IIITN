@@ -3,6 +3,8 @@ import {Home} from 'App/Pages/Presentation/Home';
 import {RequireAuthentication} from 'App/Pages/Presentation/Login';
 import {PlaygroundTypescript, PlaygroundCanvas2D} from 'App/Pages/Playground/';
 import {TasksCanvasView, TaskManager, TasksTypescriptView, TasksView} from 'App/Pages/Task/';
+import {SessionManage} from 'App/Pages/Session/Manage/';
+import {SessionView} from 'App/Pages/Session/index';
 import {GetState} from 'App/State';
 
 export const DEFAULT_REDIRECT_URL: string = "/playground";
@@ -45,6 +47,9 @@ let RouteConfig: {
 		},{
 			route: "/students",
 			component: Students
+		},{
+			route: "/session",
+			component: SessionView
 		}
 	],
 
@@ -55,6 +60,9 @@ let RouteConfig: {
 		},{
 			route: "/task/manage",
 			component: TaskManager
+		},{
+			route: "/session/manage",
+			component: SessionManage
 		}
 	]
 }

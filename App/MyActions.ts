@@ -5,6 +5,7 @@ import {IUserAction, IUserSaveTaskDetails} from 'App/State/Reducers/UserReducer'
 import {INR_User} from 'Common/ActionSignature';
 import * as _ from 'lodash';
 import { IGuideAction } from 'App/State/Reducers/GuideReducer';
+import { ISessionAction } from 'App/State/Reducers/SessionReducer';
 
 export let Me = {
 	// Network and local state requests.
@@ -12,8 +13,8 @@ export let Me = {
 		return Network.requestAndDispatch("USER_LOGIN", data);
 	},
 
-	getStudents() {
-		return Network.requestAndDispatch("STUDENTS");
+	getUserList() {
+		return Network.requestAndDispatch("USER_LIST");
 	},
 
 	submitTask(data: IUserSaveTaskDetails) {
@@ -81,5 +82,36 @@ export let Guide = {
 			type: "GUIDE_ACTION",
 			orderedMapAction: action
 		} as IGuideAction);
+	}
+}
+
+export let Session = {
+	addStudents(students: string[]) {
+		return Network.requestAndDispatch("SESSION_ADD_STUDENTS", {
+			type: "SESSION_ADD_STUDENTS",
+			students
+		});
+	},
+	delStudents(students: string[]) {
+		return Network.requestAndDispatch("SESSION_DEL_STUDENTS", {
+			type: "SESSION_DEL_STUDENTS",
+			students
+		});
+	},
+	sit(pos: string) {
+		return Network.request("SESSION_SITTING", {
+			pos
+		});
+	},
+	init() {
+		return Network.requestAndDispatch("SESSION_INIT");
+	},
+	POMPOMMMM(pos: string) {
+		return Network.request("SESSION_POMPOMMMM", {
+			pos
+		});
+	},
+	POMPOMMMMALL() {
+		return Network.request("SESSION_POMPOMMMM_ALL");
 	}
 }

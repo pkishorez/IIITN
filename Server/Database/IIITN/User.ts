@@ -32,8 +32,12 @@ export class User {
 				}
 			]
 		};
+		User.broadCast(User.getOnlineUserList(), {
+			type: "USER_ONLINE_LIST",
+			list: User.getOnlineUserList()
+		});
 		this.socket.on("disconnect", ()=>{
-			if (User.userList[this.userid].length>1) {
+			if (_.isArray(User.userList[this.userid]) && User.userList[this.userid].length>1) {
 				User.userList = {
 					...User.userList,
 					[this.userid]: User.userList[this.userid].filter((instance)=>{
@@ -42,16 +46,28 @@ export class User {
 						return true;
 					})
 				};
-				return;
 			}
-			User.userList = _.omit(User.userList, this.userid);
+			else {
+				User.userList = _.omit(User.userList, this.userid);
+			}
+			User.broadCast(User.getOnlineUserList(), {
+				type: "USER_ONLINE_LIST",
+				list: User.getOnlineUserList()
+			});
 		})
 	}
-
 	static broadCast(list: string[], data: any) {
 		list.map((user)=>{
+			if (!User.userList[user]) {
+				return;
+			}
 			User.userList[user].forEach((stats)=>{
-				stats.socket.send(data);
+				try {
+					stats.socket.emit("PASSIVE_ACTION", data);
+				}
+				catch(e) {
+					console.error("COULDN'T SEND TO "+user);
+				}
 			})
 		});
 	}
@@ -73,7 +89,8 @@ export class User {
 				return Promise.resolve({
 					ref: new User(data.userid, socket),
 					secretKey: user.secretKey,
-					tasks: user.tasks
+					tasks: user.tasks,
+					onlineList: this.getOnlineUserList()
 				});
 			}
 			return Promise.reject("Invalid password.");
@@ -81,7 +98,9 @@ export class User {
 	}
 	static getStudents() {
 		return Database.collection("user").getMany({role: "student"}).toArray().then((data)=>{
-			return data.map((obj: any)=>_.omit(obj, ["password", "secretKey"]));
+			return {
+				list: data.map((obj: any)=>_.omit(obj, ["password", "secretKey"]))
+			};
 		})
 		.catch(()=>Promise.reject("Couldn't get students."));
 	}

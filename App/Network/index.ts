@@ -7,6 +7,7 @@ import {__store, GetState} from 'App/State';
 import * as io from 'socket.io-client';
 import * as _ from 'lodash';
 import { Me } from 'App/MyActions';
+import { train } from 'App/Utils/Audio';
 
 let Socket: _SocketIO;
 let g_reqid = 0;
@@ -39,6 +40,10 @@ class _SocketIO {
 			console.log("SocketIO Connection Disconnected.");
 			Me.goOffline();
 		});
+		this.socket.on("PASSIVE_ACTION", (data: any)=>{
+			console.log("PASSIVE_ACTION", data);
+			__store.dispatch(data);
+		});
 	}
 
 	request(req_type: IRequestType, data?: any) {
@@ -65,12 +70,12 @@ class _SocketIO {
 			});
 		}).catch((error)=>{
 			console.error(error);
-			return Promise.reject("Server Error: "+JSON.stringify(error));
+			return Promise.reject(typeof error=="string"?error:JSON.stringify(error));
 		});
 	}
-	requestAndDispatch(req_type: IRequestType, data: any) {
+	requestAndDispatch(req_type: IRequestType, data?: any) {
 		return this.request(req_type, data).then((response: any)=>{
-
+			console.log(response);
 			if (typeof response == "object") {
 				__store.dispatch({
 					type: req_type,

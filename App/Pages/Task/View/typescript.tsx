@@ -10,6 +10,7 @@ import { ITypescriptTestCaseTask } from 'Server/Database/Schema/Task';
 import { Flash } from 'classui/Components/Flash';
 import { TestCaseChallenge } from 'App/Monaco/Tasks/Typescript/TestCaseChallenge';
 import {Table} from 'classui/Components/Table';
+import { train } from 'App/Utils/Audio';
 
 interface IProps {
 	tasks: IOrderedMap<ITypescriptTestCaseTask>
@@ -49,6 +50,7 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		});
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section style={{marginTop: 20}} remain>
+				<div className="button" onClick={()=>train.play()}>Sound</div>
 				<Table hoverable defaultGroup="status" rowOnClick={(data)=>{
 					this.attemptTask(data.task_id);
 				}} headerItems={["title", "status"]} data={data} columnUI={{
