@@ -6,19 +6,20 @@ import {INR_User} from 'Common/ActionSignature';
 import * as _ from 'lodash';
 import { IGuideAction } from 'App/State/Reducers/GuideReducer';
 import { ISessionAction } from 'App/State/Reducers/SessionReducer';
+import { Helper } from 'App/Helper';
 
 export let Me = {
 	// Network and local state requests.
 	login(data: INR_User["USER_LOGIN"]) {
-		return Network.requestAndDispatch("USER_LOGIN", data);
+		return Helper.requestAndDispatch("USER_LOGIN", data);
 	},
 
 	getUserList() {
-		return Network.requestAndDispatch("USER_LIST");
+		return Helper.requestAndDispatch("USER_LIST");
 	},
 
 	submitTask(data: IUserSaveTaskDetails) {
-		return Network.requestAndDispatch("USER_SAVE_TASK", data);
+		return Helper.requestAndDispatch("USER_SAVE_TASK", data);
 	},
 
 	// Only network requests.
@@ -61,7 +62,7 @@ export let Task = {
 		} as any);
 	},
 	perform(action: ITaskAction["orderedMapAction"]) {
-		return Network.requestAndDispatch("TASK_ACTION", {
+		return Helper.requestAndDispatch("TASK_ACTION", {
 			type: "TASK_ACTION",
 			orderedMapAction: action
 		} as ITaskAction);
@@ -70,7 +71,7 @@ export let Task = {
 
 export let Guide = {
 	init() {
-		return Network.requestAndDispatch("GUIDE_ACTION", {
+		return Helper.requestAndDispatch("GUIDE_ACTION", {
 			type: "GUIDE_ACTION",
 			orderedMapAction: {
 				type: "INIT"
@@ -78,7 +79,7 @@ export let Guide = {
 		} as IGuideAction);
 	},
 	perform(action: IGuideAction["orderedMapAction"]) {
-		return Network.requestAndDispatch("GUIDE_ACTION", {
+		return Helper.requestAndDispatch("GUIDE_ACTION", {
 			type: "GUIDE_ACTION",
 			orderedMapAction: action
 		} as IGuideAction);
@@ -87,13 +88,13 @@ export let Guide = {
 
 export let Session = {
 	addStudents(students: string[]) {
-		return Network.requestAndDispatch("SESSION_ADD_STUDENTS", {
+		return Helper.requestAndDispatch("SESSION_ADD_STUDENTS", {
 			type: "SESSION_ADD_STUDENTS",
 			students
 		});
 	},
 	delStudents(students: string[]) {
-		return Network.requestAndDispatch("SESSION_DEL_STUDENTS", {
+		return Helper.requestAndDispatch("SESSION_DEL_STUDENTS", {
 			type: "SESSION_DEL_STUDENTS",
 			students
 		});
@@ -104,14 +105,20 @@ export let Session = {
 		});
 	},
 	init() {
-		return Network.requestAndDispatch("SESSION_INIT");
+		return Helper.requestAndDispatch("SESSION_INIT");
 	},
-	POMPOMMMM(pos: string) {
+	POMPOMMMM(pos: string[]) {
 		return Network.request("SESSION_POMPOMMMM", {
 			pos
 		});
 	},
 	POMPOMMMMALL() {
 		return Network.request("SESSION_POMPOMMMM_ALL");
+	},
+	getTaskDetails(task_id: string, users: string[]) {
+		return Network.request("SESSION_TASK_DETAILS", {
+			task_id,
+			users
+		});
 	}
 }

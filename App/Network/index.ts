@@ -1,19 +1,13 @@
-import {NavBar} from 'classui/Navbar';
-import {Feedback} from 'classui/Components/Feedback';
 import {Promise} from 'es6-promise';
 import {getResponseID} from 'Common/Utils';
 import {IRequestType, IRequest, IResponse} from 'Server/Connection';
-import {__store, GetState} from 'App/State';
 import * as io from 'socket.io-client';
-import * as _ from 'lodash';
-import { Me } from 'App/MyActions';
-import { train } from 'App/Utils/Audio';
 
 let Socket: _SocketIO;
 let g_reqid = 0;
 
 class _SocketIO {
-	private connected: boolean = true;
+	private connected: boolean = false;
 	public get onlineStatus(): boolean {
 		return this.connected;
 	}
@@ -24,28 +18,27 @@ class _SocketIO {
 			// Connected.
 			this.connected = true;
 			console.log("SocketIO Connection established.");
-			Me.goOnline();
-			// Attempt login here :)
-			if (GetState().user.userid) {
-				// Reestablish session if user is already logged in.
-				Me.login({
-					userid: GetState().user.userid as string,
-					secretKey: GetState().user.secretKey as string
-				});	
-			}
 		});
 		this.socket.on("disconnect", ()=>{
 			// Disconnected.
 			this.connected = false;
 			console.log("SocketIO Connection Disconnected.");
-			Me.goOffline();
-		});
-		this.socket.on("PASSIVE_ACTION", (data: any)=>{
-			console.log("PASSIVE_ACTION", data);
-			__store.dispatch(data);
 		});
 	}
 
+	// Restrain using these functions max :)
+	_on(type: string, func: (data: any)=>void) {
+		this.socket.on(type, func);
+	}
+	_off(type: string, func: (data: any)=>void) {
+		this.socket.off(type, func);
+	}
+	registerConnected(func: ()=>void) {
+		this.socket.on("connect", func);
+	}
+	registerDisconnected(func: ()=>void) {
+		this.socket.on("disconnect", func);
+	}
 	request(req_type: IRequestType, data?: any) {
 		return new Promise<any>((resolve, reject)=>{
 			if (!this.connected) {
@@ -72,28 +65,6 @@ class _SocketIO {
 			console.error(error);
 			return Promise.reject(typeof error=="string"?error:JSON.stringify(error));
 		});
-	}
-	requestAndDispatch(req_type: IRequestType, data?: any) {
-		return this.request(req_type, data).then((response: any)=>{
-			console.log(response);
-			if (typeof response == "object") {
-				__store.dispatch({
-					type: req_type,
-					...data,
-					...response
-				});
-			}
-			else {
-				__store.dispatch({
-					type: req_type,
-					...data
-				});
-			}
-			return response;
-		}).catch((error)=>{
-			Feedback.show(error, "error");
-			return Promise.reject(error);
-		})
 	}
 }
 
