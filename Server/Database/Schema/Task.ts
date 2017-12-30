@@ -106,7 +106,7 @@ export type ITypescriptTestCaseTask = {
 
 export type ITask = ICanvasTask | ITypescriptTask | ITypescriptTestCaseTask;
 
-let validIDSchema: IJSONSchema = {
+export let validIDSchema: IJSONSchema = {
 	type: "string",
 	pattern: "^[a-zA-Z0-9-]{1,50}$"
 }

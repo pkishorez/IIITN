@@ -38,6 +38,7 @@ let consoleStyle: React.CSSProperties = {
 	width: "100%",
 	lineHeight: 1.6,
 	height: "100%",
+	maxHeight: 200,
 	fontFamily: "monospace",
 	padding: 20,
 	margin:0,

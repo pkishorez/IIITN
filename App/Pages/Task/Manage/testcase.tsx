@@ -65,20 +65,17 @@ export let AddOrEditTypescriptTestcaseTask = (props: Partial<ITypescriptTestCase
 						<DraftEditor height="100%" defaultState={props.question} onChange={(state)=>questionState=JSON.stringify(convertToRaw(state.getCurrentContent()))}/>
 					</Section>
 					<Section style={{height: "100%"}}>
-						<Layout direction="column" basis="100%" style={{overflow:"auto"}}>
-							<Section remain>
+						<Layout direction="column" equallySpaced basis="100%" style={{overflow:"auto"}}>
+							<Section basis="50%" remain>
 								<Monaco style={{
 									overflowX: "hidden",
-									height: "100%",
-									minHeight: 200
-								}} content={props.funcDetails?JSON.stringify(props.funcDetails, undefined, "\t"):`{\t"$schema": "http://cseclub/functionDetails"\n}`} language="json" editorRef={(ref: any)=>funcDetailsRef=ref} schema={S_FunctionDetails}/>
+									height: "100%"
+								}} content={JSON.stringify(props.funcDetails?props.funcDetails:{"$schema": "http://cseclub/functionDetails"}, undefined, "\t")} language="json" editorRef={(ref: any)=>funcDetailsRef=ref} schema={S_FunctionDetails}/>
 							</Section>
-							<Section style={{maxHeight: "100%"}}>
+							<Section basis="50%">
 								<Monaco content={props.resetCode?props.resetCode:`function func_name(params) {\n}`} editorRef={(ref: any)=>resetCodeRef=ref}
-								autoResize
 								dimensions={{
-									minHeight: 100,
-									maxHeight: 300
+									height: "100%"
 								}} />
 							</Section>
 						</Layout>

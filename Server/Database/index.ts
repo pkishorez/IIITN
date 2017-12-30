@@ -87,8 +87,6 @@ export class Collection{
 						}
 					}
 				}).catch((e)=>{
-					console.log(e);
-					console.log(_id, key);
 					return Promise.reject("Couldn't append elements to array")
 				});
 			},

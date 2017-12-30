@@ -40,11 +40,9 @@ export class SessionManage_ extends React.Component<IProps, IState> {
 				</span>
 				<span className="button inline-block" onClick={()=>{
 					let otherStudentIDS = _.difference(_.map(this.props.students, "_id"), this.props.sessionStudentIds);
-					console.log(otherStudentIDS);
 					AddStudents(_.filter(this.props.students, (student)=>_.includes(otherStudentIDS, student._id)));
 				}} style={{marginRight: 20}}>Add Students</span>
 				<span className="button primary inline-block" onClick={()=>{
-					console.log(this.state.selected);
 					Session.delStudents(this.state.selected).then((msg)=>{
 						Feedback.show(msg, "success");
 					})

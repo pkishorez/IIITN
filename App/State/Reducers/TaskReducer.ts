@@ -16,7 +16,7 @@ export let TaskReducer = (state: ITaskState={map: {}, order: []}, action: ITaskA
 		case "TASK_ACTION": {
 			let orderedMapState = new OrderedMap(state);
 			orderedMapState.performAction(action.orderedMapAction);
-			state = orderedMapState.getState();
+			state = {...orderedMapState.getState()};
 			break;
 		}
 	}
