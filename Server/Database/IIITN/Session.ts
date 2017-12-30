@@ -29,13 +29,20 @@ export class Session {
 	static getStudents() {
 		return Database.collection("session").get({_id: "session"}).then((data)=>{
 			return {
-				list: data.list
+				list: data.list,
+				sitting: this.sitting
 			};
 		});
 	}
-	static pompomm(pos: string) {
-		if (this.sitting && this.sitting[pos]) {
-			User.broadCast([this.sitting[pos]], {
+	static pompomm(positions: string[]) {
+		if (this.sitting && _.isArray(positions)) {
+			let users: string[] = [];
+			positions.forEach((pos)=>{
+				if (this.sitting[pos]) {
+					users = [...users, this.sitting[pos]];
+				}
+			})
+			User.broadCast(users, {
 				type: "SESSION_POMPOMMMM"
 			});
 			return Promise.resolve("POMPOMMMM :)");
@@ -43,10 +50,13 @@ export class Session {
 		return Promise.reject("Couldn't POMPOMMM");
 	}
 	static pompommAll() {
-		User.broadCast(User.getOnlineUserList(), {
+		User.broadCast(_.difference(User.getOnlineUserList(), ["admin"]), {
 			type: "SESSION_POMPOMMMM"
 		});
 		return Promise.resolve("POMPOMMMM :)");
+	}
+	static taskSubmitted(user: string, task_id: string) {
+		
 	}
 	static sit(userid: string, pos: string) {
 		if (userid=="admin") {

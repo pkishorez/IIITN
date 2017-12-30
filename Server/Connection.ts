@@ -7,14 +7,16 @@ import * as _ from 'lodash';
 import { IUserSaveTaskDetails } from 'App/State/Reducers/UserReducer';
 import { ISessionAction } from 'App/State/Reducers/SessionReducer';
 import { Session } from 'Server/Database/IIITN/Session';
+import { IOrderedMapAction } from 'classui/DataStructures/OrderedMap';
 
 export type IRequestType = 
-	"REGISTER" | "PROFILE" | "USER_LIST"
+	"REGISTER" | "PROFILE" | "USER_LIST" | "USER_ONLINE_LIST"
 	| keyof(INR_User)
 	| ITaskAction["type"]
 	| IGuideAction["type"]
 	| IUserSaveTaskDetails["type"]
 	| ISessionAction["type"]
+	| "SESSION_TASK_DETAILS"
 
 export interface IRequest {
 	id: number
@@ -50,9 +52,6 @@ export class Connection {
 			case "PROFILE": {
 				return User.getProfile(request.data.userid);
 			}
-			case "TASK_ACTION": {
-				return Task.performAction(request.data);
-			}
 		}
 		if (!this.user) {
 			return Promise.reject("User should be authenticated first.");
@@ -65,6 +64,11 @@ export class Connection {
 			case "GUIDE_ACTION": {
 				if (_.get(request.data, "orderedMapAction.type")=="INIT")
 					return Guide.performAction(request.data);
+				break;
+			}
+			case "TASK_ACTION": {
+				if (_.get(request.data, "orderedMapAction.type")=="INIT")
+					return Task.performAction(request.data);
 				break;
 			}
 			case "SESSION_INIT": {
@@ -85,6 +89,14 @@ export class Connection {
 			case "GUIDE_ACTION": {
 				return Guide.performAction(request.data);
 			}
+			case "TASK_ACTION": {
+				return Task.performAction(request.data).then((result)=>{
+					if (_.get(request.data, "orderedMapAction.type")=="HIDDEN") {
+						User.broadCast(_.map(Session.sitting), _.omit(request, "id"));
+					}
+					return result;
+				});
+			}
 			case "SESSION_ADD_STUDENTS": {
 				return Session.addStudents(request.data.students);
 			}
@@ -96,6 +108,9 @@ export class Connection {
 			}
 			case "SESSION_POMPOMMMM_ALL": {
 				return Session.pompommAll();
+			}
+			case "SESSION_TASK_DETAILS": {
+				return User.getTaskDetails(request.data.task_id, request.data.users);
 			}
 		}
 

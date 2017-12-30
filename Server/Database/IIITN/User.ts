@@ -6,6 +6,8 @@ import { S_UserTask_Details } from 'Server/Database/Schema/Task';
 import { IUserAction, IUserSaveTaskDetails } from 'App/State/Reducers/UserReducer';
 import { Database } from 'Server/Database';
 import * as _ from 'lodash';
+import { Session } from 'Server/Database/IIITN/Session';
+import { IRequest, IRequestType } from 'Server/Connection';
 
 export class User {
 	private static userList: {
@@ -58,7 +60,7 @@ export class User {
 	}
 	static broadCast(list: string[], data: any) {
 		list.map((user)=>{
-			if (!User.userList[user]) {
+			if (!_.isArray(User.userList[user])) {
 				return;
 			}
 			User.userList[user].forEach((stats)=>{
@@ -121,6 +123,30 @@ export class User {
 
 		return Database.collection("user").deep(this.userid, `tasks.${saveTaskAction.taskDetails._id}`).update(
 			saveTaskAction.taskDetails
-		).then(()=>saveTaskAction)
+		).then(()=>{
+			if ((saveTaskAction.taskDetails.type=="TYPESCRIPT_TESTCASE_TASK") && (saveTaskAction.taskDetails.test_cases_passed>0)) {
+				Session.taskSubmitted(this.userid, saveTaskAction.taskDetails._id);
+			}
+			return saveTaskAction;
+		})
+	}
+	static getTaskDetails(task_id: string, users: string[]) {
+		let passed: string[] = [];
+		return Database.collection("user").getMany({}, {tasks: 1}).toObject().then((allDetails)=>{
+			users.forEach((user)=>{
+				let userDetails = allDetails[user];
+				if (_.isPlainObject(userDetails) && userDetails.tasks) {
+					let taskDetails: IUserTask_Details = userDetails.tasks[task_id];
+					if (taskDetails && taskDetails.type=="TYPESCRIPT_TESTCASE_TASK") {
+						if (_.isNumber(taskDetails.test_cases_passed)) {
+							passed = [...passed, user];
+						}
+					}
+				}
+			});
+			return passed;
+		}).catch((e)=>{
+			return Promise.reject("COULDN't");
+		});
 	}
 }

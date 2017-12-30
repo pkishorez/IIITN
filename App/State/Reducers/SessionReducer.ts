@@ -10,6 +10,7 @@ export type ISessionAction = {
 } | {
 	type: "SESSION_INIT",
 	list: string[]
+	sitting: ISessionState["sitting"]
 } | {
 	type: "SESSION_SITTING",
 	sitting: ISessionState["sitting"]
@@ -35,7 +36,8 @@ export let SessionReducer = (state: ISessionState=defaultState, action: ISession
 		case "SESSION_INIT": {
 			state = {
 				...state,
-				students: [...action.list]
+				students: [...action.list],
+				sitting: {...action.sitting}
 			};
 			break;
 		}
