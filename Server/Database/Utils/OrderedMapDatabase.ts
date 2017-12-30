@@ -24,7 +24,8 @@ export class OrderedMapDatabase<T> {
 				return this.collection.getMany({}).toObject().then((list)=>{
 					action.state = {
 						map: _.omit(list, "config"),
-						order: list.config?list.config.order:Object.keys(list)
+						order: list.config?list.config.order?list.config.order:[]:Object.keys(list),
+						hidden: list.config?list.config.hidden:undefined
 					};
 					return action;
 				});
@@ -62,6 +63,11 @@ export class OrderedMapDatabase<T> {
 			}
 			case "REORDER": {
 				return this.setOrder(action.order).then(()=>{
+					return action;
+				});
+			}
+			case "HIDDEN": {
+				return this.collection.deep("config", "hidden").update(action.hidden).then(()=>{
 					return action;
 				});
 			}

@@ -48,6 +48,12 @@ class TaskManager_ extends React.Component<IProps> {
 							_id: task_id
 						}):null
 					}}
+					onHide={(hidden)=>{
+						TaskAction.perform({
+							type: "HIDDEN",
+							hidden
+						});
+					}}
 					/>
 				</div>
 		</div>;

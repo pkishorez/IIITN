@@ -41,7 +41,7 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		}, true, true, true);
 	}
 	render() {
-		let data = Object.keys(this.props.tasks.map).map((task_id)=>{
+		let data = _.difference(this.props.tasks.order, this.props.tasks.hidden?this.props.tasks.hidden:[]).map((task_id)=>{
 			return {
 				...this.props.tasks.map[task_id],
 				task_id,
@@ -50,7 +50,6 @@ class TasksTypescriptView_ extends React.Component<IProps, IState> {
 		});
 		return <Layout style={{maxWidth: 935, margin: 'auto'}} gutter={15} justify="center" align="start">
 			<Section style={{marginTop: 20}} remain>
-				<div className="button" onClick={()=>train.play()}>Sound</div>
 				<Table hoverable defaultGroup="status" rowOnClick={(data)=>{
 					this.attemptTask(data.task_id);
 				}} headerItems={["title", "status"]} data={data} columnUI={{
@@ -81,21 +80,17 @@ class Tasks extends React.Component<IProps & {task_id: string}, {task_id: string
 }
 
 let mapStateToProps = (state: IRootState): IProps=>{
-	let typescript_tasks_keys = Object.keys(state.tasks.map).filter((task_id)=>{
-		return state.tasks.map[task_id].type=="TYPESCRIPT_TESTCASE_TASK";
-	});
-	let map = {};
-	for (let key of typescript_tasks_keys) {
-		map = {
-			...map,
-			[key]: state.tasks.map[key]
-		}
-	}
-	let order = _.difference(state.tasks.order, _.difference(state.tasks.order, typescript_tasks_keys));
-	let typescriptTasks = {
-		map,
-		order
-	}
+	let typescriptTasks: IProps["tasks"] = {
+		map: state.tasks.map as any,
+		order: _.difference(
+			state.tasks.order,
+			Object.keys(_.pickBy(
+				state.tasks.map,
+				(task)=>(task.type!="TYPESCRIPT_TESTCASE_TASK")
+			))
+		),
+		hidden: state.tasks.hidden
+	};
 	return {
 		tasks: typescriptTasks,
 		userTasks: state.user.taskDetails
